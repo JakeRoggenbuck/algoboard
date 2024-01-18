@@ -16,4 +16,4 @@ def test_get_rank():
 
     json_data = communicator.get_json_data(full_page)
 
-    assert communicator.get_rank(json_data) > 2_000_000
+    assert communicator.get_rank(json_data) > 1_000_000

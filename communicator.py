@@ -1,3 +1,4 @@
+# Implement the communicator and caching
 import requests
 from bs4 import BeautifulSoup
 from pathlib import Path
@@ -76,3 +77,5 @@ if __name__ == "__main__":
     pulled = pull_full_page("jakeroggenbuck")
 
     a = get_json_data(pulled)
+
+    print(get_rank(a))
