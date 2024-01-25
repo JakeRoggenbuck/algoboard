@@ -11,7 +11,7 @@ URL = "https://leetcode.com/"
 
 def pull_full_page(username: str) -> str:
 
-    file_path = Path(username)
+    file_path = Path("users_cache") / Path(username)
 
     if file_path.exists():
 
@@ -19,16 +19,16 @@ def pull_full_page(username: str) -> str:
         time = datetime.datetime.fromtimestamp(file_path.stat().st_mtime, tz=datetime.timezone.utc)
         now = datetime.datetime.now(tz=datetime.timezone.utc)
 
-        # Check if file is older than 5 minutes
-        if now - time < datetime.timedelta(minutes=5):
+        # Check if file is older than 100 minutes
+        if now - time < datetime.timedelta(minutes=100):
 
-            with open(username, "r") as file:
+            with open(file_path, "r") as file:
                 return file.read()
 
     # Pull data from URL
     res = requests.get(URL + username)
 
-    with open(username, "w") as file:
+    with open(file_path, "w") as file:
         file.write(res.text)
 
     return res.text
