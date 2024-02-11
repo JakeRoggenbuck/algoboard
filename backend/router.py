@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from communicator import pull_full_page, get_json_data, get_rank
 from pathlib import Path
 import sqlite3
+from datetime import datetime
 
 app = FastAPI()
 
@@ -39,6 +40,7 @@ def get_leaterboard(board_id: str):
         rank = get_rank(json_data)
 
         user["rank"] = rank
+        user["date"] = str(datetime.now())
 
     # Sort
     users_in_board = sorted(users_in_board, key=lambda x: x["rank"])
