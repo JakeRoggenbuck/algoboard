@@ -76,7 +76,24 @@ day_5 = [
     [{"name": "isabellovecandy", "rank": 5000001}],
 ]
 
-data = [*day_1, *day_2, *day_3, *day_4, *day_5]
+day_6 = [
+    [{"name": "hansonn", "rank": 470919, "date": "2024-02-12 19:19:52.869711"}],
+    [{"name": "2003kevinle", "rank": 702659, "date": "2024-02-12 19:19:52.879316"}],
+    [{"name": "feliciafengg", "rank": 784868, "date": "2024-02-12 19:19:52.923800"}],
+    [{"name": "realchef", "rank": 891656, "date": "2024-02-12 19:19:52.798046"}],
+    [{"name": "normando", "rank": 939765, "date": "2024-02-12 19:19:52.896724"}],
+    [{"name": "AroopB", "rank": 1033796, "date": "2024-02-12 19:19:52.850945"}],
+    [{"name": "jakeroggenbuck", "rank": 1151340, "date": "2024-02-12 19:19:52.807235"}],
+    [{"name": "siddharthmmani", "rank": 1673868, "date": "2024-02-12 19:19:52.887658"}],
+    [{"name": "ahujaanish11", "rank": 1718014, "date": "2024-02-12 19:19:52.933749"}],
+    [{"name": "andchen1", "rank": 2425496, "date": "2024-02-12 19:19:52.914964"}],
+    [{"name": "atata6", "rank": 3114099, "date": "2024-02-12 19:19:52.950097"}],
+    [{"name": "vshl", "rank": 4476769, "date": "2024-02-12 19:19:52.906337"}],
+    [{"name": "AggieWorker", "rank": 5000001, "date": "2024-02-12 19:19:52.859786"}],
+    [{"name": "isabellovecandy", "rank": 5000001, "date": "2024-02-12 19:19:52.941459"}],
+]
+
+data = [*day_1, *day_2, *day_3, *day_4, *day_5, *day_6]
 
 names = set([item["name"] for sublist in data for item in sublist])
 ranks = {name: [] for name in names}

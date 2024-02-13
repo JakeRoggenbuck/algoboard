@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from communicator import pull_full_page, get_json_data, get_rank
+from communicator import pull_full_page, get_json_data, get_rank, get_solved
 from pathlib import Path
 import sqlite3
 from datetime import datetime
@@ -15,11 +15,13 @@ if Path("./ranking.db"):
     has_created = True
 
 if not has_created:
-    cur.execute("""CREATE TABLE raking(
+    cur.execute(
+        """CREATE TABLE raking(
         id INTEGER PRIMARY KEY,
         name TEXT NOT NULL,
         rank INTEGER NOT NULL,
-        time timestamp)""")
+        time timestamp)"""
+    )
 
 
 @app.get("/leaterboard/{board_id}")
@@ -38,8 +40,10 @@ def get_leaterboard(board_id: str):
         json_data = get_json_data(page)
 
         rank = get_rank(json_data)
+        solved = get_solved(json_data)
 
         user["rank"] = rank
+        user["solved"] = solved
         user["date"] = str(datetime.now())
 
     # Sort

@@ -49,28 +49,58 @@ def get_json_data(page: str) -> dict:
 
 def get_rank(json_data: dict) -> int:
     '''
-        {
-        "props": {
-            "pageProps": {
-            "dehydratedState": {
-                "mutations": [],
-                "queries": [
-                {
-                    "state": {
-                    "data": {
-                        "matchedUser": {
-                        "contestBadge": null,
-                        "username": "jakeroggenbuck",
-                        "githubUrl": null,
-                        "twitterUrl": null,
-                        "linkedinUrl": null,
-                        "profile": {
-                            "ranking": 2975231,
+    {
+    "props": {
+        "pageProps": {
+        "dehydratedState": {
+            "mutations": [],
+            "queries": [
+            {
+                "state": {
+                "data": {
+                    "matchedUser": {
+                    "contestBadge": null,
+                    "username": "jakeroggenbuck",
+                    "githubUrl": null,
+                    "twitterUrl": null,
+                    "linkedinUrl": null,
+                    "profile": {
+                        "ranking": 2975231,
     '''
 
-    ranking = json_data["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"]["matchedUser"]["profile"]["ranking"]
+    ranking = json_data["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"][
+        "matchedUser"
+    ]["profile"]["ranking"]
 
     return ranking
+
+
+def get_solved(json_data: dict) -> int:
+    '''
+    {
+    "props": {
+        "pageProps": {
+        "dehydratedState": {
+            "mutations": [],
+            "queries": [
+            {
+                "state": {
+                "data": {
+                    "matchedUser": {
+                    "contestBadge": null,
+                    "username": "jakeroggenbuck",
+                    "githubUrl": null,
+                    "twitterUrl": null,
+                    "linkedinUrl": null,
+                    "profile": {
+                        "ranking": 2975231,
+    '''
+
+    solved = json_data["props"]["pageProps"]["dehydratedState"]["queries"][-1]["state"]["data"][
+        "matchedUser"
+    ]
+
+    return solved
 
 
 if __name__ == "__main__":
@@ -78,4 +108,4 @@ if __name__ == "__main__":
 
     a = get_json_data(pulled)
 
-    print(get_rank(a))
+    print(get_solved(a))
