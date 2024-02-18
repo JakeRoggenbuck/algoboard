@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import sys
+import json
 
 day_1 = [
     [{"name": "hansonn", "rank": 487992}],
@@ -93,7 +94,10 @@ day_6 = [
     [{"name": "isabellovecandy", "rank": 5000001, "date": "2024-02-12 19:19:52.941459"}],
 ]
 
-data = [*day_1, *day_2, *day_3, *day_4, *day_5, *day_6]
+with open("./aggieworks-swe-2-13-2024.json") as file:
+    day_7 = [[x] for x in json.load(file)]
+
+data = [*day_1, *day_2, *day_3, *day_4, *day_5, *day_6, *day_7]
 
 names = set([item["name"] for sublist in data for item in sublist])
 ranks = {name: [] for name in names}
