@@ -5,7 +5,7 @@ import json
 
 data = []
 
-with open("aggieworks-swe-2-18-2024.json") as file1:
+with open("aggieworks-swe-2-20-2024.json") as file1:
     data1 = json.load(file1)
     data += data1
 
@@ -46,8 +46,9 @@ colors = {'Easy': 'green', 'Medium': 'blue', 'Hard': 'red'}
 plt.figure(figsize=(15, 10))
 
 for difficulty, users in plot_data.items():
-    if difficulty == "Hard":
-        for user, data_points in users.items():
+    for user, data_points in users.items():
+        # Check for datapoint change
+        if data_points[0][1] != data_points[-1][1]:
             dates, counts = zip(*sorted(data_points))
             plt.plot(
                 dates, counts, label=f'{user} - {difficulty}', marker='o'
