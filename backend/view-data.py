@@ -97,7 +97,11 @@ day_6 = [
 with open("./aggieworks-swe-2-13-2024.json") as file:
     day_7 = [[x] for x in json.load(file)]
 
-data = [*day_1, *day_2, *day_3, *day_4, *day_5, *day_6, *day_7]
+with open("./aggieworks-swe-2-21-2024.json") as file:
+    day_8 = [[x] for x in json.load(file)]
+
+
+data = [*day_1, *day_2, *day_3, *day_4, *day_5, *day_6, *day_7, *day_8]
 
 names = set([item["name"] for sublist in data for item in sublist])
 ranks = {name: [] for name in names}
@@ -116,10 +120,14 @@ for k, v in ranks.items():
             min_val = val
         if val > max_val:
             max_val = val
-    diffs[k] = {"min": min_val, "max": max_val, "diff": max_val - min_val}
+
+    diffs[k] = {
+        "by_val": {"min": min_val, "max": max_val, "diff": max_val - min_val},
+        "by_time": {"min": v[0], "max": v[-1], "diff": v[-1] - v[0]},
+    }
 
 for d, val in diffs.items():
-    print(d, val["diff"])
+    print(d, ",\t", val["by_time"]["diff"], ",\t", val["by_val"]["diff"])
 
 plt.figure(figsize=(10, 6))
 for name, rank in ranks.items():
