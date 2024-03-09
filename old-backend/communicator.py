@@ -44,6 +44,9 @@ def get_json_data(page: str) -> dict:
 
     data = json.loads(found_data.text)
 
+    with open("output_full.json", "w") as file:
+        json.dump(data, file, indent=4)
+
     return data
 
 
@@ -68,9 +71,12 @@ def get_rank(json_data: dict) -> int:
                         "ranking": 2975231,
     '''
 
-    ranking = json_data["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"][
-        "matchedUser"
-    ]["profile"]["ranking"]
+    try:
+        ranking = json_data["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"][
+            "matchedUser"
+        ]["profile"]["ranking"]
+    except KeyError:
+        ranking = -1
 
     return ranking
 
@@ -96,9 +102,23 @@ def get_solved(json_data: dict) -> int:
                         "ranking": 2975231,
     '''
 
-    solved = json_data["props"]["pageProps"]["dehydratedState"]["queries"][-1]["state"]["data"][
-        "matchedUser"
-    ]
+    try:
+        solved = json_data["props"]["pageProps"]["dehydratedState"]["queries"]
+
+        print(solved)
+
+        found = False
+        for x in solved:
+            if "allQuestionsCount" in str(x):
+                solved = x
+                found = True
+
+        if found:
+            solved = solved["state"]["data"]["matchedUser"]
+        else:
+            solved = solved[-1]["state"]["data"]["matchedUser"]
+    except KeyError:
+        solved = 0
 
     return solved
 

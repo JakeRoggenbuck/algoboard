@@ -10,7 +10,7 @@ export default function Home() {
 
       <Link to="/boards" className="text-blue-600 hover:text-blue-800">
         <button className="text-xl mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-			Boards
+          Boards
         </button>
       </Link>
     </div>

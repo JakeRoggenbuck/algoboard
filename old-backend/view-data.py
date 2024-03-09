@@ -100,8 +100,11 @@ with open("./aggieworks-swe-2-13-2024.json") as file:
 with open("./aggieworks-swe-2-21-2024.json") as file:
     day_8 = [[x] for x in json.load(file)]
 
+with open("./aggieworks-swe-2-22-2024.json") as file:
+    day_9 = [[x] for x in json.load(file)]
 
-data = [*day_1, *day_2, *day_3, *day_4, *day_5, *day_6, *day_7, *day_8]
+
+data = [*day_1, *day_2, *day_3, *day_4, *day_5, *day_6, *day_7, *day_8, *day_9]
 
 names = set([item["name"] for sublist in data for item in sublist])
 ranks = {name: [] for name in names}

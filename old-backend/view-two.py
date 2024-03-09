@@ -5,7 +5,7 @@ import json
 
 data = []
 
-with open("aggieworks-swe-2-21-2024.json") as file1:
+with open("aggieworks-swe-2-22-2024.json") as file1:
     data1 = json.load(file1)
     data += data1
 
