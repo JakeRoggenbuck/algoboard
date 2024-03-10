@@ -6,7 +6,6 @@ export default function Board() {
   return (
     <div className="bg-[#0D1117] text-white min-h-screen p-8">
       <div className="flex justify-between items-center mb-6">
-
         <div className="text-sm font-semibold">
           <nav className="flex" aria-label="Breadcrumb">
             <ol className="list-none p-0 inline-flex">
@@ -28,7 +27,7 @@ export default function Board() {
               </li>
 
               <li aria-current="page" className="text-gray-500">
-				  {params.boardId}
+                {params.boardId}
               </li>
             </ol>
           </nav>
@@ -36,12 +35,12 @@ export default function Board() {
 
         <div className="space-x-2">
           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-			  Board Code: 123
+            Board Code: 123
           </button>
         </div>
       </div>
 
-      <UserList />
+      <UserList boardId={params.boardId} />
     </div>
   );
 }

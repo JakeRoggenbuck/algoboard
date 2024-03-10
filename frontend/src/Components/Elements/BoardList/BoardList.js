@@ -1,18 +1,25 @@
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 const BoardList = () => {
-  // Sample data structure for boards
-  const boards = [
-    { id: 'my-board', name: 'My Board', participants: 20 },
-    { id: 'user-1s-board', name: 'User 1’s Board', participants: 4 },
-    { id: 'user-2s-board', name: 'User 2’s Board', participants: 24 },
-    {
-      id: 'competition-1-board',
-      name: 'Competition 1 Board',
-      participants: 124,
-    },
-    { id: 'event-1-board', name: 'Event 1 Board', participants: 256 },
-  ];
+  const [boards, setBoards] = useState([]);
+
+  useEffect(() => {
+    const fetchBoards = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/boards/');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setBoards(data);
+      } catch (error) {
+        console.error('Could not fetch boards:', error);
+      }
+    };
+
+    fetchBoards();
+  }, []);
 
   return (
     <div className="bg-[#161B22] p-4 rounded-md">
@@ -27,7 +34,8 @@ const BoardList = () => {
           >
             <span className="font-medium">{board.name}</span>
             <span className="text-[#8b949e]">
-              {board.participants} participants
+              {board.participants}{' '}
+              {board.participants > 1 ? 'participants' : 'participant'}
             </span>
           </div>
         </Link>
