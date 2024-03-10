@@ -141,6 +141,11 @@ def read_root():
     return {"Hello": "World"}
 
 
+@app.get("/status")
+def read_satus():
+    return "okay"
+
+
 @app.get("/boards/")
 def get_boards():
     con = sqlite3.connect("ranking.db")
