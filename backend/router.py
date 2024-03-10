@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 import sqlite3
+import json
 
 app = FastAPI()
 
@@ -37,7 +38,11 @@ def setup_database():
         cur.execute(
             """CREATE TABLE users(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL)"""
+            name TEXT NOT NULL,
+            rank INTEGER NOT NULL,
+            easy_solved INTEGER NOT NULL,
+            med_solved INTEGER NOT NULL,
+            hard_solved INTEGER NOT NULL)"""
         )
 
         cur.execute(
@@ -55,60 +60,45 @@ def setup_database():
         cur.execute("INSERT into boards VALUES(NULL, 'LeaterWorks', 'leaterworks', 1)")
         works_id = cur.lastrowid
 
-        cur.execute("INSERT into users VALUES(NULL, 'jakeroggenbuck')")
-        user_id = cur.lastrowid
+        with open("../old-backend/aggieworks-swe-3-9-2024.json") as file:
+            data = json.load(file)
 
-        cur.execute(
-            "INSERT into boards_users VALUES(?, ?)",
-            (
-                board_id,
-                user_id,
-            ),
-        )
+            for row in data:
+                username = row["name"]
+                rank = row["rank"]
+                solved = row["solved"]["submitStatsGlobal"]["acSubmissionNum"]
 
-        cur.execute(
-            "INSERT into boards_users VALUES(?, ?)",
-            (
-                works_id,
-                user_id,
-            ),
-        )
+                easy = solved[1]
+                assert easy["difficulty"] == "Easy"
 
-        usernames = [
-            "realchef",
-            "AroopB",
-            "AggieWorker",
-            "hansonn",
-            "2003kevinle",
-            "siddharthmmani",
-            "normando",
-            "vshl",
-            "andchen1",
-            "feliciafengg",
-            "ahujaanish11",
-            "isabellovecandy",
-            "atata6",
-        ]
+                med = solved[2]
+                assert med["difficulty"] == "Medium"
 
-        for username in usernames:
-            cur.execute("INSERT into users VALUES(NULL, ?)", (username,))
-            user_id = cur.lastrowid
+                hard = solved[3]
+                assert hard["difficulty"] == "Hard"
 
-            cur.execute(
-                "INSERT into boards_users VALUES(?, ?)",
-                (
-                    works_id,
-                    user_id,
-                ),
-            )
+                cur.execute(
+                    "INSERT into users VALUES(NULL, ?, ?, ?, ?, ?)",
+                    (username, rank, easy["count"], med["count"], hard["count"]),
+                )
 
-            cur.execute(
-                "INSERT into boards_users VALUES(?, ?)",
-                (
-                    board_id,
-                    user_id,
-                ),
-            )
+                user_id = cur.lastrowid
+
+                cur.execute(
+                    "INSERT into boards_users VALUES(?, ?)",
+                    (
+                        works_id,
+                        user_id,
+                    ),
+                )
+
+                cur.execute(
+                    "INSERT into boards_users VALUES(?, ?)",
+                    (
+                        board_id,
+                        user_id,
+                    ),
+                )
 
         con.commit()
 
@@ -184,10 +174,12 @@ def get_board(board_id: str):
         all_rows.append(
             {
                 "id": row[0],
-                "solved": {"easy": 1, "medium": 1, "hard": 1},
+                "solved": {"easy": row[3], "medium": row[4], "hard": row[5]},
                 "name": row[1],
-                "score": 1,
+                "score": row[2],
             }
         )
+
+    all_rows = sorted(all_rows, key=lambda x: x["score"])
 
     return all_rows

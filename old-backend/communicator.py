@@ -127,5 +127,6 @@ if __name__ == "__main__":
     pulled = pull_full_page("jakeroggenbuck")
 
     a = get_json_data(pulled)
+    print(a)
 
-    print(get_solved(a))
+    # print(get_solved(a))

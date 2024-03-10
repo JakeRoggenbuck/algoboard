@@ -13,6 +13,7 @@ export default function Home() {
           Boards
         </button>
       </Link>
+
     </div>
   );
 }
