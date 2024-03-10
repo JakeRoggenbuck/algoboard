@@ -102,6 +102,32 @@ def setup_database():
                 ),
             )
 
+            cur.execute(
+                "INSERT into boards_users VALUES(?, ?)",
+                (
+                    board_id,
+                    user_id,
+                ),
+            )
+
+        con.commit()
+
+        cur.execute(
+            """SELECT board_id, COUNT(user_id) as user_count
+            FROM boards_users
+            GROUP BY board_id"""
+        )
+
+        board_user_counts = cur.fetchall()
+
+        for board_id, user_count in board_user_counts:
+            cur.execute(
+                """UPDATE boards
+                SET participants = ?
+                WHERE id = ?""",
+                (user_count, board_id),
+            )
+
         con.commit()
         con.close()
 
