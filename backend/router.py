@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import pull
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 import sqlite3
@@ -134,6 +135,45 @@ def setup_database():
 
 
 setup_database()
+
+
+def repull_replace_data():
+    con = sqlite3.connect("ranking.db")
+    cur = con.cursor()
+    val = cur.execute("SELECT * FROM users")
+    users = val.fetchall()
+
+    all_data = {}
+
+    con = sqlite3.connect("ranking.db")
+
+    cur = con.cursor()
+
+    for user in users:
+        data = pull.pull_data(user[1])
+
+        all_data[user[1]] = data
+
+        to_update = (
+            (
+                data["ranking"],
+                data["easySolved"],
+                data["mediumSolved"],
+                data["hardSolved"],
+                user[1],
+            ),
+        )
+
+        cur.execute(
+            "UPDATE users SET rank=?, easy_solved=?, med_solved=?, hard_solved=? WHERE name=?",
+            *to_update,
+        )
+
+    con.commit()
+    con.close()
+
+
+repull_replace_data()
 
 
 @app.get("/")
