@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 import sqlite3
 import json
+from datetime import datetime
 
 app = FastAPI()
 
@@ -44,6 +45,17 @@ def setup_database():
             easy_solved INTEGER NOT NULL,
             med_solved INTEGER NOT NULL,
             hard_solved INTEGER NOT NULL)"""
+        )
+
+        cur.execute(
+            """CREATE TABLE user_rank(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            rank INTEGER NOT NULL,
+            easy_solved INTEGER NOT NULL,
+            med_solved INTEGER NOT NULL,
+            hard_solved INTEGER NOT NULL,
+            whentime timestamp)"""
         )
 
         cur.execute(
@@ -134,9 +146,6 @@ def setup_database():
         # )
 
 
-setup_database()
-
-
 def repull_replace_data():
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
@@ -169,11 +178,18 @@ def repull_replace_data():
             *to_update,
         )
 
+        cur.execute(
+            "INSERT into user_rank VALUES(NULL, ?, ?, ?, ?, ?, ?)",
+            (user[1], data["ranking"], data["easySolved"], data["mediumSolved"], data["hardSolved"], datetime.now(),),
+        )
+
     con.commit()
     con.close()
 
 
-repull_replace_data()
+setup_database()
+
+# repull_replace_data()
 
 
 @app.get("/")
@@ -197,6 +213,15 @@ def get_boards():
         all_rows.append({"id": row[2], "name": row[1], "participants": row[3]})
 
     return all_rows
+
+
+@app.get("/entries")
+def get_entries():
+    con = sqlite3.connect("ranking.db")
+    cur = con.cursor()
+    val = cur.execute("SELECT * FROM user_rank")
+
+    return val.fetchall()
 
 
 @app.get("/boards/{board_id}")
