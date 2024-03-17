@@ -189,7 +189,7 @@ def repull_replace_data():
 
 setup_database()
 
-# repull_replace_data()
+repull_replace_data()
 
 
 @app.get("/")
