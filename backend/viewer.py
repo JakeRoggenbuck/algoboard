@@ -20,7 +20,7 @@ columns = [
 
 df = pd.DataFrame(data, columns=columns)
 
-df["total_problems"] = df["easy_problems"] + df["medium_problems"] + df["hard_problems"])
+df["total_problems"] = df["easy_problems"] + df["medium_problems"] + df["hard_problems"]
 cumulative_df = df.groupby(["name", "date"]).agg({"total_problems": "sum"}).reset_index()
 
 df["date"] = pd.to_datetime(df["date"])
