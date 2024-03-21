@@ -8,33 +8,33 @@ const StatsTable = (props) => {
   return (
     <div className="overflow-x-auto my-4">
       <table className="min-w-full leading-normal">
-        <thead className="bg-[#0f141a]">
+        <thead className="bg-[#161B22]">
           <tr>
-            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#0f141a] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#161B22] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
               Metric
             </th>
-            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#0f141a] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#161B22] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
               Count
             </th>
-            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#0f141a] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#161B22] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
               Mean
             </th>
-            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#0f141a] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#161B22] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
               Stand. Dev.
             </th>
-            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#0f141a] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#161B22] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
               Min
             </th>
-            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#0f141a] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#161B22] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
               Max
             </th>
-            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#0f141a] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#161B22] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
               25%
             </th>
-            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#0f141a] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#161B22] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
               50%
             </th>
-            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#0f141a] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#161B22] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
               75%
             </th>
           </tr>
@@ -60,12 +60,12 @@ const StatsTable = (props) => {
               </td>
               <td className="px-5 py-5 bg-[#161B22] text-sm border-b-2 border-[#0D1117]">
                 <p className="text-white whitespace-no-wrap">
-                  {value.min.toFixed(2)}
+                  {value.min}
                 </p>
               </td>
               <td className="px-5 py-5 bg-[#161B22] text-sm border-b-2 border-[#0D1117]">
                 <p className="text-white whitespace-no-wrap">
-                  {value.max.toFixed(2)}
+                  {value.max}
                 </p>
               </td>
               <td className="px-5 py-5 bg-[#161B22] text-sm border-b-2 border-[#0D1117]">
