@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 import sqlite3
 import json
+import pandas as pd
 from datetime import datetime
 
 app = FastAPI()
@@ -189,7 +190,7 @@ def repull_replace_data():
 
 setup_database()
 
-repull_replace_data()
+# repull_replace_data()
 
 
 @app.get("/")
@@ -252,4 +253,7 @@ def get_board(board_id: str):
 
     all_rows = sorted(all_rows, key=lambda x: x["score"])
 
-    return all_rows
+    df = pd.json_normalize(all_rows, sep='_')
+    summary_statistics = df.describe().to_dict()
+
+    return {"participants": all_rows, "stats": summary_statistics}
