@@ -1,73 +1,165 @@
 import { useEffect, useState, useRef } from 'react';
 import Chart from 'chart.js/auto';
 
+const StatsTable = (props) => {
+  let summaryStats = props.summaryStats;
+  delete summaryStats['id'];
+
+  return (
+    <div className="overflow-x-auto my-4">
+      <table className="min-w-full leading-normal">
+        <thead className="bg-[#0f141a]">
+          <tr>
+            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#0f141a] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Metric
+            </th>
+            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#0f141a] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Count
+            </th>
+            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#0f141a] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Mean
+            </th>
+            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#0f141a] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Stand. Dev.
+            </th>
+            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#0f141a] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Min
+            </th>
+            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#0f141a] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Max
+            </th>
+            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#0f141a] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              25%
+            </th>
+            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#0f141a] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              50%
+            </th>
+            <th className="px-5 py-3 border-b-2 border-[#0D1117] bg-[#0f141a] text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              75%
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(summaryStats).map(([key, value]) => (
+            <tr key={key} className="border-b border-gray-200">
+              <td className="px-5 py-5 bg-[#161B22] text-sm border-b-2 border-[#0D1117]">
+                <p className="text-white whitespace-no-wrap ">{key}</p>
+              </td>
+              <td className="px-5 py-5 bg-[#161B22] text-sm border-b-2 border-[#0D1117]">
+                <p className="text-white whitespace-no-wrap">{value.count}</p>
+              </td>
+              <td className="px-5 py-5 bg-[#161B22] text-sm border-b-2 border-[#0D1117]">
+                <p className="text-white whitespace-no-wrap">
+                  {value.mean.toFixed(2)}
+                </p>
+              </td>
+              <td className="px-5 py-5 bg-[#161B22] text-sm border-b-2 border-[#0D1117]">
+                <p className="text-white whitespace-no-wrap">
+                  {value.std.toFixed(2)}
+                </p>
+              </td>
+              <td className="px-5 py-5 bg-[#161B22] text-sm border-b-2 border-[#0D1117]">
+                <p className="text-white whitespace-no-wrap">
+                  {value.min.toFixed(2)}
+                </p>
+              </td>
+              <td className="px-5 py-5 bg-[#161B22] text-sm border-b-2 border-[#0D1117]">
+                <p className="text-white whitespace-no-wrap">
+                  {value.max.toFixed(2)}
+                </p>
+              </td>
+              <td className="px-5 py-5 bg-[#161B22] text-sm border-b-2 border-[#0D1117]">
+                <p className="text-white whitespace-no-wrap">
+                  {value['25%'].toFixed(2)}
+                </p>
+              </td>
+              <td className="px-5 py-5 bg-[#161B22] text-sm border-b-2 border-[#0D1117]">
+                <p className="text-white whitespace-no-wrap">
+                  {value['50%'].toFixed(2)}
+                </p>
+              </td>
+              <td className="px-5 py-5 bg-[#161B22] text-sm border-b-2 border-[#0D1117]">
+                <p className="text-white whitespace-no-wrap">
+                  {value['75%'].toFixed(2)}
+                </p>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
 const ScoreHistogram = (props) => {
+  let data = props.data;
+
+  data = data.slice(0, 7);
+
   const chartRef = useRef(null);
-  const chartInstance = useRef(null); // Reference to store the chart instance
+  const chartInstance = useRef(null);
 
   useEffect(() => {
     const myChartRef = chartRef.current.getContext('2d');
 
-    // If there's an existing chart instance, destroy it
     if (chartInstance.current) {
       chartInstance.current.destroy();
     }
 
-    // Creating a new chart instance
+    const dataA = data.map((item) => item['solved']['easy']);
+    const dataB = data.map((item) => item['solved']['medium']);
+    const dataC = data.map((item) => item['solved']['hard']);
+
     chartInstance.current = new Chart(myChartRef, {
       type: 'bar',
       data: {
-        labels: [
-          '<800k',
-          '800k-1.6M',
-          '1.6M-2.4M',
-          '2.4M-3.2M',
-          '3.2M-4M',
-          '>4M',
-        ],
+        labels: data.map((item) => item['name']),
         datasets: [
           {
-            label: '% of Users',
-            data: [20, 30, 25, 10, 10, 5],
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)',
-            ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)',
-            ],
+            label: 'Easy',
+            data: dataA,
+            backgroundColor: '#a3e78ecc',
+            borderColor: '#a3e78e',
+            borderWidth: 1,
+          },
+          {
+            label: 'Medium',
+            data: dataB,
+            backgroundColor: '#f3ea90cc',
+            borderColor: '#f3ea90',
+            borderWidth: 1,
+          },
+          {
+            label: 'Hard',
+            data: dataC,
+            backgroundColor: '#f390cacc',
+            borderColor: '#f390ca',
             borderWidth: 1,
           },
         ],
       },
       options: {
         scales: {
+          x: {
+            stacked: true,
+          },
           y: {
-            beginAtZero: true,
+            stacked: true,
           },
         },
       },
     });
 
-    // Cleanup function to destroy chart instance when component unmounts
     return () => {
       if (chartInstance.current) {
         chartInstance.current.destroy();
       }
     };
-  }, []); // Make sure to include any dependencies here if your chart data is dynamic
+  }, [data]); // Make sure to include 'data' in the dependency array if it's dynamic
 
   return (
     <div>
+      <h1 class="text-center">Problems Solved by Type</h1>
       <canvas ref={chartRef} width="400" height="100" class="m-4"></canvas>
     </div>
   );
@@ -101,7 +193,7 @@ const UserList = (props) => {
 
   return (
     <>
-      <ScoreHistogram />
+      <ScoreHistogram data={users} />
 
       {users.map((user, index) => (
         <div
@@ -139,6 +231,8 @@ const UserList = (props) => {
           </div>
         </div>
       ))}
+
+      <StatsTable summaryStats={stats} />
     </>
   );
 };
