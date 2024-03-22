@@ -6,6 +6,7 @@ import sqlite3
 import json
 import pandas as pd
 from datetime import datetime
+from tqdm import tqdm
 
 app = FastAPI()
 
@@ -159,7 +160,7 @@ def repull_replace_data():
 
     cur = con.cursor()
 
-    for user in users:
+    for user in tqdm(users):
         data = pull.pull_data(user[1])
 
         all_data[user[1]] = data
@@ -187,10 +188,43 @@ def repull_replace_data():
     con.commit()
     con.close()
 
+def add_starting_data():
+    con = sqlite3.connect("ranking.db")
+    cur = con.cursor()
+
+    start_data = [
+        [99991, 'hansonn', 470919, 64, 94, 13, '2024-02-12 20:02:36.785595'],
+        [99992, '2003kevinle', 702659, 53, 62, 0, '2024-02-12 20:02:36.795578'],
+        [99993, 'feliciafengg', 784868, 75, 26, 0, '2024-02-12 20:02:36.842753'],
+        [99994, 'realchef', 891656, 63, 28, 0, '2024-02-12 20:02:36.712859'],
+        [99995, 'normando', 939765, 43, 35, 3, '2024-02-12 20:02:36.813943'],
+        [99996, 'AroopB', 1033796, 31, 39, 0, '2024-02-12 20:02:36.733985'],
+        [99997, 'jakeroggenbuck', 1151340, 50, 8, 2, '2024-02-12 20:02:36.722913'],
+        [99998, 'siddharthmmani', 1673868, 27, 6, 0, '2024-02-12 20:02:36.804582'],
+        [99999, 'ahujaanish11', 1718014, 21, 11, 0, '2024-02-12 20:02:36.852473'],
+        [100000, 'andchen1', 2425496, 13, 3, 0, '2024-02-12 20:02:36.833592'],
+        [100001, 'atata6', 3114099, 12, 1, 0, '2024-02-12 20:02:36.869488'],
+        [100002, 'vshl', 4476769, 3, 0, 0, '2024-02-12 20:02:36.824410'],
+        [100003, 'AggieWorker', 5000001, 2, 0, 0, '2024-02-12 20:02:36.775176'],
+        [100004, 'isabellovecandy', 5000001, 0, 0, 0, '2024-02-12 20:02:36.860291'],
+    ]
+
+    for user in start_data:
+        print((*user[1:],))
+
+        should = input(": ")
+        if should == "Y":
+            cur.execute(
+                "INSERT into user_rank VALUES(NULL, ?, ?, ?, ?, ?, ?)",
+                (*user[1:],),
+            )
+
 
 setup_database()
 
-# repull_replace_data()
+# add_starting_data()
+
+repull_replace_data()
 
 
 @app.get("/")
