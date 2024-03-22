@@ -1,4 +1,6 @@
 # Leater Board
+![image](https://github.com/JakeRoggenbuck/leaterboard/assets/35516367/0320b18e-7f08-4d6f-91d1-ea1bb9481025)
+
 
 ## Objective
 
