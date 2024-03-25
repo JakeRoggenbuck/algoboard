@@ -7,6 +7,7 @@ import json
 import pandas as pd
 from datetime import datetime
 from tqdm import tqdm
+import argparse
 
 app = FastAPI()
 
@@ -182,11 +183,19 @@ def repull_replace_data():
 
         cur.execute(
             "INSERT into user_rank VALUES(NULL, ?, ?, ?, ?, ?, ?)",
-            (user[1], data["ranking"], data["easySolved"], data["mediumSolved"], data["hardSolved"], datetime.now(),),
+            (
+                user[1],
+                data["ranking"],
+                data["easySolved"],
+                data["mediumSolved"],
+                data["hardSolved"],
+                datetime.now(),
+            ),
         )
 
     con.commit()
     con.close()
+
 
 def add_starting_data():
     con = sqlite3.connect("ranking.db")
@@ -218,13 +227,6 @@ def add_starting_data():
                 "INSERT into user_rank VALUES(NULL, ?, ?, ?, ?, ?, ?)",
                 (*user[1:],),
             )
-
-
-setup_database()
-
-# add_starting_data()
-
-repull_replace_data()
 
 
 @app.get("/")
@@ -291,3 +293,50 @@ def get_board(board_id: str):
     summary_statistics = df.describe().to_dict()
 
     return {"participants": all_rows, "stats": summary_statistics}
+
+
+def parser():
+    print(
+        r"""
+      _ _____   ___
+     | |  __ \ / _ \
+     | | |__) | | | | ___  _ __ __ _
+ _   | |  _  /| | | |/ _ \| '__/ _` |
+| |__| | | \ \| |_| | (_) | | | (_| |
+ \____/|_|  \_\\___(_)___/|_|  \__, |
+                                __/ |
+                               |___/
+         """
+    )
+
+    print(app)
+    print(dir(app))
+
+    parse = argparse.ArgumentParser(description="LeaterBoard Backend CLI")
+    parse.add_argument(
+        "-p",
+        "--pull",
+        help="Pull new data",
+        action="store_true",
+    )
+    parse.add_argument(
+        "-s",
+        "--setup",
+        help="Setup the database (can be run anytime)",
+        action="store_true",
+    )
+
+    return parse
+
+
+if __name__ == "__main__":
+    parse = parser()
+    args = parse.parse_args()
+
+    if args.pull:
+        repull_replace_data()
+
+    if args.setup:
+        setup_database()
+
+    # add_starting_data()
