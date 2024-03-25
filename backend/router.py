@@ -295,23 +295,56 @@ def get_board(board_id: str):
     return {"participants": all_rows, "stats": summary_statistics}
 
 
-def parser():
+def print_startup():
     print(
-        r"""
-      _ _____   ___
+        r"""      _ _____   ___
      | |  __ \ / _ \
      | | |__) | | | | ___  _ __ __ _
  _   | |  _  /| | | |/ _ \| '__/ _` |
 | |__| | | \ \| |_| | (_) | | | (_| |
  \____/|_|  \_\\___(_)___/|_|  \__, |
                                 __/ |
-                               |___/
+LeaterBoard Backend CLI        |___/
+=====================================
          """
     )
 
-    print(app)
-    print(dir(app))
+    con = sqlite3.connect("ranking.db")
+    cur = con.cursor()
 
+    user_ranks = cur.execute(
+        "SELECT count(*) FROM user_rank",
+    ).fetchone()[0]
+    boards = cur.execute("SELECT count(*) FROM boards").fetchone()[0]
+
+    problems = cur.execute(
+        "SELECT easy_solved, med_solved, hard_solved FROM users",
+    ).fetchall()
+
+    lw_problems = cur.execute(
+        """SELECT u.easy_solved, u.med_solved, u.hard_solved
+        FROM users as u
+        JOIN boards_users ON u.id = boards_users.user_id
+        JOIN boards ON boards_users.board_id = boards.id
+        WHERE boards.urlname = "leaterworks";""",
+    ).fetchall()
+
+    count = 0
+    for p in problems:
+        count += p[0] + p[1] + p[2]
+
+    lw_count = 0
+    for p in lw_problems:
+        lw_count += p[0] + p[1] + p[2]
+
+    print(f"Boards: {boards}")
+    print(f"Entries: {user_ranks}")
+    print(f"Problems Solved: {count}")
+    print(f"Problems Solved (Just LeaterWorks): {lw_count}")
+    print()
+
+
+def parser():
     parse = argparse.ArgumentParser(description="LeaterBoard Backend CLI")
     parse.add_argument(
         "-p",
@@ -329,14 +362,19 @@ def parser():
     return parse
 
 
+print_startup()
+
 if __name__ == "__main__":
     parse = parser()
     args = parse.parse_args()
 
-    if args.pull:
-        repull_replace_data()
-
     if args.setup:
         setup_database()
+
+    elif args.pull:
+        repull_replace_data()
+
+    else:
+        parse.print_help()
 
     # add_starting_data()
