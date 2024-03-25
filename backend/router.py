@@ -229,6 +229,30 @@ def add_starting_data():
             )
 
 
+def count_problems(board: str):
+    con = sqlite3.connect("ranking.db")
+    cur = con.cursor()
+
+    problems = cur.execute(
+        """SELECT u.easy_solved, u.med_solved, u.hard_solved
+        FROM users as u
+        JOIN boards_users ON u.id = boards_users.user_id
+        JOIN boards ON boards_users.board_id = boards.id
+        WHERE boards.urlname = ?;""",
+        (board,),
+    ).fetchall()
+
+    counts = {"all": 0, "easy": 0, "medium": 0, "hard": 0}
+
+    for p in problems:
+        counts["all"] += p[0] + p[1] + p[2]
+        counts["easy"] += p[0]
+        counts["medium"] += p[1]
+        counts["hard"] += p[2]
+
+    return counts
+
+
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
@@ -259,6 +283,11 @@ def get_entries():
     val = cur.execute("SELECT * FROM user_rank")
 
     return val.fetchall()
+
+
+@app.get("/boards/{board_id}")
+def get_count(board_id: str):
+    return count_problems(board_id)
 
 
 @app.get("/boards/{board_id}")
@@ -317,30 +346,13 @@ LeaterBoard Backend CLI        |___/
     ).fetchone()[0]
     boards = cur.execute("SELECT count(*) FROM boards").fetchone()[0]
 
-    problems = cur.execute(
-        "SELECT easy_solved, med_solved, hard_solved FROM users",
-    ).fetchall()
-
-    lw_problems = cur.execute(
-        """SELECT u.easy_solved, u.med_solved, u.hard_solved
-        FROM users as u
-        JOIN boards_users ON u.id = boards_users.user_id
-        JOIN boards ON boards_users.board_id = boards.id
-        WHERE boards.urlname = "leaterworks";""",
-    ).fetchall()
-
-    count = 0
-    for p in problems:
-        count += p[0] + p[1] + p[2]
-
-    lw_count = 0
-    for p in lw_problems:
-        lw_count += p[0] + p[1] + p[2]
+    count = count_problems("everyone")
+    lw_count = count_problems("leaterworks")
 
     print(f"Boards: {boards}")
-    print(f"Entries: {user_ranks}")
-    print(f"Problems Solved: {count}")
-    print(f"Problems Solved (Just LeaterWorks): {lw_count}")
+    print(f"Entries: {user_ranks}\n")
+    print(f"Problems Solved:\n\t{count}\n")
+    print(f"Problems Solved (Just LeaterWorks):\n\t{lw_count}")
     print()
 
 
