@@ -218,7 +218,7 @@ const UserList = (props) => {
                 <div className="font-semibold text-md">{user.name}</div>
                 <div className="text-md">
                   solved: {user.solved.easy} easy, {user.solved.medium} medium,{' '}
-                  {user.solved.hard} hard
+					{user.solved.hard} hard, total: {user.solved.easy + user.solved.medium + user.solved.hard}
                 </div>
               </div>
             </div>

@@ -286,11 +286,6 @@ def get_entries():
 
 
 @app.get("/boards/{board_id}")
-def get_count(board_id: str):
-    return count_problems(board_id)
-
-
-@app.get("/boards/{board_id}")
 def get_board(board_id: str):
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
@@ -321,7 +316,11 @@ def get_board(board_id: str):
     df = pd.json_normalize(all_rows, sep='_')
     summary_statistics = df.describe().to_dict()
 
-    return {"participants": all_rows, "stats": summary_statistics}
+    return {
+        "participants": all_rows,
+        "stats": summary_statistics,
+        "counts": count_problems(board_id),
+    }
 
 
 def print_startup():
