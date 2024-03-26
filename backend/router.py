@@ -253,6 +253,71 @@ def count_problems(board: str):
     return counts
 
 
+def add_user(username: str, verbose: bool = False):
+    con = sqlite3.connect("ranking.db")
+    cur = con.cursor()
+
+    cur.execute(
+        "INSERT into users VALUES(NULL, ?, ?, ?, ?, ?)",
+        (username, 0, 0, 0, 0),
+    )
+
+    if verbose:
+        print(f"Added {username}")
+
+    con.commit()
+    con.close()
+
+
+def add_user_to_board(username: str, board: str, verbose: bool = False):
+    con = sqlite3.connect("ranking.db")
+    cur = con.cursor()
+
+    board_id = cur.execute("SELECT id FROM boards WHERE urlname = ?", (board,)).fetchone()
+    user_id = cur.execute("SELECT id FROM users WHERE name = ?", (username,)).fetchone()
+
+    cur.execute(
+        "INSERT into boards_users VALUES(?, ?)",
+        (
+            board_id[0],
+            user_id[0],
+        ),
+    )
+
+    if verbose:
+        print(f"Added {username} to {board}")
+
+    con.commit()
+    con.close()
+
+
+def update_board_participant_counts(verbose=True):
+    con = sqlite3.connect("ranking.db")
+    cur = con.cursor()
+
+    cur.execute(
+        """SELECT board_id, COUNT(user_id) as user_count
+        FROM boards_users
+        GROUP BY board_id"""
+    )
+
+    board_user_counts = cur.fetchall()
+
+    for board_id, user_count in board_user_counts:
+        if verbose:
+            print(board_id, user_count)
+
+        cur.execute(
+            """UPDATE boards
+            SET participants = ?
+            WHERE id = ?""",
+            (user_count, board_id),
+        )
+
+    con.commit()
+    con.close()
+
+
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
@@ -364,6 +429,22 @@ def parser():
         action="store_true",
     )
     parse.add_argument(
+        "-a",
+        "--add",
+        help="Add new user",
+    )
+    parse.add_argument(
+        "-b",
+        "--board",
+        help="Add user to board [user:board]",
+    )
+    parse.add_argument(
+        "-u",
+        "--update_participant_counts",
+        help="Update participant counts",
+        action="store_true",
+    )
+    parse.add_argument(
         "-s",
         "--setup",
         help="Setup the database (can be run anytime)",
@@ -384,6 +465,16 @@ if __name__ == "__main__":
 
     elif args.pull:
         repull_replace_data()
+
+    elif args.add:
+        add_user(args.add, verbose=True)
+
+    elif args.update_participant_counts:
+        update_board_participant_counts(verbose=True)
+
+    elif args.board:
+        user, board = args.board.split(":")
+        add_user_to_board(user, board, verbose=True)
 
     else:
         parse.print_help()
