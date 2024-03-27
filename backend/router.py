@@ -70,10 +70,14 @@ def setup_database():
             FOREIGN KEY(user_id) REFERENCES users(id))"""
         )
 
-        cur.execute("INSERT into boards VALUES(NULL, 'Everyone', 'everyone', 1)")
+        cur.execute(
+            "INSERT into boards VALUES(NULL, 'Everyone', 'everyone', 1)",
+        )
         board_id = cur.lastrowid
 
-        cur.execute("INSERT into boards VALUES(NULL, 'LeaterWorks', 'leaterworks', 1)")
+        cur.execute(
+            "INSERT into boards VALUES(NULL, 'LeaterWorks', 'leaterworks', 1)",
+        )
         works_id = cur.lastrowid
 
         with open("../old-backend/aggieworks-swe-3-9-2024.json") as file:
@@ -95,7 +99,13 @@ def setup_database():
 
                 cur.execute(
                     "INSERT into users VALUES(NULL, ?, ?, ?, ?, ?)",
-                    (username, rank, easy["count"], med["count"], hard["count"]),
+                    (
+                        username,
+                        rank,
+                        easy["count"],
+                        med["count"],
+                        hard["count"],
+                    ),
                 )
 
                 user_id = cur.lastrowid
@@ -137,17 +147,6 @@ def setup_database():
         con.commit()
         con.close()
 
-        # cur.execute(
-        #     """CREATE TABLE ranking(
-        #     id INTEGER PRIMARY KEY,
-        #     name TEXT NOT NULL,
-        #     rank INTEGER NOT NULL,
-        #     easy_solved INTEGER NOT NULL,
-        #     med_solved INTEGER NOT NULL,
-        #     hard_solved INTEGER NOT NULL,
-        #     time timestamp)"""
-        # )
-
 
 def repull_replace_data():
     con = sqlite3.connect("ranking.db")
@@ -177,7 +176,9 @@ def repull_replace_data():
         )
 
         cur.execute(
-            "UPDATE users SET rank=?, easy_solved=?, med_solved=?, hard_solved=? WHERE name=?",
+            """UPDATE users
+            SET rank=?, easy_solved=?, med_solved=?, hard_solved=?
+            WHERE name=?""",
             *to_update,
         )
 
@@ -197,28 +198,37 @@ def repull_replace_data():
     con.close()
 
 
+START_DATA = [
+    [99991, 'hansonn', 470919, 64, 94, 13, '2024-02-12 20:02:36.785595'],
+    [99992, '2003kevinle', 702659, 53, 62, 0, '2024-02-12 20:02:36.795578'],
+    [99993, 'feliciafengg', 784868, 75, 26, 0, '2024-02-12 20:02:36.842753'],
+    [99994, 'realchef', 891656, 63, 28, 0, '2024-02-12 20:02:36.712859'],
+    [99995, 'normando', 939765, 43, 35, 3, '2024-02-12 20:02:36.813943'],
+    [99996, 'AroopB', 1033796, 31, 39, 0, '2024-02-12 20:02:36.733985'],
+    [99997, 'jakeroggenbuck', 1151340, 50, 8, 2, '2024-02-12 20:02:36.722913'],
+    [99998, 'siddharthmmani', 1673868, 27, 6, 0, '2024-02-12 20:02:36.804582'],
+    [99999, 'ahujaanish11', 1718014, 21, 11, 0, '2024-02-12 20:02:36.852473'],
+    [100000, 'andchen1', 2425496, 13, 3, 0, '2024-02-12 20:02:36.833592'],
+    [100001, 'atata6', 3114099, 12, 1, 0, '2024-02-12 20:02:36.869488'],
+    [100002, 'vshl', 4476769, 3, 0, 0, '2024-02-12 20:02:36.824410'],
+    [100003, 'AggieWorker', 5000001, 2, 0, 0, '2024-02-12 20:02:36.775176'],
+    [
+        100004,
+        'isabellovecandy',
+        5000001,
+        0,
+        0,
+        0,
+        '2024-02-12 20:02:36.860291',
+    ],
+]
+
+
 def add_starting_data():
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
 
-    start_data = [
-        [99991, 'hansonn', 470919, 64, 94, 13, '2024-02-12 20:02:36.785595'],
-        [99992, '2003kevinle', 702659, 53, 62, 0, '2024-02-12 20:02:36.795578'],
-        [99993, 'feliciafengg', 784868, 75, 26, 0, '2024-02-12 20:02:36.842753'],
-        [99994, 'realchef', 891656, 63, 28, 0, '2024-02-12 20:02:36.712859'],
-        [99995, 'normando', 939765, 43, 35, 3, '2024-02-12 20:02:36.813943'],
-        [99996, 'AroopB', 1033796, 31, 39, 0, '2024-02-12 20:02:36.733985'],
-        [99997, 'jakeroggenbuck', 1151340, 50, 8, 2, '2024-02-12 20:02:36.722913'],
-        [99998, 'siddharthmmani', 1673868, 27, 6, 0, '2024-02-12 20:02:36.804582'],
-        [99999, 'ahujaanish11', 1718014, 21, 11, 0, '2024-02-12 20:02:36.852473'],
-        [100000, 'andchen1', 2425496, 13, 3, 0, '2024-02-12 20:02:36.833592'],
-        [100001, 'atata6', 3114099, 12, 1, 0, '2024-02-12 20:02:36.869488'],
-        [100002, 'vshl', 4476769, 3, 0, 0, '2024-02-12 20:02:36.824410'],
-        [100003, 'AggieWorker', 5000001, 2, 0, 0, '2024-02-12 20:02:36.775176'],
-        [100004, 'isabellovecandy', 5000001, 0, 0, 0, '2024-02-12 20:02:36.860291'],
-    ]
-
-    for user in start_data:
+    for user in START_DATA:
         print((*user[1:],))
 
         should = input(": ")
@@ -269,12 +279,37 @@ def add_user(username: str, verbose: bool = False):
     con.close()
 
 
+def add_board(board: str, verbose: bool = False):
+    con = sqlite3.connect("ranking.db")
+    cur = con.cursor()
+
+    urlname = board.lower()
+    urlname = urlname.replace(" ", "-")
+
+    cur.execute(
+        "INSERT into boards VALUES(NULL, ?, ?)",
+        (board, urlname, 0),
+    )
+
+    if verbose:
+        print(f"Added {board} as {urlname}")
+
+    con.commit()
+    con.close()
+
+
 def add_user_to_board(username: str, board: str, verbose: bool = False):
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
 
-    board_id = cur.execute("SELECT id FROM boards WHERE urlname = ?", (board,)).fetchone()
-    user_id = cur.execute("SELECT id FROM users WHERE name = ?", (username,)).fetchone()
+    board_id = cur.execute(
+        "SELECT id FROM boards WHERE urlname = ?",
+        (board,),
+    ).fetchone()
+    user_id = cur.execute(
+        "SELECT id FROM users WHERE name = ?",
+        (username,),
+    ).fetchone()
 
     cur.execute(
         "INSERT into boards_users VALUES(?, ?)",
@@ -289,6 +324,19 @@ def add_user_to_board(username: str, board: str, verbose: bool = False):
 
     con.commit()
     con.close()
+
+
+def get_last_entry_time() -> str:
+    con = sqlite3.connect("ranking.db")
+    cur = con.cursor()
+
+    timestamp = cur.execute(
+        "SELECT whentime FROM user_rank ORDER BY whentime DESC LIMIT 1;",
+    ).fetchone()
+
+    con.close()
+
+    return timestamp[0]
 
 
 def update_board_participant_counts(verbose=True):
@@ -417,6 +465,7 @@ LeaterBoard Backend CLI        |___/
     print(f"Entries: {user_ranks}\n")
     print(f"Problems Solved:\n\t{count}\n")
     print(f"Problems Solved (Just LeaterWorks):\n\t{lw_count}")
+    print("\nLast pulled:", get_last_entry_time())
     print()
 
 
@@ -429,14 +478,19 @@ def parser():
         action="store_true",
     )
     parse.add_argument(
-        "-a",
-        "--add",
+        "-c",
+        "--create",
         help="Add new user",
+    )
+    parse.add_argument(
+        "-a",
+        "--assign",
+        help="Add user to board [user:board]",
     )
     parse.add_argument(
         "-b",
         "--board",
-        help="Add user to board [user:board]",
+        help="Create a new board",
     )
     parse.add_argument(
         "-u",
@@ -472,9 +526,12 @@ if __name__ == "__main__":
     elif args.update_participant_counts:
         update_board_participant_counts(verbose=True)
 
-    elif args.board:
-        user, board = args.board.split(":")
+    elif args.assign:
+        user, board = args.assign.split(":")
         add_user_to_board(user, board, verbose=True)
+
+    elif args.board:
+        add_board(args.board)
 
     else:
         parse.print_help()
