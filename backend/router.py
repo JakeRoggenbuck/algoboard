@@ -520,8 +520,8 @@ if __name__ == "__main__":
     elif args.pull:
         repull_replace_data()
 
-    elif args.add:
-        add_user(args.add, verbose=True)
+    elif args.create:
+        add_user(args.create, verbose=True)
 
     elif args.update_participant_counts:
         update_board_participant_counts(verbose=True)
