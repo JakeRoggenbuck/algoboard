@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 import pull
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
@@ -390,10 +390,21 @@ def get_boards():
 
 
 @app.get("/entries")
-def get_entries():
+def get_entries(
+    start_date: datetime = Query(None),
+    end_date: datetime = Query(None),
+):
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
-    val = cur.execute("SELECT * FROM user_rank")
+
+    if start_date and end_date:
+        query = """
+            SELECT * FROM user_rank
+            WHERE whentime BETWEEN ? AND ?
+        """
+        val = cur.execute(query, (start_date, end_date))
+    else:
+        val = cur.execute("SELECT * FROM user_rank")
 
     return val.fetchall()
 

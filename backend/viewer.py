@@ -2,10 +2,19 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import requests
+from datetime import datetime, timedelta
 
-res = requests.get("http://127.0.0.1:8000/entries")
+
+params = {
+    "start_date": (datetime.now() - timedelta(days=7)).isoformat(),
+    "end_date": datetime.now().isoformat(),
+}
+
+res = requests.get("http://127.0.0.1:8000/entries", params=params)
 
 data = res.json()
+
+print(data)
 
 columns = [
     "id",
