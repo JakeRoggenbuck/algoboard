@@ -173,15 +173,6 @@ const ScoreLine = (props) => {
             (val, _, arr) => val.y === arr[0].y,
           );
 
-          // const xValues = data.map((d) => new Date(d).getTime());
-          // console.log(xValues)
-          // const minX = new Date(Math.min(...xValues))
-          //   .toISOString()
-          //   .split('T')[0];
-          // const maxX = new Date(Math.max(...xValues))
-          //   .toISOString()
-          //   .split('T')[0];
-
           // If y values change, include this dataset
           if (!allYValuesSame_easy) {
             acc.push({
@@ -255,9 +246,6 @@ const ScoreLine = (props) => {
             },
           },
           x: {
-            // Assuming 'name' is a string, no specific configuration needed here,
-            // but you can adjust if your x-axis is date-based or numerical
-
             title: {
               display: true,
               text: 'Date', // X-axis label
@@ -271,22 +259,6 @@ const ScoreLine = (props) => {
             },
             min: minDate,
             max: maxDate,
-
-            // type: 'time',
-            // time: {
-            //   // Luxon format string
-            //   tooltipFormat: '',
-            // },
-
-            // type: 'time',
-
-            // time: {
-            //   unit: 'day',
-            // },
-            // bounds: 'data', // This ensures the axis is only as wide as the data
-            // ticks: {
-            //   source: 'data', // This makes sure ticks come only from the data points you have
-            // },
           },
         },
       },
