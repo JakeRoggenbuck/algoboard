@@ -389,22 +389,41 @@ def get_boards():
     return all_rows
 
 
-@app.get("/entries")
+@app.get("/entries/{board_id}")
 def get_entries(
+    board_id: str,
     start_date: datetime = Query(None),
     end_date: datetime = Query(None),
 ):
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
 
+    real_board_id = cur.execute(
+        "SELECT id FROM boards WHERE boards.urlname = ?",
+        (board_id,),
+    ).fetchone()[0]
+
     if start_date and end_date:
         query = """
-            SELECT * FROM user_rank
-            WHERE whentime BETWEEN ? AND ?
+        SELECT ur.*
+        FROM user_rank ur
+        INNER JOIN users u ON ur.name = u.name
+        INNER JOIN boards_users bu ON u.id = bu.user_id
+        WHERE bu.board_id = ?
+        AND ur.whentime BETWEEN ? AND ?
         """
-        val = cur.execute(query, (start_date, end_date))
+        val = cur.execute(query, (real_board_id, start_date, end_date))
     else:
-        val = cur.execute("SELECT * FROM user_rank")
+        val = cur.execute(
+            """
+        SELECT ur.*
+        FROM user_rank ur
+        INNER JOIN users u ON ur.name = u.name
+        INNER JOIN boards_users bu ON u.id = bu.user_id
+        WHERE bu.board_id = ?
+        """,
+            (real_board_id,),
+        )
 
     return val.fetchall()
 
