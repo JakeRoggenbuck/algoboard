@@ -284,19 +284,36 @@ const UserList = (props) => {
   const [stats, setStats] = useState({});
   const [entries, setEntries] = useState([]);
 
+  var end_date = new Date();
+  var start_date = new Date(end_date.getTime() - 8 * 24 * 60 * 60 * 1000);
+
   useEffect(() => {
     const fetchEntries = async () => {
       try {
-        const response = await fetch(
-          'http://127.0.0.1:8000/entries/' + props.boardId,
-        );
+        const formattedStartDate = start_date
+          ? new Date(start_date).toISOString()
+          : undefined;
+        const formattedEndDate = end_date
+          ? new Date(end_date).toISOString()
+          : undefined;
+
+        console.log(formattedStartDate);
+        console.log(formattedEndDate);
+
+        const queryParams = new URLSearchParams({
+          ...(formattedStartDate && { start_date: formattedStartDate }),
+          ...(formattedEndDate && { end_date: formattedEndDate }),
+        }).toString();
+        const url = `http://127.0.0.1:8000/entries/${props.boardId}?${queryParams}`;
+
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
         setEntries(data);
       } catch (error) {
-        console.error('Could not fetch users:', error);
+        console.error('Could not fetch entries:', error);
       }
     };
 
