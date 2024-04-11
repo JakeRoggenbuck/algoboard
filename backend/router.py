@@ -411,6 +411,7 @@ def get_entries(
         INNER JOIN boards_users bu ON u.id = bu.user_id
         WHERE bu.board_id = ?
         AND ur.whentime BETWEEN ? AND ?
+        ORDER BY ur.whentime ASC
         """
         val = cur.execute(query, (real_board_id, start_date, end_date))
     else:
@@ -421,6 +422,7 @@ def get_entries(
         INNER JOIN users u ON ur.name = u.name
         INNER JOIN boards_users bu ON u.id = bu.user_id
         WHERE bu.board_id = ?
+        ORDER BY ur.whentime ASC
         """,
             (real_board_id,),
         )
