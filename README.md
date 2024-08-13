@@ -31,3 +31,6 @@ Inspire organization members to improve their algorithmic problem solving skills
 ## Changelog content
 
 ![image](https://github.com/user-attachments/assets/a2a3b6c6-62b8-4f27-a68c-650ab0cba44e)
+
+![image](https://github.com/user-attachments/assets/9c8d83d9-c590-43ba-a02b-788403aad493)
+
