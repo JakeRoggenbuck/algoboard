@@ -541,8 +541,6 @@ def parser():
     return parse
 
 
-print_startup()
-
 if __name__ == "__main__":
     parse = parser()
     args = parse.parse_args()
@@ -568,5 +566,7 @@ if __name__ == "__main__":
 
     else:
         parse.print_help()
+
+    print_startup()
 
     # add_starting_data()
