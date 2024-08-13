@@ -3,11 +3,13 @@ import React, { useState, useEffect } from 'react';
 
 export default function Component() {
   const [isStatusOkay, setIsStatusOkay] = useState(false);
+  const [latency, setLatency] = useState(0);
 
   useEffect(() => {
     // Function to fetch status
     const fetchStatus = async () => {
       try {
+        var starttime = new Date();
         const response = await fetch('http://50.116.10.252:8000/status');
         const data = await response.json();
 
@@ -17,6 +19,9 @@ export default function Component() {
         } else {
           setIsStatusOkay(false);
         }
+
+        var endtime = new Date();
+        setLatency(endtime - starttime);
       } catch (error) {
         console.error('Failed to fetch status:', error);
         setIsStatusOkay(false);
@@ -30,7 +35,7 @@ export default function Component() {
   return (
     <div className="bg-[#0D1117] min-h-screen flex flex-col justify-between">
       <header className="text-white p-5 text-sm flex justify-between items-center">
-        <p class="text-xl">leaterboard.com</p>
+        <p class="text-xl">Leaterboard</p>
         {/* <nav> */}
         {/*   <a */}
         {/*     className="text-white hover:text-blue-300 transition-colors duration-300" */}
@@ -58,6 +63,7 @@ export default function Component() {
           )}
 
           <span>API Status</span>
+          <p className="text-gray-400"> - {latency}ms</p>
         </div>
         <span>Contact: bug@jr0.org</span>
       </footer>
