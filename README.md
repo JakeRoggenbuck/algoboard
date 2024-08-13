@@ -27,3 +27,7 @@ Inspire organization members to improve their algorithmic problem solving skills
 6. Rank improvement
     - (e.g. Rank 1,000,000 before, now rank 900,000)
     - Get everyone who has solved 1 problem to reach top 1,000,000
+
+## Changelog content
+
+![image](https://github.com/user-attachments/assets/a2a3b6c6-62b8-4f27-a68c-650ab0cba44e)
