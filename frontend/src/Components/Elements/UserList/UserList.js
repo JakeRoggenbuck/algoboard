@@ -284,6 +284,7 @@ const UserList = (props) => {
   const [stats, setStats] = useState({});
   const [entries, setEntries] = useState([]);
   const [show_line, set_show_line] = useState(true);
+  const [update_time, set_update_time] = useState('');
 
   const change_to_line_view = () => {
     set_show_line(true);
@@ -321,6 +322,8 @@ const UserList = (props) => {
         }
         const data = await response.json();
         setEntries(data);
+
+        set_update_time(String(data[0][6]).slice(0, -10));
       } catch (error) {
         console.error('Could not fetch entries:', error);
       }
@@ -354,18 +357,21 @@ const UserList = (props) => {
       {show_line ? (
         <>
           <ScoreLine data={entries} />
-          <button
-            onClick={change_to_line_view}
-            className="mx-1 my-4 text-xl mt-8 bg-blue-800 text-white font-bold py-2 px-4 rounded"
-          >
-            Show Problems Solved Graph
-          </button>
-          <button
-            onClick={change_to_histagran_view}
-            className="mx-1 my-4 text-xl mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Show Score Histogram
-          </button>
+
+          <div className="flex flex-row">
+            <button
+              onClick={change_to_line_view}
+              className="mx-1 my-4 text-md mt-8 bg-blue-800 text-white font-bold py-2 px-4 rounded"
+            >
+              Show Problems Solved Graph
+            </button>
+            <button
+              onClick={change_to_histagran_view}
+              className="mx-1 my-4 text-md mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Show Score Histogram
+            </button>
+          </div>
         </>
       ) : (
         <>
@@ -373,18 +379,20 @@ const UserList = (props) => {
 
           <button
             onClick={change_to_line_view}
-            className="mx-1 my-4 text-xl mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="mx-1 my-4 text-md mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             Show Problems Solved Graph
           </button>
           <button
             onClick={change_to_histagran_view}
-            className="mx-1 my-4 text-xl mt-8 bg-blue-800 text-white font-bold py-2 px-4 rounded"
+            className="mx-1 my-4 text-md mt-8 bg-blue-800 text-white font-bold py-2 px-4 rounded"
           >
             Show Score Histogram
           </button>
         </>
       )}
+
+      <p className="mx-2 my-4 text-gray-400">Last updated: {update_time}</p>
 
       {users.map((user, index) => (
         <div
