@@ -8,7 +8,7 @@ export default function Component() {
     // Function to fetch status
     const fetchStatus = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/status');
+        const response = await fetch('http://50.116.10.252:8000/status');
         const data = await response.json();
 
         // Check the status and update the state

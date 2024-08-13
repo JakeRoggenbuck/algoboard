@@ -7,7 +7,7 @@ const BoardList = () => {
   useEffect(() => {
     const fetchBoards = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/boards/');
+        const response = await fetch('http://50.116.10.252:8000/boards/');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
