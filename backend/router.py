@@ -13,7 +13,8 @@ app = FastAPI()
 
 origins = [
     "http://localhost:3000",
-    "http://50.116.10.252:3000"
+    "http://50.116.10.252:3000",
+    "https://leaterboard.vercel.app"
 ]
 
 app.add_middleware(
