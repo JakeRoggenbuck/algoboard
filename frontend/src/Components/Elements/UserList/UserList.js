@@ -283,6 +283,15 @@ const UserList = (props) => {
   const [users, setUsers] = useState([]);
   const [stats, setStats] = useState({});
   const [entries, setEntries] = useState([]);
+  const [show_line, set_show_line] = useState(true);
+
+  const change_to_line_view = () => {
+    set_show_line(true);
+  };
+
+  const change_to_histagran_view = () => {
+    set_show_line(false);
+  };
 
   var end_date = new Date();
   var start_date = new Date(end_date.getTime() - 8 * 24 * 60 * 60 * 1000);
@@ -342,9 +351,40 @@ const UserList = (props) => {
 
   return (
     <>
-      {/* <ScoreHistogram data={users} /> */}
+      {show_line ? (
+        <>
+          <ScoreLine data={entries} />
+          <button
+            onClick={change_to_line_view}
+            className="mx-1 my-4 text-xl mt-8 bg-blue-800 text-white font-bold py-2 px-4 rounded"
+          >
+            Show Problems Solved Graph
+          </button>
+          <button
+            onClick={change_to_histagran_view}
+            className="mx-1 my-4 text-xl mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Show Score Histogram
+          </button>
+        </>
+      ) : (
+        <>
+          <ScoreHistogram data={users} />
 
-      <ScoreLine data={entries} />
+          <button
+            onClick={change_to_line_view}
+            className="mx-1 my-4 text-xl mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Show Problems Solved Graph
+          </button>
+          <button
+            onClick={change_to_histagran_view}
+            className="mx-1 my-4 text-xl mt-8 bg-blue-800 text-white font-bold py-2 px-4 rounded"
+          >
+            Show Score Histogram
+          </button>
+        </>
+      )}
 
       {users.map((user, index) => (
         <div
