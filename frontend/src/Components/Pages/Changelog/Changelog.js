@@ -12,7 +12,19 @@ export default function Changelog() {
       </header>
 
       <div className="flex flex-col text-white items-center min-h-screen my-4">
-        <div className="m-4">
+        <div className="m-4 w-3/5">
+          <h1 className="my-4 font-bold text-white text-5xl">
+            Changelog for 8-15-2024
+          </h1>
+
+          <h3 className="my-4 text-white text-2xl">- Fixed last modified</h3>
+          <p className="my-4">
+            Before it was displaying the time of the first data point for that
+            week by mistake.
+          </p>
+        </div>
+
+        <div className="m-4 w-3/5">
           <h1 className="my-4 font-bold text-white text-5xl">
             Changelog for 8-12-2024
           </h1>

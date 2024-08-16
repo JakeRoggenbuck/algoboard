@@ -16,20 +16,24 @@ function Boards() {
               </li>
 
               <li aria-current="page" className="text-gray-500">
-                  Boards
+                Boards
               </li>
             </ol>
           </nav>
         </div>
 
         <div className="space-x-2">
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Invite to My Board
-          </button>
+          <a target="_blank" href="https://forms.gle/X7PboDVHygyBvTxcA">
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Invite to My Board
+            </button>
+          </a>
 
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Join New Board
-          </button>
+          <a target="_blank" href="https://forms.gle/X7PboDVHygyBvTxcA">
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Join New Board
+            </button>
+          </a>
         </div>
       </div>
 
