@@ -329,7 +329,7 @@ const UserList = (props) => {
         const data = await response.json();
         setEntries(data);
 
-        set_update_time(String(data[0][6]).slice(0, -10));
+        set_update_time(String(data[data.length - 1][6]).slice(0, -10));
       } catch (error) {
         console.error('Could not fetch entries:', error);
       }
