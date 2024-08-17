@@ -82,6 +82,11 @@ export default function Component() {
           <span>API Status</span>
           <p className="text-gray-400"> - {latency}ms</p>
         </div>
+        <span>
+          <a target="_blank" href="https://forms.gle/o2pdkqeoXEVV7kw78">
+            Feedback Form
+          </a>
+        </span>
         <span>Contact: bug@jr0.org</span>
       </footer>
     </div>
