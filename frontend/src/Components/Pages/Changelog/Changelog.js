@@ -28,6 +28,12 @@ export default function Changelog() {
             <img className="m-2" src={icon_image} />
             <img className="m-2" src={banner_logo} />
           </p>
+
+          <h3 className="my-4 text-white text-2xl">- Add page titles</h3>
+          <p className="my-4">
+            I set page titles programmatically by board and I also added meta
+            descriptions and a name in the manifest.json file.
+          </p>
         </div>
 
         <div className="m-4 w-3/5">
