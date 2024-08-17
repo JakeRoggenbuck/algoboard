@@ -6,6 +6,8 @@ export default function Component() {
   const [isStatusOkay, setIsStatusOkay] = useState(false);
   const [latency, setLatency] = useState(0);
 
+  document.title = 'Home - Leaterboard';
+
   useEffect(() => {
     // Function to fetch status
     const fetchStatus = async () => {

@@ -3,6 +3,9 @@ import { Link, useParams } from 'react-router-dom';
 
 export default function Board() {
   const params = useParams();
+
+  document.title = params.boardId + ' - Leaterboard';
+
   return (
     <div className="bg-[#0D1117] text-white min-h-screen p-8">
       <div className="flex justify-between items-center mb-6">

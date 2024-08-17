@@ -2,6 +2,8 @@ import BoardList from '../../../Components/Elements/BoardList/BoardList';
 import { Link } from 'react-router-dom';
 
 function Boards() {
+  document.title = 'Boards - Leaterboard';
+
   return (
     <div className="bg-[#0D1117] text-white min-h-screen p-8">
       <div className="flex justify-between items-center mb-6">
