@@ -9,7 +9,10 @@ export default function Changelog() {
     <div className="bg-[#0D1117] min-h-screen flex flex-col justify-between">
       <header className="text-white p-5 text-sm flex justify-between items-center">
         <Link to="/">
-          <p class="text-xl">Leaterboard</p>
+          <div className="flex flex-row items-center">
+            <img className="m-2 h-8" src={icon_image} />
+            <p class="text-xl">Leaterboard</p>
+          </div>
         </Link>
       </header>
 
