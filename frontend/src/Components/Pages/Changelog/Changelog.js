@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import latency_image from '../../../images/api-status-latency.png';
 import histagram_image from '../../../images/histagram.png';
+import banner_logo from '../../../images/banner_logo.png';
+import icon_image from '../../../images/icon_image.png';
 
 export default function Changelog() {
   return (
@@ -12,6 +14,19 @@ export default function Changelog() {
       </header>
 
       <div className="flex flex-col text-white items-center min-h-screen my-4">
+        <div className="m-4 w-3/5">
+          <h1 className="my-4 font-bold text-white text-5xl">
+            Changelog for 8-16-2024
+          </h1>
+
+          <h3 className="my-4 text-white text-2xl">- New icon</h3>
+          <p className="my-4">
+            I created a new icon based on a previous logo idea.
+            <img className="m-2" src={icon_image} />
+            <img className="m-2" src={banner_logo} />
+          </p>
+        </div>
+
         <div className="m-4 w-3/5">
           <h1 className="my-4 font-bold text-white text-5xl">
             Changelog for 8-15-2024

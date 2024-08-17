@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
+import icon_image from '../../../images/icon_image.png';
 
 export default function Component() {
   const [isStatusOkay, setIsStatusOkay] = useState(false);
@@ -34,8 +35,11 @@ export default function Component() {
 
   return (
     <div className="bg-[#0D1117] min-h-screen flex flex-col justify-between">
-      <header className="text-white p-5 text-sm flex justify-between items-center">
-        <p class="text-xl">Leaterboard</p>
+      <header className="text-white p-5 text-sm flex flex justify-between items-center">
+        <div className="flex flex-row items-center">
+          <img className="m-2 h-8" src={icon_image} />
+          <p class="text-xl">Leaterboard</p>
+        </div>
         {/* <nav> */}
         {/*   <a */}
         {/*     className="text-white hover:text-blue-300 transition-colors duration-300" */}
@@ -55,7 +59,10 @@ export default function Component() {
             </button>
           </Link>
 
-          <Link to="/changelog" className="mx-1 text-blue-600 hover:text-blue-800">
+          <Link
+            to="/changelog"
+            className="mx-1 text-blue-600 hover:text-blue-800"
+          >
             <button className="text-xl mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               View Changelog
             </button>
