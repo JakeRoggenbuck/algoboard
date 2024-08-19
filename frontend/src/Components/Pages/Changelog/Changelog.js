@@ -3,6 +3,8 @@ import latency_image from '../../../images/api-status-latency.png';
 import histagram_image from '../../../images/histagram.png';
 import banner_logo from '../../../images/banner_logo.png';
 import icon_image from '../../../images/icon_image.png';
+import hourly_updates from '../../../images/hourly-updates.png';
+import new_update_script from '../../../images/new_update_script.png';
 
 export default function Changelog() {
   return (
@@ -17,6 +19,26 @@ export default function Changelog() {
       </header>
 
       <div className="flex flex-col text-white items-center min-h-screen my-4">
+        <div className="m-4 w-3/5">
+          <h1 className="my-4 font-bold text-white text-5xl">
+            Changelog for 8-19-2024
+          </h1>
+
+          <h3 className="my-4 text-white text-2xl">
+            - More Frequent Data Updates
+          </h3>
+          <p className="my-4">
+            I added updates that happen every 3 hours instead of once a day.
+          </p>
+          <img className="m-2" src={hourly_updates} />
+
+          <p className="my-4">
+            I also changed the update script to update every three hours. This
+            is a simple solution and it works great.
+          </p>
+          <img className="m-2" src={new_update_script} />
+        </div>
+
         <div className="m-4 w-3/5">
           <h1 className="my-4 font-bold text-white text-5xl">
             Changelog for 8-16-2024
