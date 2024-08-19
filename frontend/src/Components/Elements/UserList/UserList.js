@@ -124,17 +124,17 @@ const ScoreLine = (props) => {
         (acc, [name, records]) => {
           // Map the records to the desired data structure, e.g., extracting the rank and date
           const data_easy = records.map(([rank, easy, med, hard, date]) => ({
-            x: date.split(' ')[0], // Assuming you want to plot the date on the x-axis
+            x: date.split('.')[0], // Assuming you want to plot the date on the x-axis
             y: easy, // and the rank on the y-axis
           }));
 
           const data_med = records.map(([rank, easy, med, hard, date]) => ({
-            x: date.split(' ')[0], // Use the date as the x-axis value
+            x: date.split('.')[0], // Use the date as the x-axis value
             y: med, // Using the med value for the y-axis
           }));
 
           const data_hard = records.map(([rank, easy, med, hard, date]) => ({
-            x: date.split(' ')[0], // Use the date as the x-axis value
+            x: date.split('.')[0], // Use the date as the x-axis value
             y: hard, // Using the hard value for the y-axis
           }));
 
@@ -257,9 +257,9 @@ const ScoreLine = (props) => {
 
             type: 'time',
             time: {
-              unit: 'day',
-              parser: 'yyyy-MM-dd', // Specify the format of your dates
-              tooltipFormat: 'yyyy-MM-dd', // Format for the tooltip
+              unit: 'hour', // Change to hour
+              parser: 'yyyy-MM-dd HH:mm:ss', // Parse with date and time
+              tooltipFormat: 'yyyy-MM-dd HH:mm', // Tooltip with date and time
             },
             min: minDate,
             max: maxDate,
