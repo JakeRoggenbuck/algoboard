@@ -4,7 +4,6 @@ import StatsTable from '../StatsTable/StatsTable';
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-luxon';
-import { useLocation } from 'react-router-dom';
 
 import Chart from 'chart.js/auto';
 
