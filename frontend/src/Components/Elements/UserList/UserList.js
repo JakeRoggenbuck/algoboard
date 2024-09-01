@@ -248,6 +248,8 @@ const ScoreLine = (props) => {
               display: true,
               text: 'Problems by difficulty', // Y-axis label
             },
+            type: 'logarithmic',
+            min: 1,
           },
           x: {
             title: {
@@ -278,7 +280,7 @@ const ScoreLine = (props) => {
   return (
     <div>
       <h1 class="text-center">Problems Solved by Type in the Last Week</h1>
-      <canvas ref={chartRef} width="400" height="100" class="m-4"></canvas>
+      <canvas ref={chartRef} width="400" height="150" class="m-4"></canvas>
     </div>
   );
 };
@@ -289,7 +291,7 @@ const UserList = (props) => {
   const [entries, setEntries] = useState([]);
   const [show_line, set_show_line] = useState(true);
   const [update_time, set_update_time] = useState('');
-  const [days_to_graph, set_days_to_graph] = useState(8);
+  const [days_to_graph, set_days_to_graph] = useState(20);
 
   const change_to_line_view = () => {
     set_show_line(true);
