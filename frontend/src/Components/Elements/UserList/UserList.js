@@ -80,7 +80,7 @@ const ScoreHistogram = (props) => {
   return (
     <div>
       <h1 class="text-center">Problems Solved by Type</h1>
-      <canvas ref={chartRef} width="400" height="100" class="m-4"></canvas>
+      <canvas ref={chartRef} width="400" height="110" class="m-4"></canvas>
     </div>
   );
 };
@@ -260,6 +260,7 @@ const ScoreLine = (props) => {
             type: 'time',
             time: {
               unit: 'hour', // Change to hour
+              unitStepSize: 3,
               parser: 'yyyy-MM-dd HH:mm:ss', // Parse with date and time
               tooltipFormat: 'yyyy-MM-dd HH:mm', // Tooltip with date and time
             },
@@ -280,7 +281,7 @@ const ScoreLine = (props) => {
   return (
     <div>
       <h1 class="text-center">Problems Solved by Type in the Last Week</h1>
-      <canvas ref={chartRef} width="400" height="150" class="m-4"></canvas>
+      <canvas ref={chartRef} width="400" height="110" class="m-4"></canvas>
     </div>
   );
 };
@@ -291,7 +292,7 @@ const UserList = (props) => {
   const [entries, setEntries] = useState([]);
   const [show_line, set_show_line] = useState(true);
   const [update_time, set_update_time] = useState('');
-  const [days_to_graph, set_days_to_graph] = useState(20);
+  const [days_to_graph, set_days_to_graph] = useState(8);
 
   const change_to_line_view = () => {
     set_show_line(true);
@@ -345,6 +346,46 @@ const UserList = (props) => {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
+
+        const diamond = ' 💎';
+        const rocket = ' 🚀';
+        const raised_hands = ' 🙌';
+        const tada = ' 🎉';
+        const star = ' ⭐';
+        const star2 = ' 🌟';
+        const lightning = ' ⚡';
+        const exclamation = ' ❗';
+        const exclamation2 = ' ‼️';
+
+        for (let i = 0; i < data.participants.length; i++) {
+          if (data.participants[i].score < 1000000) {
+            data.participants[i].name += lightning;
+          }
+
+          if (data.participants[i].score < 500000) {
+            data.participants[i].name += star;
+          }
+
+          if (data.participants[i].score < 400000) {
+            data.participants[i].name += star2;
+          }
+
+          if (data.participants[i].score < 300000) {
+            data.participants[i].name += raised_hands;
+          }
+
+          if (data.participants[i].score < 200000) {
+            data.participants[i].name += tada;
+          }
+
+          if (data.participants[i].score < 100000) {
+            data.participants[i].name += rocket;
+          }
+
+          if (data.participants[i].score < 50000) {
+            data.participants[i].name += diamond;
+          }
+        }
 
         // Chef Mode Easter Egg
         if (window.location.search === '?chef') {
