@@ -259,8 +259,8 @@ const ScoreLine = (props) => {
 
             type: 'time',
             time: {
-              unit: 'hour', // Change to hour
-              unitStepSize: 3,
+              // unit: 'hour', // Change to hour
+              // unitStepSize: 3,
               parser: 'yyyy-MM-dd HH:mm:ss', // Parse with date and time
               tooltipFormat: 'yyyy-MM-dd HH:mm', // Tooltip with date and time
             },
