@@ -46,6 +46,33 @@ export default function Changelog() {
               button! Your feedback is really important to me!
             </p>
             <Feedback />
+
+            <h3 className="my-4 text-white text-2xl">
+              - Make buttons the same width
+            </h3>
+            <p className="my-4">
+              I also made these two buttons the same width.
+            </p>
+
+            <div className="flex flex-row space-x-2">
+              <Link
+                to="/boards"
+                className="mx-1 text-blue-600 hover:text-blue-800"
+              >
+                <button className="text-xl mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-40 whitespace-nowrap">
+                  View Boards
+                </button>
+              </Link>
+
+              <Link
+                to="/changelog"
+                className="mx-1 text-blue-600 hover:text-blue-800"
+              >
+                <button className="text-xl mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-40 whitespace-nowrap">
+                  Changelog
+                </button>
+              </Link>
+            </div>
           </div>
 
           <div className="m-4 w-3/5">
