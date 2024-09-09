@@ -75,6 +75,9 @@ export default function Changelog() {
                 </button>
               </Link>
             </div>
+
+            <h3 className="my-4 text-white text-2xl">- Settle on a name</h3>
+            <p className="my-4">This website is now called The Board!</p>
           </div>
 
           <div className="m-4 w-3/5">
