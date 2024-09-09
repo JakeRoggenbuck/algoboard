@@ -39,7 +39,7 @@ export default function Component() {
   return (
     <>
       <div className="bg-[#0D1117] min-h-screen flex flex-col justify-between">
-      <Feedback />
+        <Feedback />
         <header className="text-white p-5 text-sm flex flex justify-between items-center">
           <div className="flex flex-row items-center">
             <img className="m-2 h-8" src={icon_image} />
@@ -59,12 +59,12 @@ export default function Component() {
             Leaterboard
           </h1>
 
-          <div className="flex flex-row">
+          <div className="flex flex-row space-x-2">
             <Link
               to="/boards"
               className="mx-1 text-blue-600 hover:text-blue-800"
             >
-              <button className="text-xl mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              <button className="text-xl mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-40 whitespace-nowrap">
                 View Boards
               </button>
             </Link>
@@ -73,8 +73,8 @@ export default function Component() {
               to="/changelog"
               className="mx-1 text-blue-600 hover:text-blue-800"
             >
-              <button className="text-xl mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                View Changelog
+              <button className="text-xl mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-40 whitespace-nowrap">
+                Changelog
               </button>
             </Link>
           </div>
