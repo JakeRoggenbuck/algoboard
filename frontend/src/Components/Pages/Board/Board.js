@@ -6,7 +6,7 @@ import Feedback from '../../../Components/Elements/Feedback/Feedback.js';
 export default function Board() {
   const params = useParams();
 
-  document.title = params.boardId + ' - Leaterboard';
+  document.title = params.boardId + ' - The Board';
 
   return (
     <>

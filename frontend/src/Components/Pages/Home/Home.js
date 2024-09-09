@@ -7,7 +7,7 @@ export default function Component() {
   const [isStatusOkay, setIsStatusOkay] = useState(false);
   const [latency, setLatency] = useState(0);
 
-  document.title = 'Home - Leaterboard';
+  document.title = 'Home - The Board';
 
   useEffect(() => {
     // Function to fetch status
@@ -43,7 +43,7 @@ export default function Component() {
         <header className="text-white p-5 text-sm flex flex justify-between items-center">
           <div className="flex flex-row items-center">
             <img className="m-2 h-8" src={icon_image} />
-            <p class="text-xl">Leaterboard</p>
+            <p class="text-xl">The Board</p>
           </div>
           {/* <nav> */}
           {/*   <a */}
@@ -56,7 +56,7 @@ export default function Component() {
         </header>
         <main className="flex flex-col items-center justify-center flex-grow">
           <h1 className="text-white text-8xl font-extrabold mb-8">
-            Leaterboard
+            The Board
           </h1>
 
           <div className="flex flex-row space-x-2">

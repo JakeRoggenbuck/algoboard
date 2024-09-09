@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Feedback from '../../../Components/Elements/Feedback/Feedback.js';
 
 function Boards() {
-  document.title = 'Boards - Leaterboard';
+  document.title = 'Boards - The Board';
 
   return (
     <>

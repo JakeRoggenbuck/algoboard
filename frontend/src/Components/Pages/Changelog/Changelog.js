@@ -18,6 +18,8 @@ export default function Changelog() {
   const exclamation = ' ❗';
   const exclamation2 = ' ‼️';
 
+  document.title = 'Changelog - The Board';
+
   return (
     <>
       <Feedback />
@@ -26,7 +28,7 @@ export default function Changelog() {
           <Link to="/">
             <div className="flex flex-row items-center">
               <img className="m-2 h-8" src={icon_image} />
-              <p class="text-xl">Leaterboard</p>
+              <p class="text-xl">The Board</p>
             </div>
           </Link>
         </header>
