@@ -34,6 +34,22 @@ export default function Changelog() {
         <div className="flex flex-col text-white items-center min-h-screen my-4">
           <div className="m-4 w-3/5">
             <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 9-08-2024
+            </h1>
+
+            <h3 className="my-4 text-white text-2xl">- Feedback Banner</h3>
+            <p className="my-4">
+              I added a banner at the top of the screen that looks like this! I
+              am also adding it below in case I change the banner or take the
+              banner down at some point in the future. This is the real feedback
+              banner and it actually works! You can click the feedback form
+              button! Your feedback is really important to me!
+            </p>
+            <Feedback />
+          </div>
+
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
               Changelog for 9-07-2024
             </h1>
 
