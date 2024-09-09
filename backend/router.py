@@ -14,6 +14,7 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",
     "http://50.116.10.252:3000",
+    "http://algoboard.org",
     "https://leaterboard.vercel.app"
 ]
 
