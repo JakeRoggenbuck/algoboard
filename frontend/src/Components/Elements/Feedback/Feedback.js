@@ -44,7 +44,7 @@ export default function Feedback() {
                 >
                   <circle r={1} cx={1} cy={1} />
                 </svg>
-                Let me know what you think about the LeaterBoard!
+                Let me know what you think about the AlgoBoard!
               </p>
               <a
                 href="https://forms.gle/o2pdkqeoXEVV7kw78"

@@ -18,7 +18,7 @@ export default function Changelog() {
   const exclamation = ' ❗';
   const exclamation2 = ' ‼️';
 
-  document.title = 'Changelog - The Board';
+  document.title = 'Changelog - AlgoBoard';
 
   return (
     <>
@@ -28,12 +28,22 @@ export default function Changelog() {
           <Link to="/">
             <div className="flex flex-row items-center">
               <img className="m-2 h-8" src={icon_image} />
-              <p class="text-xl">The Board</p>
+              <p class="text-xl">AlgoBoard</p>
             </div>
           </Link>
         </header>
 
         <div className="flex flex-col text-white items-center min-h-screen my-4">
+
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 9-09-2024
+            </h1>
+
+            <h3 className="my-4 text-white text-2xl">- Change name</h3>
+            <p className="my-4">
+				This is now called the AlgoBoard!
+            </p>
           <div className="m-4 w-3/5">
             <h1 className="my-4 font-bold text-white text-5xl">
               Changelog for 9-08-2024
