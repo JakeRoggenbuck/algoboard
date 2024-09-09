@@ -5,6 +5,7 @@ import banner_logo from '../../../images/banner_logo.png';
 import icon_image from '../../../images/icon_image.png';
 import hourly_updates from '../../../images/hourly-updates.png';
 import new_update_script from '../../../images/new_update_script.png';
+import Feedback from '../../../Components/Elements/Feedback/Feedback.js';
 
 export default function Changelog() {
   const diamond = ' 💎';
@@ -18,113 +19,116 @@ export default function Changelog() {
   const exclamation2 = ' ‼️';
 
   return (
-    <div className="bg-[#0D1117] min-h-screen flex flex-col justify-between">
-      <header className="text-white p-5 text-sm flex justify-between items-center">
-        <Link to="/">
-          <div className="flex flex-row items-center">
-            <img className="m-2 h-8" src={icon_image} />
-            <p class="text-xl">Leaterboard</p>
+    <>
+      <Feedback />
+      <div className="bg-[#0D1117] min-h-screen flex flex-col justify-between">
+        <header className="text-white p-5 text-sm flex justify-between items-center">
+          <Link to="/">
+            <div className="flex flex-row items-center">
+              <img className="m-2 h-8" src={icon_image} />
+              <p class="text-xl">Leaterboard</p>
+            </div>
+          </Link>
+        </header>
+
+        <div className="flex flex-col text-white items-center min-h-screen my-4">
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 9-07-2024
+            </h1>
+
+            <h3 className="my-4 text-white text-2xl">- Score badges</h3>
+            <p className="my-4">
+              I added badges for reaching different scores. These badges get
+              displayed next to your username.
+              <ul>
+                <li>score &lt; 1,000,000 = {lightning}</li>
+                <li>score &lt; 500,000 = {star}</li>
+                <li>score &lt; 400,000 = {star2}</li>
+                <li>score &lt; 300,000 = {raised_hands}</li>
+                <li>score &lt; 200,000 = {tada}</li>
+                <li>score &lt; 100,000 = {rocket}</li>
+                <li>score &lt; 50,000 = {diamond}</li>
+              </ul>
+            </p>
           </div>
-        </Link>
-      </header>
 
-      <div className="flex flex-col text-white items-center min-h-screen my-4">
-        <div className="m-4 w-3/5">
-          <h1 className="my-4 font-bold text-white text-5xl">
-            Changelog for 9-07-2024
-          </h1>
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 8-19-2024
+            </h1>
 
-          <h3 className="my-4 text-white text-2xl">- Score badges</h3>
-          <p className="my-4">
-            I added badges for reaching different scores. These badges get
-            displayed next to your username.
-            <ul>
-              <li>score &lt; 1,000,000 = {lightning}</li>
-              <li>score &lt; 500,000 = {star}</li>
-              <li>score &lt; 400,000 = {star2}</li>
-              <li>score &lt; 300,000 = {raised_hands}</li>
-              <li>score &lt; 200,000 = {tada}</li>
-              <li>score &lt; 100,000 = {rocket}</li>
-              <li>score &lt; 50,000 = {diamond}</li>
-            </ul>
-          </p>
-        </div>
+            <h3 className="my-4 text-white text-2xl">
+              - More Frequent Data Updates
+            </h3>
+            <p className="my-4">
+              I added updates that happen every 3 hours instead of once a day.
+            </p>
+            <img className="m-2" src={hourly_updates} />
 
-        <div className="m-4 w-3/5">
-          <h1 className="my-4 font-bold text-white text-5xl">
-            Changelog for 8-19-2024
-          </h1>
+            <p className="my-4">
+              I also changed the update script to update every three hours. This
+              is a simple solution and it works great.
+            </p>
+            <img className="m-2" src={new_update_script} />
+          </div>
 
-          <h3 className="my-4 text-white text-2xl">
-            - More Frequent Data Updates
-          </h3>
-          <p className="my-4">
-            I added updates that happen every 3 hours instead of once a day.
-          </p>
-          <img className="m-2" src={hourly_updates} />
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 8-16-2024
+            </h1>
 
-          <p className="my-4">
-            I also changed the update script to update every three hours. This
-            is a simple solution and it works great.
-          </p>
-          <img className="m-2" src={new_update_script} />
-        </div>
+            <h3 className="my-4 text-white text-2xl">- New icon</h3>
+            <p className="my-4">
+              I created a new icon based on a previous logo idea.
+              <img className="m-2" src={icon_image} />
+              <img className="m-2" src={banner_logo} />
+            </p>
 
-        <div className="m-4 w-3/5">
-          <h1 className="my-4 font-bold text-white text-5xl">
-            Changelog for 8-16-2024
-          </h1>
+            <h3 className="my-4 text-white text-2xl">- Add page titles</h3>
+            <p className="my-4">
+              I set page titles programmatically by board and I also added meta
+              descriptions and a name in the manifest.json file.
+            </p>
+          </div>
 
-          <h3 className="my-4 text-white text-2xl">- New icon</h3>
-          <p className="my-4">
-            I created a new icon based on a previous logo idea.
-            <img className="m-2" src={icon_image} />
-            <img className="m-2" src={banner_logo} />
-          </p>
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 8-15-2024
+            </h1>
 
-          <h3 className="my-4 text-white text-2xl">- Add page titles</h3>
-          <p className="my-4">
-            I set page titles programmatically by board and I also added meta
-            descriptions and a name in the manifest.json file.
-          </p>
-        </div>
+            <h3 className="my-4 text-white text-2xl">- Fixed last modified</h3>
+            <p className="my-4">
+              Before it was displaying the time of the first data point for that
+              week by mistake.
+            </p>
+          </div>
 
-        <div className="m-4 w-3/5">
-          <h1 className="my-4 font-bold text-white text-5xl">
-            Changelog for 8-15-2024
-          </h1>
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 8-12-2024
+            </h1>
+            <h3 className="my-4 text-white text-2xl">- Added Changelog</h3>
+            <p className="my-4">
+              I created this page, the "changelog" to show what I update.
+            </p>
+            <h3 className="my-4 text-white text-2xl">- API Status Latency</h3>
+            <p className="my-4">
+              I added a tag that displays the API latency on the home page.
+            </p>
 
-          <h3 className="my-4 text-white text-2xl">- Fixed last modified</h3>
-          <p className="my-4">
-            Before it was displaying the time of the first data point for that
-            week by mistake.
-          </p>
-        </div>
+            <img src={latency_image} />
 
-        <div className="m-4 w-3/5">
-          <h1 className="my-4 font-bold text-white text-5xl">
-            Changelog for 8-12-2024
-          </h1>
-          <h3 className="my-4 text-white text-2xl">- Added Changelog</h3>
-          <p className="my-4">
-            I created this page, the "changelog" to show what I update.
-          </p>
-          <h3 className="my-4 text-white text-2xl">- API Status Latency</h3>
-          <p className="my-4">
-            I added a tag that displays the API latency on the home page.
-          </p>
+            <h3 className="my-4 text-white text-2xl">- Added a Histagram</h3>
+            <p className="my-4">
+              I added a Histagram view for the total score. I also added button
+              to switch between the views.
+            </p>
 
-          <img src={latency_image} />
-
-          <h3 className="my-4 text-white text-2xl">- Added a Histagram</h3>
-          <p className="my-4">
-            I added a Histagram view for the total score. I also added button to
-            switch between the views.
-          </p>
-
-          <img className="object-contain h-80" src={histagram_image} />
+            <img className="object-contain h-80" src={histagram_image} />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

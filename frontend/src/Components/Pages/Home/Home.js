@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import icon_image from '../../../images/icon_image.png';
+import Feedback from '../../../Components/Elements/Feedback/Feedback.js';
 
 export default function Component() {
   const [isStatusOkay, setIsStatusOkay] = useState(false);
@@ -36,60 +37,68 @@ export default function Component() {
   }, []); // The empty array means this effect runs once on mount
 
   return (
-    <div className="bg-[#0D1117] min-h-screen flex flex-col justify-between">
-      <header className="text-white p-5 text-sm flex flex justify-between items-center">
-        <div className="flex flex-row items-center">
-          <img className="m-2 h-8" src={icon_image} />
-          <p class="text-xl">Leaterboard</p>
-        </div>
-        {/* <nav> */}
-        {/*   <a */}
-        {/*     className="text-white hover:text-blue-300 transition-colors duration-300" */}
-        {/*     href="#" */}
-        {/*   > */}
-        {/*     About */}
-        {/*   </a> */}
-        {/* </nav> */}
-      </header>
-      <main className="flex flex-col items-center justify-center flex-grow">
-        <h1 className="text-white text-8xl font-extrabold mb-8">Leaterboard</h1>
+    <>
+      <div className="bg-[#0D1117] min-h-screen flex flex-col justify-between">
+      <Feedback />
+        <header className="text-white p-5 text-sm flex flex justify-between items-center">
+          <div className="flex flex-row items-center">
+            <img className="m-2 h-8" src={icon_image} />
+            <p class="text-xl">Leaterboard</p>
+          </div>
+          {/* <nav> */}
+          {/*   <a */}
+          {/*     className="text-white hover:text-blue-300 transition-colors duration-300" */}
+          {/*     href="#" */}
+          {/*   > */}
+          {/*     About */}
+          {/*   </a> */}
+          {/* </nav> */}
+        </header>
+        <main className="flex flex-col items-center justify-center flex-grow">
+          <h1 className="text-white text-8xl font-extrabold mb-8">
+            Leaterboard
+          </h1>
 
-        <div className="flex flex-row">
-          <Link to="/boards" className="mx-1 text-blue-600 hover:text-blue-800">
-            <button className="text-xl mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              View Boards
-            </button>
-          </Link>
+          <div className="flex flex-row">
+            <Link
+              to="/boards"
+              className="mx-1 text-blue-600 hover:text-blue-800"
+            >
+              <button className="text-xl mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                View Boards
+              </button>
+            </Link>
 
-          <Link
-            to="/changelog"
-            className="mx-1 text-blue-600 hover:text-blue-800"
-          >
-            <button className="text-xl mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              View Changelog
-            </button>
-          </Link>
-        </div>
-      </main>
-      <footer className="text-white p-5 text-sm flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          {isStatusOkay ? (
-            <CircleIcon className="text-green-500" />
-          ) : (
-            <CircleIcon className="text-red-500" />
-          )}
+            <Link
+              to="/changelog"
+              className="mx-1 text-blue-600 hover:text-blue-800"
+            >
+              <button className="text-xl mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                View Changelog
+              </button>
+            </Link>
+          </div>
+        </main>
+        <footer className="text-white p-5 text-sm flex justify-between items-center">
+          <div className="flex items-center space-x-2">
+            {isStatusOkay ? (
+              <CircleIcon className="text-green-500" />
+            ) : (
+              <CircleIcon className="text-red-500" />
+            )}
 
-          <span>API Status</span>
-          <p className="text-gray-400"> - {latency}ms</p>
-        </div>
-        <span>
-          <a target="_blank" href="https://forms.gle/o2pdkqeoXEVV7kw78">
-            Feedback Form
-          </a>
-        </span>
-        <span>Contact: bug@jr0.org</span>
-      </footer>
-    </div>
+            <span>API Status</span>
+            <p className="text-gray-400"> - {latency}ms</p>
+          </div>
+          <span>
+            <a target="_blank" href="https://forms.gle/o2pdkqeoXEVV7kw78">
+              Feedback Form
+            </a>
+          </span>
+          <span>Contact: bug@jr0.org</span>
+        </footer>
+      </div>
+    </>
   );
 }
 
