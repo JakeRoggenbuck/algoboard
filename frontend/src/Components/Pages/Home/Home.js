@@ -9,6 +9,7 @@ export default function Component() {
   const [latency, setLatency] = useState(0);
 
   document.title = 'Home - AlgoBoard';
+  const tada = ' 🎉';
 
   useEffect(() => {
     // Function to fetch status
@@ -64,7 +65,7 @@ export default function Component() {
           <h1 className="text-white text-8xl font-extrabold mb-8">AlgoBoard</h1>
           {solved != -9999 ? (
             <p className="text-2xl text-gray-400">
-              <b>{solved}</b> Problems Solved!
+              <b>{solved}</b> Problems Solved! {tada}
             </p>
           ) : (
             <p className="m-4"></p>
