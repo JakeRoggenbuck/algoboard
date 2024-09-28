@@ -341,6 +341,58 @@ def get_last_entry_time() -> str:
 
     return timestamp[0]
 
+def calculate_total_solved_on_board():
+    con = sqlite3.connect("ranking.db")
+    cur = con.cursor()
+
+    recent = cur.execute(
+        """
+        WITH RankedEntries AS (
+            SELECT name, easy_solved, med_solved, hard_solved, whentime,
+                    ROW_NUMBER() OVER (PARTITION BY name ORDER BY whentime DESC) AS rn
+            FROM user_rank
+        )
+        SELECT name, easy_solved, med_solved, hard_solved, whentime
+        FROM RankedEntries
+        WHERE rn = 1;
+        """
+    ).fetchall()
+
+    first = cur.execute(
+        """
+        WITH RankedEntries AS (
+            SELECT name, easy_solved, med_solved, hard_solved, whentime,
+                    ROW_NUMBER() OVER (PARTITION BY name ORDER BY whentime ASC) AS rn
+            FROM user_rank
+        )
+        SELECT name, easy_solved, med_solved, hard_solved, whentime
+        FROM RankedEntries
+        WHERE rn = 1;
+        """
+    ).fetchall()
+
+    con.close()
+
+    found = {}
+
+    for row in recent:
+        found[row[0]] = [(row[1], row[2], row[3])]
+
+    for row in first:
+        found[row[0]].append((row[1], row[2], row[3]))
+
+    sums = {"easy": 0, "med": 0, "hard": 0}
+
+    for _, v in found.items():
+        a = v[0]
+        b = v[1]
+
+        sums["easy"] += a[0] - b[0]
+        sums["med"] += a[1] - b[1]
+        sums["hard"] += a[2] - b[2]
+
+    return sums
+
 
 def update_board_participant_counts(verbose=True):
     con = sqlite3.connect("ranking.db")
@@ -390,6 +442,11 @@ def get_boards():
         all_rows.append({"id": row[2], "name": row[1], "participants": row[3]})
 
     return all_rows
+
+
+@app.get("/solved/")
+def get_solved():
+    return calculate_total_solved_on_board()
 
 
 @app.get("/entries/{board_id}")
@@ -495,6 +552,8 @@ LeaterBoard Backend CLI        |___/
 
     count = count_problems("everyone")
     lw_count = count_problems("leaterworks")
+
+    print("Solved: ", calculate_total_solved_on_board())
 
     print(f"Boards: {boards}")
     print(f"Entries: {user_ranks}\n")
