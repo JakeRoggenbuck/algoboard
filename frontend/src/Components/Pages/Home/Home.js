@@ -5,6 +5,7 @@ import Feedback from '../../../Components/Elements/Feedback/Feedback.js';
 
 export default function Component() {
   const [isStatusOkay, setIsStatusOkay] = useState(false);
+  const [solved, setSolved] = useState(-9999);
   const [latency, setLatency] = useState(0);
 
   document.title = 'Home - AlgoBoard';
@@ -30,6 +31,11 @@ export default function Component() {
         console.error('Failed to fetch status:', error);
         setIsStatusOkay(false);
       }
+
+      const response = await fetch('http://127.0.0.1:8000/solved');
+      const data = await response.json();
+
+      setSolved(data['easy'] + data['med'] + data['hard']);
     };
 
     // Call the fetch function
@@ -55,9 +61,14 @@ export default function Component() {
           {/* </nav> */}
         </header>
         <main className="flex flex-col items-center justify-center flex-grow">
-          <h1 className="text-white text-8xl font-extrabold mb-8">
-            AlgoBoard
-          </h1>
+          <h1 className="text-white text-8xl font-extrabold mb-8">AlgoBoard</h1>
+          {solved != -9999 ? (
+            <p className="text-2xl text-gray-400">
+              <b>{solved}</b> Problems Solved!
+            </p>
+          ) : (
+            <p className="m-4"></p>
+          )}
 
           <div className="flex flex-row space-x-2">
             <Link
