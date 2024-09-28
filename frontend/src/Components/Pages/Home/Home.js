@@ -33,7 +33,7 @@ export default function Component() {
         setIsStatusOkay(false);
       }
 
-      const response = await fetch('http://127.0.0.1:8000/solved');
+      const response = await fetch('http://50.116.10.252:8000/solved');
       const data = await response.json();
 
       setSolved(data['easy'] + data['med'] + data['hard']);
