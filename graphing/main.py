@@ -8,7 +8,7 @@ data = {
     "Score": [],
 }
 
-with open("./entries-backup.json") as file:
+with open("./backup-everyone.json") as file:
     RES = json.load(file)
 
 for entry in RES:
