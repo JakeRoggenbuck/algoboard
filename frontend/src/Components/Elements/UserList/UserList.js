@@ -292,7 +292,7 @@ const UserList = (props) => {
   const [entries, setEntries] = useState([]);
   const [show_line, set_show_line] = useState(true);
   const [update_time, set_update_time] = useState('');
-  const [days_to_graph, set_days_to_graph] = useState(8);
+  const [days_to_graph, set_days_to_graph] = useState(15);
 
   const change_to_line_view = () => {
     set_show_line(true);
