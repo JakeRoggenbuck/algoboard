@@ -165,6 +165,14 @@ def repull_replace_data():
 
     for user in tqdm(users):
         data = pull.pull_data(user[1])
+        ranking = pull.pull_rank(user[1])
+
+        data = {
+            "ranking": ranking["ranking"],
+            "easySolved": data["easySolved"],
+            "hardSolved": data["hardSolved"],
+            "mediumSolved": data["mediumSolved"]
+        }
 
         all_data[user[1]] = data
 
