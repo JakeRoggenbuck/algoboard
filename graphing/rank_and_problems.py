@@ -11,7 +11,7 @@ data = {
     "Hard": [],
 }
 
-with open("./backup-everyone.json") as file:
+with open("./everyone") as file:
     RES = json.load(file)
 
 for entry in RES:
