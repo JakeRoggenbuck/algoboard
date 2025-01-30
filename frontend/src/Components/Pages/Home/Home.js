@@ -6,6 +6,8 @@ import { Cpu, User, LogIn, Zap, LogOut } from "lucide-react";
 
 const CLIENT_ID = "Ov23liHgNhl3LvtjnyX7";
 
+const FEATURES = { login: false };
+
 export default function Component() {
   const [isStatusOkay, setIsStatusOkay] = useState(false);
   const [solved, setSolved] = useState(-9999);
@@ -123,42 +125,47 @@ export default function Component() {
           {/*     About */}
           {/*   </a> */}
           {/* </nav> */}
-          <div className="flex items-center space-x-4">
-            {localStorage.getItem("accessToken") ? (
-              <button
-                onClick={logout}
-                className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-full hover:from-cyan-600 hover:to-blue-700 transition h-10"
-              >
-                <LogOut className="mr-2" size={20} />
-                Sign Out
-              </button>
-            ) : (
-              <button
-                onClick={loginWithGitHub}
-                className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-full hover:from-cyan-600 hover:to-blue-700 transition h-10"
-              >
-                <LogIn className="mr-2" size={20} />
-                Sign In
-              </button>
-            )}
 
-            <div className="flex items-center space-x-2 bg-gray-800 rounded-full px-3 py-2 h-10">
-              {"avatar_url" in githubInfo ? (
-                <img
-                  src={githubInfo.avatar_url}
-                  height="24"
-                  width="24"
-                  className="rounded-full"
-                />
+          {FEATURES.login ? (
+            <div className="flex items-center space-x-4">
+              {localStorage.getItem("accessToken") ? (
+                <button
+                  onClick={logout}
+                  className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-full hover:from-cyan-600 hover:to-blue-700 transition h-10"
+                >
+                  <LogOut className="mr-2" size={20} />
+                  Sign Out
+                </button>
               ) : (
-                <User className="text-cyan-400" size={20} />
+                <button
+                  onClick={loginWithGitHub}
+                  className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-full hover:from-cyan-600 hover:to-blue-700 transition h-10"
+                >
+                  <LogIn className="mr-2" size={20} />
+                  Sign In
+                </button>
               )}
 
-              <span className="font-medium text-gray-200">
-                {githubInfo.login ? githubInfo.login : "Guest"}
-              </span>
+              <div className="flex items-center space-x-2 bg-gray-800 rounded-full px-3 py-2 h-10">
+                {"avatar_url" in githubInfo ? (
+                  <img
+                    src={githubInfo.avatar_url}
+                    height="24"
+                    width="24"
+                    className="rounded-full"
+                  />
+                ) : (
+                  <User className="text-cyan-400" size={20} />
+                )}
+
+                <span className="font-medium text-gray-200">
+                  {githubInfo.login ? githubInfo.login : "Guest"}
+                </span>
+              </div>
             </div>
-          </div>
+          ) : (
+            <></>
+          )}
         </header>
         <main className="flex flex-col items-center justify-center flex-grow">
           <h1 className="text-white text-8xl font-extrabold mb-8">AlgoBoard</h1>
