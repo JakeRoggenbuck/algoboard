@@ -8,11 +8,14 @@ const BoardList = () => {
     const fetchBoards = async () => {
       try {
         const response = await fetch('http://50.116.10.252:8000/boards/');
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
+
         const data = await response.json();
         setBoards(data);
+
       } catch (error) {
         console.error('Could not fetch boards:', error);
       }
