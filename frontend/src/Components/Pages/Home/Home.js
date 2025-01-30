@@ -6,7 +6,7 @@ import { Cpu, User, LogIn, Zap, LogOut } from "lucide-react";
 
 const CLIENT_ID = "Ov23liHgNhl3LvtjnyX7";
 
-const FEATURES = { login: false };
+const FEATURES = { login: true };
 
 export default function Component() {
   const [isStatusOkay, setIsStatusOkay] = useState(false);
