@@ -1,11 +1,11 @@
-import { useEffect, useState, useRef } from 'react';
-import StatsTable from '../StatsTable/StatsTable';
+import { useEffect, useState, useRef } from "react";
+import StatsTable from "../StatsTable/StatsTable";
 
-import React from 'react';
-import { Line } from 'react-chartjs-2';
-import 'chartjs-adapter-luxon';
+import React from "react";
+import { Line } from "react-chartjs-2";
+import "chartjs-adapter-luxon";
 
-import Chart from 'chart.js/auto';
+import Chart from "chart.js/auto";
 
 const features = {
   show_days_input: false,
@@ -20,40 +20,40 @@ const ScoreHistogram = (props) => {
   const chartInstance = useRef(null);
 
   useEffect(() => {
-    const myChartRef = chartRef.current.getContext('2d');
+    const myChartRef = chartRef.current.getContext("2d");
 
     if (chartInstance.current) {
       chartInstance.current.destroy();
     }
 
-    const dataA = data.map((item) => item['solved']['easy']);
-    const dataB = data.map((item) => item['solved']['medium']);
-    const dataC = data.map((item) => item['solved']['hard']);
+    const dataA = data.map((item) => item["solved"]["easy"]);
+    const dataB = data.map((item) => item["solved"]["medium"]);
+    const dataC = data.map((item) => item["solved"]["hard"]);
 
     chartInstance.current = new Chart(myChartRef, {
-      type: 'bar',
+      type: "bar",
       data: {
-        labels: data.map((item) => item['name']),
+        labels: data.map((item) => item["name"]),
         datasets: [
           {
-            label: 'Easy',
+            label: "Easy",
             data: dataA,
-            backgroundColor: '#a3e78ecc',
-            borderColor: '#a3e78e',
+            backgroundColor: "#a3e78ecc",
+            borderColor: "#a3e78e",
             borderWidth: 1,
           },
           {
-            label: 'Medium',
+            label: "Medium",
             data: dataB,
-            backgroundColor: '#f3ea90cc',
-            borderColor: '#f3ea90',
+            backgroundColor: "#f3ea90cc",
+            borderColor: "#f3ea90",
             borderWidth: 1,
           },
           {
-            label: 'Hard',
+            label: "Hard",
             data: dataC,
-            backgroundColor: '#f390cacc',
-            borderColor: '#f390ca',
+            backgroundColor: "#f390cacc",
+            borderColor: "#f390ca",
             borderWidth: 1,
           },
         ],
@@ -113,7 +113,7 @@ const ScoreLine = (props) => {
   const chartInstance = useRef(null);
 
   useEffect(() => {
-    const myChartRef = chartRef.current.getContext('2d');
+    const myChartRef = chartRef.current.getContext("2d");
 
     if (chartInstance.current) {
       chartInstance.current.destroy();
@@ -124,17 +124,17 @@ const ScoreLine = (props) => {
         (acc, [name, records]) => {
           // Map the records to the desired data structure, e.g., extracting the rank and date
           const data_easy = records.map(([rank, easy, med, hard, date]) => ({
-            x: date.split('.')[0], // Assuming you want to plot the date on the x-axis
+            x: date.split(".")[0], // Assuming you want to plot the date on the x-axis
             y: easy, // and the rank on the y-axis
           }));
 
           const data_med = records.map(([rank, easy, med, hard, date]) => ({
-            x: date.split('.')[0], // Use the date as the x-axis value
+            x: date.split(".")[0], // Use the date as the x-axis value
             y: med, // Using the med value for the y-axis
           }));
 
           const data_hard = records.map(([rank, easy, med, hard, date]) => ({
-            x: date.split('.')[0], // Use the date as the x-axis value
+            x: date.split(".")[0], // Use the date as the x-axis value
             y: hard, // Using the hard value for the y-axis
           }));
 
@@ -182,8 +182,8 @@ const ScoreLine = (props) => {
             acc.push({
               label: name, // Use the user's name as the label
               data: adjustedDataEasy,
-              backgroundColor: '#a3e78ecc',
-              borderColor: '#a3e78e',
+              backgroundColor: "#a3e78ecc",
+              borderColor: "#a3e78e",
               borderWidth: 1,
               fill: false,
             });
@@ -193,8 +193,8 @@ const ScoreLine = (props) => {
             acc.push({
               label: name, // Use the user's name as the label
               data: adjustedDataMed,
-              backgroundColor: '#f3ea90cc',
-              borderColor: '#f3ea90',
+              backgroundColor: "#f3ea90cc",
+              borderColor: "#f3ea90",
               borderWidth: 1,
               fill: false,
             });
@@ -204,8 +204,8 @@ const ScoreLine = (props) => {
             acc.push({
               label: name, // Use the user's name as the label
               data: adjustedDataHard,
-              backgroundColor: '#f390cacc',
-              borderColor: '#f390ca',
+              backgroundColor: "#f390cacc",
+              borderColor: "#f390ca",
               borderWidth: 1,
               fill: false,
             });
@@ -222,9 +222,9 @@ const ScoreLine = (props) => {
     let datasets = generateChartDatasets(transformedData);
 
     chartInstance.current = new Chart(myChartRef, {
-      type: 'line',
+      type: "line",
       data: {
-        labels: data.map((item) => item['name']), // Assuming 'name' is the category for each data point
+        labels: data.map((item) => item["name"]), // Assuming 'name' is the category for each data point
         datasets: datasets,
       },
       options: {
@@ -234,11 +234,11 @@ const ScoreLine = (props) => {
         responsive: true,
         plugins: {
           legend: {
-            position: 'top', // Adjust legend position as needed
+            position: "top", // Adjust legend position as needed
           },
           title: {
             display: true,
-            text: 'Problems Solved This Week', // Update title to reflect your data context
+            text: "Problems Solved This Week", // Update title to reflect your data context
           },
         },
         scales: {
@@ -246,23 +246,23 @@ const ScoreLine = (props) => {
             beginAtZero: false, // Change this based on your data's needs
             title: {
               display: true,
-              text: 'Problems by difficulty', // Y-axis label
+              text: "Problems by difficulty", // Y-axis label
             },
-            type: 'logarithmic',
+            type: "logarithmic",
             min: 1,
           },
           x: {
             title: {
               display: true,
-              text: 'Date', // X-axis label
+              text: "Date", // X-axis label
             },
 
-            type: 'time',
+            type: "time",
             time: {
               // unit: 'hour', // Change to hour
               // unitStepSize: 3,
-              parser: 'yyyy-MM-dd HH:mm:ss', // Parse with date and time
-              tooltipFormat: 'yyyy-MM-dd HH:mm', // Tooltip with date and time
+              parser: "yyyy-MM-dd HH:mm:ss", // Parse with date and time
+              tooltipFormat: "yyyy-MM-dd HH:mm", // Tooltip with date and time
             },
             min: minDate,
             max: maxDate,
@@ -291,7 +291,7 @@ const UserList = (props) => {
   const [stats, setStats] = useState({});
   const [entries, setEntries] = useState([]);
   const [show_line, set_show_line] = useState(true);
-  const [update_time, set_update_time] = useState('');
+  const [update_time, set_update_time] = useState("");
   const [days_to_graph, set_days_to_graph] = useState(15);
 
   const change_to_line_view = () => {
@@ -320,18 +320,18 @@ const UserList = (props) => {
           ...(formattedStartDate && { start_date: formattedStartDate }),
           ...(formattedEndDate && { end_date: formattedEndDate }),
         }).toString();
-		  const url = `https://api.algoboard.org/entries/${props.boardId}?${queryParams}`;
+        const url = `https://api.algoboard.org/entries/${props.boardId}?${queryParams}`;
 
         const response = await fetch(url);
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         const data = await response.json();
         setEntries(data);
 
         set_update_time(String(data[data.length - 1][6]).slice(0, -10));
       } catch (error) {
-        console.error('Could not fetch entries:', error);
+        console.error("Could not fetch entries:", error);
       }
     };
 
@@ -340,22 +340,22 @@ const UserList = (props) => {
     const fetchUsers = async () => {
       try {
         const response = await fetch(
-			'https://api.algoboard.org/boards/' + props.boardId,
+          "https://api.algoboard.org/boards/" + props.boardId,
         );
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         const data = await response.json();
 
-        const diamond = ' 💎';
-        const rocket = ' 🚀';
-        const raised_hands = ' 🙌';
-        const tada = ' 🎉';
-        const star = ' ⭐';
-        const star2 = ' 🌟';
-        const lightning = ' ⚡';
-        const exclamation = ' ❗';
-        const exclamation2 = ' ‼️';
+        const diamond = " 💎";
+        const rocket = " 🚀";
+        const raised_hands = " 🙌";
+        const tada = " 🎉";
+        const star = " ⭐";
+        const star2 = " 🌟";
+        const lightning = " ⚡";
+        const exclamation = " ❗";
+        const exclamation2 = " ‼️";
 
         for (let i = 0; i < data.participants.length; i++) {
           if (data.participants[i].score < 1000000) {
@@ -388,7 +388,7 @@ const UserList = (props) => {
         }
 
         // Chef Mode Easter Egg
-        if (window.location.search === '?chef') {
+        if (window.location.search === "?chef") {
           for (let i = 0; i < data.participants.length; i++) {
             if (data.participants[i].id === 4) {
               let chef = data.participants[i];
@@ -408,14 +408,14 @@ const UserList = (props) => {
 
         setStats(data.stats);
       } catch (error) {
-        console.error('Could not fetch users:', error);
+        console.error("Could not fetch users:", error);
       }
     };
 
     fetchUsers();
   }, []);
 
-  const colors = ['#a3e78e', '#8ed0e7', '#d28ee7', '#f3ea90', '#f390ca'];
+  const colors = ["#a3e78e", "#8ed0e7", "#d28ee7", "#f3ea90", "#f390ca"];
 
   return (
     <>
@@ -475,7 +475,7 @@ const UserList = (props) => {
       {users.map((user, index) => (
         <div
           key={index}
-          className={`bg-[#161B22] rounded-md p-4 ${index > 0 ? 'mt-4' : ''}`}
+          className={`bg-[#161B22] rounded-md p-4 ${index > 0 ? "mt-4" : ""}`}
         >
           <div className="grid grid-cols-3 gap-4">
             <div className="flex items-center space-x-4">
@@ -494,16 +494,16 @@ const UserList = (props) => {
               <div>
                 <div className="font-semibold text-md">{user.name}</div>
                 <div className="text-md">
-                  solved: {user.solved.easy} easy, {user.solved.medium} medium,{' '}
-                  {user.solved.hard} hard, total:{' '}
+                  solved: {user.solved.easy} easy, {user.solved.medium} medium,{" "}
+                  {user.solved.hard} hard, total:{" "}
                   {user.solved.easy + user.solved.medium + user.solved.hard}
                 </div>
               </div>
             </div>
             <div className="col-span-2 flex items-center justify-end">
               <span className="font-semibold">
-                score:{' '}
-                {user.score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                score:{" "}
+                {user.score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
               </span>
             </div>
           </div>

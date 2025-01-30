@@ -1,24 +1,24 @@
-import { Link } from 'react-router-dom';
-import latency_image from '../../../images/api-status-latency.png';
-import histagram_image from '../../../images/histagram.png';
-import banner_logo from '../../../images/banner_logo.png';
-import icon_image from '../../../images/icon_image.png';
-import hourly_updates from '../../../images/hourly-updates.png';
-import new_update_script from '../../../images/new_update_script.png';
-import Feedback from '../../../Components/Elements/Feedback/Feedback.js';
+import { Link } from "react-router-dom";
+import latency_image from "../../../images/api-status-latency.png";
+import histagram_image from "../../../images/histagram.png";
+import banner_logo from "../../../images/banner_logo.png";
+import icon_image from "../../../images/icon_image.png";
+import hourly_updates from "../../../images/hourly-updates.png";
+import new_update_script from "../../../images/new_update_script.png";
+import Feedback from "../../../Components/Elements/Feedback/Feedback.js";
 
 export default function Changelog() {
-  const diamond = ' 💎';
-  const rocket = ' 🚀';
-  const raised_hands = ' 🙌';
-  const tada = ' 🎉';
-  const star = ' ⭐';
-  const star2 = ' 🌟';
-  const lightning = ' ⚡';
-  const exclamation = ' ❗';
-  const exclamation2 = ' ‼️';
+  const diamond = " 💎";
+  const rocket = " 🚀";
+  const raised_hands = " 🙌";
+  const tada = " 🎉";
+  const star = " ⭐";
+  const star2 = " 🌟";
+  const lightning = " ⚡";
+  const exclamation = " ❗";
+  const exclamation2 = " ‼️";
 
-  document.title = 'Changelog - AlgoBoard';
+  document.title = "Changelog - AlgoBoard";
 
   return (
     <>

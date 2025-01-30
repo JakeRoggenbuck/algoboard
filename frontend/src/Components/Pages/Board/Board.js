@@ -1,12 +1,12 @@
-import UserList from '../../../Components/Elements/UserList/UserList';
-import { Link, useParams } from 'react-router-dom';
+import UserList from "../../../Components/Elements/UserList/UserList";
+import { Link, useParams } from "react-router-dom";
 
-import Feedback from '../../../Components/Elements/Feedback/Feedback.js';
+import Feedback from "../../../Components/Elements/Feedback/Feedback.js";
 
 export default function Board() {
   const params = useParams();
 
-  document.title = params.boardId + ' - AlgoBoard';
+  document.title = params.boardId + " - AlgoBoard";
 
   return (
     <>

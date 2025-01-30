@@ -8,6 +8,11 @@ import pandas as pd
 from datetime import datetime
 from tqdm import tqdm
 import argparse
+from fastapi import FastAPI, Header, Response
+from fastapi.responses import JSONResponse
+import requests
+from typing import Union
+
 
 app = FastAPI()
 
@@ -26,6 +31,60 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+CLIENT_ID = ""
+CLIENT_SECRET = ""
+
+with open("config.secret") as file:
+    # FORMAT:
+    # first line = client id
+    # second line = client secret
+
+    CLIENT_ID = file.readline().rstrip()
+    CLIENT_SECRET = file.readline().rstrip()
+
+
+@app.get("/access-token")
+def get_access_token(code: Union[str, None] = None):
+
+    if code:
+        params = "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&code=" + code
+        headers = {"Accept": "application/json"}
+
+        # Ask GitHub for the access token
+        res = requests.post(
+            "https://github.com/login/oauth/access_token" + params,
+            headers=headers,
+        )
+
+        return JSONResponse(content=res.json(), status_code=200)
+
+    return JSONResponse(content={"message": "Could not load"}, status_code=400)
+
+
+@app.get("/user-info")
+def get_user_info(authorization: str = Header(default=None)):
+
+    headers = {"Authorization": authorization, "Accept": "application/json"}
+
+    res = requests.get("https://api.github.com/user", headers=headers)
+
+    data = res.json()
+
+    # We can safely assume that the user with the username equal to 'login'
+    # has access to the account. This means we can use this username and
+    # possibly the id (I think they are unique) to store with my internal
+    # user data structure to function like a login
+    if data.get("login") and data.get("id"):
+        if isinstance(data["login"], str) and isinstance(data["id"], int):
+            print(data["id"], data["login"])
+
+    # Check if GitHub responded
+    if res.status_code == 200:
+        return JSONResponse(content=res.json(), status_code=200)
+
+    return JSONResponse(content={"message": "Could not load"}, status_code=400)
 
 
 def setup_database():
