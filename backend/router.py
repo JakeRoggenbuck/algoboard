@@ -50,7 +50,11 @@ def get_access_token(code: Union[str, None] = None):
 
     if code:
         params = "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&code=" + code
-        headers = {"Accept": "application/json"}
+
+        headers = {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+        }
 
         # Ask GitHub for the access token
         res = requests.post(
