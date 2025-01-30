@@ -4,7 +4,7 @@ import icon_image from "../../../images/icon_image.png";
 import Feedback from "../../../Components/Elements/Feedback/Feedback.js";
 import { Cpu, User, LogIn, Zap, LogOut } from "lucide-react";
 
-const CLIENT_ID = "Ov23liHgNhl3LvtjnyX7";
+const CLIENT_ID = "Ov23liAdJ5YRCEzVsbOD";
 
 const FEATURES = { login: true };
 
