@@ -26,7 +26,7 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -60,7 +60,7 @@ def get_access_token(code: Union[str, None] = None):
 
         return JSONResponse(content=res.json(), status_code=200)
 
-    return Response(content="Code not included.", status_code=400)
+    return JSONResponse(content={"message": "Could not load"}, status_code=400)
 
 
 @app.get("/user-info")
@@ -84,7 +84,7 @@ def get_user_info(authorization: str = Header(default=None)):
     if res.status_code == 200:
         return JSONResponse(content=res.json(), status_code=200)
 
-    return Response(content="Could not fetch information.", status_code=400)
+    return JSONResponse(content={"message": "Could not load"}, status_code=400)
 
 
 def setup_database():

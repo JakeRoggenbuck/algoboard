@@ -2,14 +2,79 @@ import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import icon_image from '../../../images/icon_image.png';
 import Feedback from '../../../Components/Elements/Feedback/Feedback.js';
+import { Cpu, User, LogIn, Zap, LogOut } from "lucide-react";
+
+
+const CLIENT_ID = "Ov23liHgNhl3LvtjnyX7";
+
 
 export default function Component() {
   const [isStatusOkay, setIsStatusOkay] = useState(false);
   const [solved, setSolved] = useState(-9999);
   const [latency, setLatency] = useState(0);
 
+  const [rerender, setRerender] = useState(false);
+  const [githubInfo, setGithubInfo] = useState({ login: "" });
+
   document.title = 'Home - AlgoBoard';
   const tada = ' 🎉';
+
+  async function getUserInfo() {
+    await fetch("https://api.algoboard.org/user-info", {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setGithubInfo(data);
+        console.log(data);
+      });
+  }
+
+  useEffect(() => {
+    const s = window.location.search;
+    const url = new URLSearchParams(s);
+    const code = url.get("code");
+
+    if (code && localStorage.getItem("accessToken") === null) {
+      async function getAccessToken() {
+        await fetch("https://api.algoboard.org/access-token?code=" + code, {
+          method: "GET",
+        })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data);
+            if (data.access_token) {
+              localStorage.setItem("accessToken", data.access_token);
+              setRerender(!rerender);
+            }
+          });
+      }
+      getAccessToken();
+    } else {
+      getUserInfo();
+    }
+
+    // Remove code from url bar
+    window.history.pushState({}, "", window.location.pathname);
+  }, [rerender]);
+
+  function loginWithGitHub() {
+    window.location.assign(
+      "https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID,
+    );
+  }
+
+  function logout() {
+    localStorage.removeItem("accessToken");
+    window.location.reload();
+  }
 
   useEffect(() => {
     // Function to fetch status
@@ -60,6 +125,44 @@ export default function Component() {
           {/*     About */}
           {/*   </a> */}
           {/* </nav> */}
+
+		        <div className="flex items-center space-x-4">
+          {localStorage.getItem("accessToken") ? (
+            <button
+              onClick={logout}
+              className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-full hover:from-cyan-600 hover:to-blue-700 transition"
+            >
+              <LogOut className="mr-2" size={20} />
+              Sign Out
+            </button>
+          ) : (
+            <button
+              onClick={loginWithGitHub}
+              className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-full hover:from-cyan-600 hover:to-blue-700 transition"
+            >
+              <LogIn className="mr-2" size={20} />
+              Sign In
+            </button>
+          )}
+
+          <div className="flex items-center space-x-2 bg-gray-800 rounded-full px-3 py-1">
+            {"avatar_url" in githubInfo ? (
+              <img
+                src={githubInfo.avatar_url}
+                height="20"
+                width="20"
+                className="rounded-full"
+              />
+            ) : (
+              <User className="text-cyan-400" size={20} />
+            )}
+
+            <span className="font-medium text-gray-200">
+              {githubInfo.login ? githubInfo.login : "Guest"}
+            </span>
+          </div>
+        </div>
+
         </header>
         <main className="flex flex-col items-center justify-center flex-grow">
           <h1 className="text-white text-8xl font-extrabold mb-8">AlgoBoard</h1>
