@@ -320,7 +320,7 @@ const UserList = (props) => {
           ...(formattedStartDate && { start_date: formattedStartDate }),
           ...(formattedEndDate && { end_date: formattedEndDate }),
         }).toString();
-        const url = `http://50.116.10.252:8000/entries/${props.boardId}?${queryParams}`;
+		  const url = `https://api.algoboard.org/entries/${props.boardId}?${queryParams}`;
 
         const response = await fetch(url);
         if (!response.ok) {
@@ -340,7 +340,7 @@ const UserList = (props) => {
     const fetchUsers = async () => {
       try {
         const response = await fetch(
-          'http://50.116.10.252:8000/boards/' + props.boardId,
+			'https://api.algoboard.org/boards/' + props.boardId,
         );
         if (!response.ok) {
           throw new Error('Network response was not ok');

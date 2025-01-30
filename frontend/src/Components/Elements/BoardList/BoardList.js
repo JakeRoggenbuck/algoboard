@@ -7,7 +7,7 @@ const BoardList = () => {
   useEffect(() => {
     const fetchBoards = async () => {
       try {
-        const response = await fetch('http://50.116.10.252:8000/boards/');
+		  const response = await fetch('https://api.algoboard.org/boards/');
 
         if (!response.ok) {
           throw new Error('Network response was not ok');

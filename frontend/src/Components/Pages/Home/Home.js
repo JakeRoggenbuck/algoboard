@@ -16,7 +16,7 @@ export default function Component() {
     const fetchStatus = async () => {
       try {
         var starttime = new Date();
-        const response = await fetch('http://50.116.10.252:8000/status');
+		  const response = await fetch('https://api.algoboard.org/status');
         const data = await response.json();
 
         // Check the status and update the state
@@ -33,7 +33,7 @@ export default function Component() {
         setIsStatusOkay(false);
       }
 
-      const response = await fetch('http://50.116.10.252:8000/solved');
+      const response = await fetch('https://api.algoboard.org/solved');
       const data = await response.json();
 
       setSolved(data['easy'] + data['med'] + data['hard']);
