@@ -31,7 +31,6 @@ export default function Component() {
       })
       .then((data) => {
         setGithubInfo(data);
-        console.log(data);
       });
   }
 
@@ -49,7 +48,6 @@ export default function Component() {
             return response.json();
           })
           .then((data) => {
-            console.log(data);
             if (data.access_token) {
               localStorage.setItem("accessToken", data.access_token);
               setRerender(!rerender);
