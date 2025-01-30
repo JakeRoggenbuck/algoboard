@@ -1,6 +1,6 @@
 const StatsTable = (props) => {
   let summaryStats = props.summaryStats;
-  delete summaryStats['id'];
+  delete summaryStats["id"];
 
   return (
     <div className="overflow-x-auto my-4">
@@ -63,17 +63,17 @@ const StatsTable = (props) => {
               </td>
               <td className="px-5 py-5 bg-[#161B22] text-sm border-b-2 border-[#0D1117]">
                 <p className="text-white whitespace-no-wrap">
-                  {value['25%'].toFixed(2)}
+                  {value["25%"].toFixed(2)}
                 </p>
               </td>
               <td className="px-5 py-5 bg-[#161B22] text-sm border-b-2 border-[#0D1117]">
                 <p className="text-white whitespace-no-wrap">
-                  {value['50%'].toFixed(2)}
+                  {value["50%"].toFixed(2)}
                 </p>
               </td>
               <td className="px-5 py-5 bg-[#161B22] text-sm border-b-2 border-[#0D1117]">
                 <p className="text-white whitespace-no-wrap">
-                  {value['75%'].toFixed(2)}
+                  {value["75%"].toFixed(2)}
                 </p>
               </td>
             </tr>

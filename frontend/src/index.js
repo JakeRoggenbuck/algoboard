@@ -1,34 +1,31 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import React from "react";
+import ReactDOM from "react-dom/client";
 import {
   createBrowserRouter,
   RouterProvider,
   Route,
   createRoutesFromElements,
-} from 'react-router-dom';
-import './index.css';
-import App from './App';
-import Board from './Components/Pages/Board/Board';
-import Boards from './Components/Pages/Boards/Boards';
-import Changelog from './Components/Pages/Changelog/Changelog';
-import Home from './Components/Pages/Home/Home';
-import reportWebVitals from './reportWebVitals';
+} from "react-router-dom";
+import "./index.css";
+import App from "./App";
+import Board from "./Components/Pages/Board/Board";
+import Boards from "./Components/Pages/Boards/Boards";
+import Changelog from "./Components/Pages/Changelog/Changelog";
+import Home from "./Components/Pages/Home/Home";
+import reportWebVitals from "./reportWebVitals";
 
 const routes = createRoutesFromElements(
   <Route>
     <Route path="/" element={<Home />} />
     <Route path="/boards" element={<Boards />} />
-    <Route path="/changelog" element={<Changelog/>} />
-    <Route
-      path="/boards/:boardId"
-      element={<Board />}
-    />
+    <Route path="/changelog" element={<Changelog />} />
+    <Route path="/boards/:boardId" element={<Board />} />
   </Route>,
 );
 
 const router = createBrowserRouter(routes);
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <RouterProvider router={router} />

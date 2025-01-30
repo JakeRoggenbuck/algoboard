@@ -1,12 +1,10 @@
-import { Link } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
-import icon_image from '../../../images/icon_image.png';
-import Feedback from '../../../Components/Elements/Feedback/Feedback.js';
+import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import icon_image from "../../../images/icon_image.png";
+import Feedback from "../../../Components/Elements/Feedback/Feedback.js";
 import { Cpu, User, LogIn, Zap, LogOut } from "lucide-react";
 
-
 const CLIENT_ID = "Ov23liHgNhl3LvtjnyX7";
-
 
 export default function Component() {
   const [isStatusOkay, setIsStatusOkay] = useState(false);
@@ -16,8 +14,8 @@ export default function Component() {
   const [rerender, setRerender] = useState(false);
   const [githubInfo, setGithubInfo] = useState({ login: "" });
 
-  document.title = 'Home - AlgoBoard';
-  const tada = ' 🎉';
+  document.title = "Home - AlgoBoard";
+  const tada = " 🎉";
 
   async function getUserInfo() {
     await fetch("https://api.algoboard.org/user-info", {
@@ -81,11 +79,11 @@ export default function Component() {
     const fetchStatus = async () => {
       try {
         var starttime = new Date();
-		  const response = await fetch('https://api.algoboard.org/status');
+        const response = await fetch("https://api.algoboard.org/status");
         const data = await response.json();
 
         // Check the status and update the state
-        if (data === 'okay') {
+        if (data === "okay") {
           setIsStatusOkay(true);
         } else {
           setIsStatusOkay(false);
@@ -94,14 +92,14 @@ export default function Component() {
         var endtime = new Date();
         setLatency(endtime - starttime);
       } catch (error) {
-        console.error('Failed to fetch status:', error);
+        console.error("Failed to fetch status:", error);
         setIsStatusOkay(false);
       }
 
-      const response = await fetch('https://api.algoboard.org/solved');
+      const response = await fetch("https://api.algoboard.org/solved");
       const data = await response.json();
 
-      setSolved(data['easy'] + data['med'] + data['hard']);
+      setSolved(data["easy"] + data["med"] + data["hard"]);
     };
 
     // Call the fetch function
@@ -126,43 +124,42 @@ export default function Component() {
           {/*   </a> */}
           {/* </nav> */}
 
-		        <div className="flex items-center space-x-4">
-          {localStorage.getItem("accessToken") ? (
-            <button
-              onClick={logout}
-              className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-full hover:from-cyan-600 hover:to-blue-700 transition"
-            >
-              <LogOut className="mr-2" size={20} />
-              Sign Out
-            </button>
-          ) : (
-            <button
-              onClick={loginWithGitHub}
-              className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-full hover:from-cyan-600 hover:to-blue-700 transition"
-            >
-              <LogIn className="mr-2" size={20} />
-              Sign In
-            </button>
-          )}
-
-          <div className="flex items-center space-x-2 bg-gray-800 rounded-full px-3 py-1">
-            {"avatar_url" in githubInfo ? (
-              <img
-                src={githubInfo.avatar_url}
-                height="20"
-                width="20"
-                className="rounded-full"
-              />
+          <div className="flex items-center space-x-4">
+            {localStorage.getItem("accessToken") ? (
+              <button
+                onClick={logout}
+                className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-full hover:from-cyan-600 hover:to-blue-700 transition"
+              >
+                <LogOut className="mr-2" size={20} />
+                Sign Out
+              </button>
             ) : (
-              <User className="text-cyan-400" size={20} />
+              <button
+                onClick={loginWithGitHub}
+                className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-full hover:from-cyan-600 hover:to-blue-700 transition"
+              >
+                <LogIn className="mr-2" size={20} />
+                Sign In
+              </button>
             )}
 
-            <span className="font-medium text-gray-200">
-              {githubInfo.login ? githubInfo.login : "Guest"}
-            </span>
-          </div>
-        </div>
+            <div className="flex items-center space-x-2 bg-gray-800 rounded-full px-3 py-1">
+              {"avatar_url" in githubInfo ? (
+                <img
+                  src={githubInfo.avatar_url}
+                  height="20"
+                  width="20"
+                  className="rounded-full"
+                />
+              ) : (
+                <User className="text-cyan-400" size={20} />
+              )}
 
+              <span className="font-medium text-gray-200">
+                {githubInfo.login ? githubInfo.login : "Guest"}
+              </span>
+            </div>
+          </div>
         </header>
         <main className="flex flex-col items-center justify-center flex-grow">
           <h1 className="text-white text-8xl font-extrabold mb-8">AlgoBoard</h1>

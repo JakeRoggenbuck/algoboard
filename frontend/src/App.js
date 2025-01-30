@@ -1,6 +1,6 @@
-import logo from './logo.svg';
-import Boards from './Components/Pages/Boards/Boards';
-import './App.css';
+import logo from "./logo.svg";
+import Boards from "./Components/Pages/Boards/Boards";
+import "./App.css";
 
 function App() {
   return (

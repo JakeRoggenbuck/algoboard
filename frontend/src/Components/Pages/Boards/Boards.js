@@ -1,9 +1,9 @@
-import BoardList from '../../../Components/Elements/BoardList/BoardList';
-import { Link } from 'react-router-dom';
-import Feedback from '../../../Components/Elements/Feedback/Feedback.js';
+import BoardList from "../../../Components/Elements/BoardList/BoardList";
+import { Link } from "react-router-dom";
+import Feedback from "../../../Components/Elements/Feedback/Feedback.js";
 
 function Boards() {
-  document.title = 'Boards - AlgoBoard';
+  document.title = "Boards - AlgoBoard";
 
   return (
     <>
