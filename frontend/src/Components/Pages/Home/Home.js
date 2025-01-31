@@ -7,10 +7,14 @@ import { Cpu, User, LogIn, Zap, LogOut } from "lucide-react";
 
 const CLIENT_ID = "Ov23liAdJ5YRCEzVsbOD";
 
+const random_flag = () => {
+	return Boolean(Math.floor(Math.random() * 2));
+}
+
 const FEATURES = {
   login: true,
   top_text: false,
-  show_background_image: Boolean(Math.floor(Math.random() * 2)),
+  show_background_image: true,
 };
 
 export default function Component() {
