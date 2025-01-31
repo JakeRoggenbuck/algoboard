@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import icon_image from "../../../images/icon_image.png";
-import bg_image from "../../../images/algoboard_bg.png";
-import Feedback from "../../../Components/Elements/Feedback/Feedback.js";
-import { Cpu, User, LogIn, Zap, LogOut } from "lucide-react";
+import icon_image from "../../images/icon_image.png";
+import bg_image from "../../images/algoboard_bg.png";
+import Feedback from "../../Components/Elements/Feedback.js";
+import { User, LogIn, LogOut } from "lucide-react";
 
 const CLIENT_ID = "Ov23liAdJ5YRCEzVsbOD";
 
 const random_flag = () => {
-	return Boolean(Math.floor(Math.random() * 2));
-}
+  return Boolean(Math.floor(Math.random() * 2));
+};
 
 const FEATURES = {
   login: true,
