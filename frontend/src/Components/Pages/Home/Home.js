@@ -176,7 +176,7 @@ export default function Component() {
               {localStorage.getItem("accessToken") ? (
                 <button
                   onClick={logout}
-                  className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-full hover:from-cyan-600 hover:to-blue-700 transition h-10"
+                  className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-cyan-600 hover:to-blue-700 transition h-10"
                 >
                   <LogOut className="mr-2" size={20} />
                   Sign Out
