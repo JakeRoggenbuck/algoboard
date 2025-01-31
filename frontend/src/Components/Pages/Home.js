@@ -8,8 +8,8 @@ import { User, LogIn, LogOut } from "lucide-react";
 const CLIENT_ID = "Ov23liAdJ5YRCEzVsbOD";
 
 const random_flag = () => {
-	return Boolean(Math.floor(Math.random() * 2));
-}
+  return Boolean(Math.floor(Math.random() * 2));
+};
 
 const FEATURES = {
   login: true,
