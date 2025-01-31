@@ -426,20 +426,20 @@ const UserList = (props) => {
           <div className="flex flex-row">
             <button
               onClick={change_to_line_view}
-              className="mx-1 my-4 text-md mt-8 bg-blue-800 text-white font-bold py-2 px-4 rounded"
+              className="mx-1 my-4 text-md mt-8 bg-blue-800 text-white font-bold py-2 px-4 rounded-lg"
             >
               Show Problems Solved Graph
             </button>
             <button
               onClick={change_to_histagran_view}
-              className="mx-1 my-4 text-md mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="mx-1 my-4 text-md mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
             >
               Show Score Histogram
             </button>
 
             {features.show_days_input ? (
               <input
-                className="w-32 mx-1 my-4 text-md mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded placeholder-white"
+                className="w-32 mx-1 my-4 text-md mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg placeholder-white"
                 type="number"
                 id="days_count"
                 name="days_count"
@@ -457,13 +457,13 @@ const UserList = (props) => {
 
           <button
             onClick={change_to_line_view}
-            className="mx-1 my-4 text-md mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="mx-1 my-4 text-md mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
           >
             Show Problems Solved Graph
           </button>
           <button
             onClick={change_to_histagran_view}
-            className="mx-1 my-4 text-md mt-8 bg-blue-800 text-white font-bold py-2 px-4 rounded"
+            className="mx-1 my-4 text-md mt-8 bg-blue-800 text-white font-bold py-2 px-4 rounded-lg"
           >
             Show Score Histogram
           </button>

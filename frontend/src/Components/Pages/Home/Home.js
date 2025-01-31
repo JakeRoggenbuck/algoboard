@@ -137,14 +137,14 @@ export default function Component() {
               ) : (
                 <button
                   onClick={loginWithGitHub}
-                  className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-full hover:from-cyan-600 hover:to-blue-700 transition h-10"
+                  className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-cyan-600 hover:to-blue-700 transition h-10"
                 >
                   <LogIn className="mr-2" size={20} />
                   Sign In
                 </button>
               )}
 
-              <div className="flex items-center space-x-2 bg-gray-800 rounded-full px-3 py-2 h-10">
+              <div className="flex items-center space-x-2 bg-gray-800 rounded-lg px-3 py-2 h-10">
                 {"avatar_url" in githubInfo ? (
                   <img
                     src={githubInfo.avatar_url}
@@ -180,7 +180,7 @@ export default function Component() {
               to="/boards"
               className="mx-1 text-blue-600 hover:text-blue-800"
             >
-              <button className="text-xl mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-40 whitespace-nowrap">
+              <button className="text-xl mt-8 bg-gradient-to-r from-cyan-500 to-blue-600 hover:bg-blue-700 hover:border-blue-700 text-white font-bold py-3 px-4 rounded-lg w-40 whitespace-nowrap hover:from-cyan-600 hover:to-blue-700">
                 View Boards
               </button>
             </Link>
@@ -189,7 +189,7 @@ export default function Component() {
               to="/changelog"
               className="mx-1 text-blue-600 hover:text-blue-800"
             >
-              <button className="text-xl mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-40 whitespace-nowrap">
+              <button className="text-xl mt-8 bg-[#0D1117] hover:border-blue-700 border-blue-500 border-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-40 whitespace-nowrap">
                 Changelog
               </button>
             </Link>
