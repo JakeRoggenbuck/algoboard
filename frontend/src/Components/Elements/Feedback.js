@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 
-// import { XMarkIcon } from '@heroicons/react/20/solid'
-
 export default function Feedback() {
   const [showButton, SetShowButton] = useState(1);
 
