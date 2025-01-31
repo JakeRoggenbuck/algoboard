@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import StatsTable from "../StatsTable/StatsTable";
+import StatsTable from "./StatsTable.js";
 
 import React from "react";
 import { Line } from "react-chartjs-2";
