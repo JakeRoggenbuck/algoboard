@@ -1,12 +1,21 @@
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import icon_image from "../../../images/icon_image.png";
+import bg_image from "../../../images/algoboard_bg.png";
 import Feedback from "../../../Components/Elements/Feedback/Feedback.js";
 import { Cpu, User, LogIn, Zap, LogOut } from "lucide-react";
 
 const CLIENT_ID = "Ov23liAdJ5YRCEzVsbOD";
 
-const FEATURES = { login: true, top_text: false };
+const random_flag = () => {
+	return Boolean(Math.floor(Math.random() * 2));
+}
+
+const FEATURES = {
+  login: true,
+  top_text: false,
+  show_background_image: true,
+};
 
 export default function Component() {
   const [isStatusOkay, setIsStatusOkay] = useState(false);
@@ -84,7 +93,6 @@ export default function Component() {
       const cachedData = JSON.parse(localStorage.getItem(cacheKey));
       if (cachedData) {
         setSolved(cachedData["easy"] + cachedData["med"] + cachedData["hard"]);
-        console.log("Using cache");
         return;
       }
     }
@@ -130,8 +138,21 @@ export default function Component() {
   return (
     <>
       <div className="bg-[#0D1117] min-h-screen flex flex-col justify-between">
+        {FEATURES.show_background_image ? (
+          <img
+            src={bg_image}
+            alt="Background"
+            id="my_image"
+            class="absolute top-1/2 left-1/2 object-cover z-0 -translate-x-1/2 -translate-y-1/2 opacity-20 animate-fadeInOut"
+          />
+        ) : (
+          <></>
+        )}
+
+        <div className="" />
+
         <Feedback />
-        <header className="text-white p-5 text-sm flex flex justify-between items-center">
+        <header className="text-white z-10 p-5 text-sm flex flex justify-between items-center">
           <div className="flex flex-row items-center">
             <img className="m-2 h-8" src={icon_image} />
             <p class="text-xl">AlgoBoard</p>
@@ -191,7 +212,8 @@ export default function Component() {
             <></>
           )}
         </header>
-        <main className="flex flex-col items-center justify-center flex-grow">
+
+        <main className="flex z-10 flex-col items-center justify-center flex-grow">
           <h1 className="text-white text-8xl font-extrabold mb-8">AlgoBoard</h1>
           {solved != -9999 ? (
             <p className="text-2xl text-gray-400">
