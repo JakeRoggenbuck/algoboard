@@ -6,6 +6,7 @@ import icon_image from "../../../images/icon_image.png";
 import hourly_updates from "../../../images/hourly-updates.png";
 import new_update_script from "../../../images/new_update_script.png";
 import Feedback from "../../../Components/Elements/Feedback/Feedback.js";
+import { LogIn, User } from "lucide-react";
 
 export default function Changelog() {
   const diamond = " 💎";
@@ -20,9 +21,14 @@ export default function Changelog() {
 
   document.title = "Changelog - AlgoBoard";
 
+  const onSignIn = () => {
+    alert("Just a demo! Go to the home page for the real login!");
+  };
+
   return (
     <>
       <Feedback />
+
       <div className="bg-[#0D1117] min-h-screen flex flex-col justify-between">
         <header className="text-white p-5 text-sm flex justify-between items-center">
           <Link to="/">
@@ -36,12 +42,43 @@ export default function Changelog() {
         <div className="flex flex-col text-white items-center min-h-screen my-4">
           <div className="m-4 w-3/5">
             <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 1-30-2025
+            </h1>
+
+            <h3 className="my-4 text-white text-2xl">- Hello SSL!</h3>
+            <p className="my-4">I added SSL and properly hosted the site.</p>
+
+            <h3 className="my-4 text-white text-2xl">
+              - Login with GitHub OAuth
+            </h3>
+            <p className="my-4">You can now login with GitHub OAuth.</p>
+
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={onSignIn}
+                className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-cyan-600 hover:to-blue-700 transition h-10"
+              >
+                <LogIn className="mr-2" size={20} />
+                Sign In
+              </button>
+
+              <div className="flex items-center space-x-2 bg-gray-800 rounded-lg px-3 py-2 h-10">
+                <User className="text-cyan-400" size={20} />
+
+                <span className="font-medium text-gray-200">Guest</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
               Changelog for 9-09-2024
             </h1>
 
             <h3 className="my-4 text-white text-2xl">- Change name</h3>
             <p className="my-4">This is now called the AlgoBoard!</p>
           </div>
+
           <div className="m-4 w-3/5">
             <h1 className="my-4 font-bold text-white text-5xl">
               Changelog for 9-08-2024
