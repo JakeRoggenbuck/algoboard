@@ -7,7 +7,11 @@ import { Cpu, User, LogIn, Zap, LogOut } from "lucide-react";
 
 const CLIENT_ID = "Ov23liAdJ5YRCEzVsbOD";
 
-const FEATURES = { login: true, top_text: false };
+const FEATURES = {
+  login: true,
+  top_text: false,
+  show_background_image: Boolean(Math.floor(Math.random() * 2)),
+};
 
 export default function Component() {
   const [isStatusOkay, setIsStatusOkay] = useState(false);
@@ -130,12 +134,16 @@ export default function Component() {
   return (
     <>
       <div className="bg-[#0D1117] min-h-screen flex flex-col justify-between">
-        <img
-          src={bg_image}
-          alt="Background"
-          id="my_image"
-          class="absolute top-1/2 left-1/2 object-cover z-0 -translate-x-1/2 -translate-y-1/2 opacity-20 animate-fadeInOut"
-        />
+        {FEATURES.show_background_image ? (
+          <img
+            src={bg_image}
+            alt="Background"
+            id="my_image"
+            class="absolute top-1/2 left-1/2 object-cover z-0 -translate-x-1/2 -translate-y-1/2 opacity-20 animate-fadeInOut"
+          />
+        ) : (
+          <></>
+        )}
 
         <div className="" />
 
