@@ -6,7 +6,7 @@ import { Cpu, User, LogIn, Zap, LogOut } from "lucide-react";
 
 const CLIENT_ID = "Ov23liAdJ5YRCEzVsbOD";
 
-const FEATURES = { login: true };
+const FEATURES = { login: true, top_text: false };
 
 export default function Component() {
   const [isStatusOkay, setIsStatusOkay] = useState(false);
@@ -136,14 +136,19 @@ export default function Component() {
             <img className="m-2 h-8" src={icon_image} />
             <p class="text-xl">AlgoBoard</p>
           </div>
-          {/* <nav> */}
-          {/*   <a */}
-          {/*     className="text-white hover:text-blue-300 transition-colors duration-300" */}
-          {/*     href="#" */}
-          {/*   > */}
-          {/*     About */}
-          {/*   </a> */}
-          {/* </nav> */}
+
+          {FEATURES.top_text ? (
+            <nav>
+              <a
+                className="text-white hover:text-blue-300 transition-colors duration-300"
+                href="#"
+              >
+                About
+              </a>
+            </nav>
+          ) : (
+            <></>
+          )}
 
           {FEATURES.login ? (
             <div className="flex items-center space-x-4">
