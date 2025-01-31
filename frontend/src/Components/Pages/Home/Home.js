@@ -189,7 +189,7 @@ export default function Component() {
               to="/changelog"
               className="mx-1 text-blue-600 hover:text-blue-800"
             >
-				<button className="text-xl mt-8 bg-[#0D1117] hover:border-blue-700 border-blue-500 border-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-40 whitespace-nowrap">
+              <button className="text-xl mt-8 bg-[#0D1117] hover:border-blue-700 border-blue-500 border-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-40 whitespace-nowrap">
                 Changelog
               </button>
             </Link>
