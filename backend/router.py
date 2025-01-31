@@ -4,11 +4,11 @@ import sqlite3
 import pandas as pd
 from datetime import datetime
 import argparse
-from fastapi import FastAPI, Header, Response
+from fastapi import FastAPI, Header
 from fastapi.responses import JSONResponse
 import requests
 from typing import Union
-from setup_database import repull_replace_data, setup_database
+from database_setup import repull_replace_data, setup_database
 from database import (
     update_board_participant_counts,
     calculate_total_solved_on_board,
