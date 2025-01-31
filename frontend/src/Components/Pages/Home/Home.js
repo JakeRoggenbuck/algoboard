@@ -74,6 +74,30 @@ export default function Component() {
     window.location.reload();
   }
 
+  const fetchSolvedProblems = async () => {
+    const cacheKey = "solvedProblems";
+    const cacheTimeKey = "solvedProblemsTime";
+    const cacheTime = localStorage.getItem(cacheTimeKey);
+    const now = new Date().getTime();
+
+    if (cacheTime && now - parseInt(cacheTime) < 600000) {
+      const cachedData = JSON.parse(localStorage.getItem(cacheKey));
+      if (cachedData) {
+        setSolved(cachedData["easy"] + cachedData["med"] + cachedData["hard"]);
+        console.log("Using cache");
+        return;
+      }
+    }
+
+    const response = await fetch("https://api.algoboard.org/solved");
+    const data = await response.json();
+
+    setSolved(data["easy"] + data["med"] + data["hard"]);
+
+    localStorage.setItem(cacheKey, JSON.stringify(data));
+    localStorage.setItem(cacheTimeKey, now.toString());
+  };
+
   useEffect(() => {
     // Function to fetch status
     const fetchStatus = async () => {
@@ -96,10 +120,7 @@ export default function Component() {
         setIsStatusOkay(false);
       }
 
-      const response = await fetch("https://api.algoboard.org/solved");
-      const data = await response.json();
-
-      setSolved(data["easy"] + data["med"] + data["hard"]);
+      fetchSolvedProblems();
     };
 
     // Call the fetch function
