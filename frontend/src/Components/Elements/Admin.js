@@ -15,17 +15,20 @@ function Admin() {
     setMessage('');
 
     try {
-      const response = await fetch('/admin/create-user', {
-        method: 'POST',
-        headers: {
-          Authorization: localStorage.getItem('github_token') || '',
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        'https://api.algoboard.org/admin/create-user',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: localStorage.getItem('github_token') || '',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: username,
+          }),
         },
-        body: JSON.stringify({
-          username: username,
-        }),
-      });
+      );
 
       const data = await response.json();
 
