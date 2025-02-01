@@ -8,6 +8,7 @@ from fastapi import FastAPI, Header
 from fastapi.responses import JSONResponse
 import requests
 from typing import Union
+from pydantic import BaseModel
 from database_setup import repull_replace_data, setup_database
 from database import (
     update_board_participant_counts,
@@ -18,6 +19,10 @@ from database import (
     add_user,
     count_problems,
 )
+
+
+class User(BaseModel):
+    username: str
 
 
 app = FastAPI()
@@ -90,6 +95,34 @@ def get_user_info(authorization: str = Header(default=None)):
     # Check if GitHub responded
     if res.status_code == 200:
         return JSONResponse(content=res.json(), status_code=200)
+
+    return JSONResponse(content={"message": "Could not load"}, status_code=400)
+
+
+@app.get("/admin/create-user")
+def create_user_router(user: User, authorization: str = Header(default=None)):
+
+    headers = {"Authorization": authorization, "Accept": "application/json"}
+
+    res = requests.get("https://api.github.com/user", headers=headers)
+
+    data = res.json()
+
+    # We can safely assume that the user with the username equal to 'login'
+    # has access to the account. This means we can use this username and
+    # possibly the id (I think they are unique) to store with my internal
+    # user data structure to function like a login
+    if data.get("login") and data.get("id"):
+        if isinstance(data["login"], str) and isinstance(data["id"], int):
+
+            # I have admin permissions to add people
+            if data.get("login") == "JakeRoggenbuck":
+                add_user(user.username)
+                add_user_to_board(user.username, "everyone")
+
+            # Check if GitHub responded
+            if res.status_code == 200:
+                return JSONResponse(content=res.json(), status_code=200)
 
     return JSONResponse(content={"message": "Could not load"}, status_code=400)
 
