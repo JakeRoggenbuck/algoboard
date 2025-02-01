@@ -245,8 +245,7 @@ export default function Component() {
           </div>
 
           {/* Show admin panel to Jake because he is admin */}
-          {1 ||
-          ('login' in githubInfo && githubInfo.login === 'JakeRoggenbuck') ? (
+          {'login' in githubInfo && githubInfo.login === 'JakeRoggenbuck' ? (
             <div className="p-12">
               <Admin />
             </div>
