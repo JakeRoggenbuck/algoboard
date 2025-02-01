@@ -136,6 +136,7 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
             if data.get("login") == "JakeRoggenbuck":
                 add_user(user.username)
                 add_user_to_board(user.username, "everyone")
+                update_board_participant_counts()
 
             # Check if GitHub responded
             if res.status_code == 200:
@@ -175,6 +176,7 @@ def add_user_to_board_route(
             # I have admin permissions to add people
             if data.get("login") == "JakeRoggenbuck":
                 add_user_to_board(userboard.username, userboard.board)
+                update_board_participant_counts()
 
             # Check if GitHub responded
             if res.status_code == 200:
