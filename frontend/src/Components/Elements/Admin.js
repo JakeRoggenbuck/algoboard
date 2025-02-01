@@ -53,7 +53,7 @@ function Admin() {
         setUsername('');
         setBoard('');
       } else {
-        setMessage(data.message || 'Fagreyiled to add user to board');
+        setMessage(data.message || 'Failed to add user to board');
       }
     } catch (error) {
       setMessage('An error occurred while adding the user to board');
