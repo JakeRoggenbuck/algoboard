@@ -78,6 +78,8 @@ def get_access_token(code: Union[str, None] = None):
 @app.get("/user-info")
 def get_user_info(authorization: str = Header(default=None)):
 
+    print(authorization)
+
     headers = {"Authorization": authorization, "Accept": "application/json"}
 
     res = requests.get(
@@ -104,6 +106,8 @@ def get_user_info(authorization: str = Header(default=None)):
 
 @app.post("/admin/create-user")
 def create_user_router(user: User, authorization: str = Header(default=None)):
+
+    print(authorization)
 
     headers = {"Authorization": authorization, "Accept": "application/json"}
 
