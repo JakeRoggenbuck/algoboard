@@ -108,6 +108,7 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
 
     data = res.json()
 
+    print(res)
     print(data)
 
     # We can safely assume that the user with the username equal to 'login'
