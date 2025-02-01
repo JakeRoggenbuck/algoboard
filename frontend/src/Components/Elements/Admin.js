@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 function Admin() {
-  const [username, setUsername] = useState('');
-  const [board, setBoard] = useState('');
-  const [message, setMessage] = useState('');
+  const [username, setUsername] = useState("");
+  const [board, setBoard] = useState("");
+  const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -17,27 +17,27 @@ function Admin() {
 
   const AddUserToBoardSubmit = async () => {
     if (!username.trim()) {
-      setMessage('Please enter a username');
+      setMessage("Please enter a username");
       return;
     }
 
     if (!board.trim()) {
-      setMessage('Please enter a board');
+      setMessage("Please enter a board");
       return;
     }
 
     setIsLoading(true);
-    setMessage('');
+    setMessage("");
 
     try {
       const response = await fetch(
-        'https://api.algoboard.org/admin/add-user-to-board',
+        "https://api.algoboard.org/admin/add-user-to-board",
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             username: username,
@@ -49,14 +49,14 @@ function Admin() {
       const data = await response.json();
 
       if (response.status === 200) {
-        setMessage('User added to board successfully!');
-        setUsername('');
-        setBoard('');
+        setMessage("User added to board successfully!");
+        setUsername("");
+        setBoard("");
       } else {
-        setMessage(data.message || 'Failed to add user to board');
+        setMessage(data.message || "Failed to add user to board");
       }
     } catch (error) {
-      setMessage('An error occurred while adding the user to board');
+      setMessage("An error occurred while adding the user to board");
     } finally {
       setIsLoading(false);
     }
@@ -64,22 +64,22 @@ function Admin() {
 
   const createUserSubmit = async () => {
     if (!username.trim()) {
-      setMessage('Please enter a username');
+      setMessage("Please enter a username");
       return;
     }
 
     setIsLoading(true);
-    setMessage('');
+    setMessage("");
 
     try {
       const response = await fetch(
-        'https://api.algoboard.org/admin/create-user',
+        "https://api.algoboard.org/admin/create-user",
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             username: username,
@@ -90,13 +90,13 @@ function Admin() {
       const data = await response.json();
 
       if (response.status === 200) {
-        setMessage('User added successfully!');
-        setUsername('');
+        setMessage("User added successfully!");
+        setUsername("");
       } else {
-        setMessage(data.message || 'Failed to add user');
+        setMessage(data.message || "Failed to add user");
       }
     } catch (error) {
-      setMessage('An error occurred while adding the user');
+      setMessage("An error occurred while adding the user");
     } finally {
       setIsLoading(false);
     }
@@ -138,7 +138,7 @@ function Admin() {
                 disabled={isLoading}
                 className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? 'Adding...' : 'Add User'}
+                {isLoading ? "Adding..." : "Add User"}
               </button>
             </div>
 
@@ -166,16 +166,16 @@ function Admin() {
                 disabled={isLoading}
                 className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? 'Adding...' : 'Add User'}
+                {isLoading ? "Adding..." : "Add User"}
               </button>
             </div>
 
             {message && (
               <p
                 className={`text-sm ${
-                  message.includes('success')
-                    ? 'text-green-600'
-                    : 'text-red-600'
+                  message.includes("success")
+                    ? "text-green-600"
+                    : "text-red-600"
                 }`}
               >
                 {message}
