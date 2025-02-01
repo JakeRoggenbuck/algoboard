@@ -108,6 +108,9 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
 
     data = res.json()
 
+    print(res)
+    print(data)
+
     # We can safely assume that the user with the username equal to 'login'
     # has access to the account. This means we can use this username and
     # possibly the id (I think they are unique) to store with my internal
@@ -115,9 +118,9 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
     if data.get("login") and data.get("id"):
         if isinstance(data["login"], str) and isinstance(data["id"], int):
 
+            print("Added user!", "A" + data.get("login") + "A", data.get("login") == "JakeRoggenbuck")
             # I have admin permissions to add people
             if data.get("login") == "JakeRoggenbuck":
-                print("Added user!", "A" + data.get("login") + "A")
                 add_user(user.username)
                 add_user_to_board(user.username, "everyone")
 
