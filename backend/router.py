@@ -117,6 +117,7 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
 
             # I have admin permissions to add people
             if data.get("login") == "JakeRoggenbuck":
+                print("Added user!", "A" + data.get("login") + "A")
                 add_user(user.username)
                 add_user_to_board(user.username, "everyone")
 
