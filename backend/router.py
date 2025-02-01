@@ -99,7 +99,7 @@ def get_user_info(authorization: str = Header(default=None)):
     return JSONResponse(content={"message": "Could not load"}, status_code=400)
 
 
-@app.get("/admin/create-user")
+@app.post("/admin/create-user")
 def create_user_router(user: User, authorization: str = Header(default=None)):
 
     headers = {"Authorization": authorization, "Accept": "application/json"}
