@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Query
+import base64
 from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
 import pandas as pd
@@ -78,10 +79,19 @@ def get_access_token(code: Union[str, None] = None):
 @app.get("/user-info")
 def get_user_info(authorization: str = Header(default=None)):
 
-    headers = {"Authorization": authorization, "Accept": "application/json"}
+    credentials = f"{CLIENT_ID}:{CLIENT_SECRET}"
+    encoded_credentials = base64.b64encode(credentials.encode()).decode()
+
+    headers = {
+        "Authorization": authorization,
+        "Accept": "application/json",
+        "Authorization": f"Basic {encoded_credentials}",
+        "User-Agent": "The Algoboard.org",
+        "Content-Type": "application/json"
+    }
 
     res = requests.get(
-        "https://api.github.com/user?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET,
+        "https://api.github.com/user",
         headers=headers,
     )
 
@@ -105,10 +115,19 @@ def get_user_info(authorization: str = Header(default=None)):
 @app.post("/admin/create-user")
 def create_user_router(user: User, authorization: str = Header(default=None)):
 
-    headers = {"Authorization": authorization, "Accept": "application/json"}
+    credentials = f"{CLIENT_ID}:{CLIENT_SECRET}"
+    encoded_credentials = base64.b64encode(credentials.encode()).decode()
+
+    headers = {
+        "Authorization": authorization,
+        "Accept": "application/json",
+        "Authorization": f"Basic {encoded_credentials}",
+        "User-Agent": "The Algoboard.org",
+        "Content-Type": "application/json"
+    }
 
     res = requests.get(
-        "https://api.github.com/user?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET,
+        "https://api.github.com/user",
         headers=headers,
     )
 
