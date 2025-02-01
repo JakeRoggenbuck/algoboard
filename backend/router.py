@@ -25,6 +25,11 @@ class User(BaseModel):
     username: str
 
 
+class UserBoard(BaseModel):
+    username: str
+    board: str
+
+
 app = FastAPI()
 
 origins = [
@@ -106,7 +111,10 @@ def get_user_info(authorization: str = Header(default=None)):
 def create_user_router(user: User, authorization: str = Header(default=None)):
 
     if not authorization:
-        raise HTTPException(status_code=401, detail="Missing Authorization header")
+        raise HTTPException(
+            status_code=401,
+            detail="Missing Authorization header",
+        )
 
     headers = {"Authorization": authorization, "Accept": "application/json"}
 
@@ -128,6 +136,45 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
             if data.get("login") == "JakeRoggenbuck":
                 add_user(user.username)
                 add_user_to_board(user.username, "everyone")
+
+            # Check if GitHub responded
+            if res.status_code == 200:
+                return JSONResponse(content=res.json(), status_code=200)
+
+    return JSONResponse(content={"message": "Could not load"}, status_code=400)
+
+
+@app.post("/admin/add-user-to-board")
+def add_user_to_board_route(
+    userboard: UserBoard,
+    authorization: str = Header(default=None),
+):
+
+    if not authorization:
+        raise HTTPException(
+            status_code=401,
+            detail="Missing Authorization header",
+        )
+
+    headers = {"Authorization": authorization, "Accept": "application/json"}
+
+    res = requests.get(
+        "https://api.github.com/user",
+        headers=headers,
+    )
+
+    data = res.json()
+
+    # We can safely assume that the user with the username equal to 'login'
+    # has access to the account. This means we can use this username and
+    # possibly the id (I think they are unique) to store with my internal
+    # user data structure to function like a login
+    if data.get("login") and data.get("id"):
+        if isinstance(data["login"], str) and isinstance(data["id"], int):
+
+            # I have admin permissions to add people
+            if data.get("login") == "JakeRoggenbuck":
+                add_user_to_board(userboard.username, userboard.board)
 
             # Check if GitHub responded
             if res.status_code == 200:
