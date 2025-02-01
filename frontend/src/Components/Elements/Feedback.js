@@ -1,7 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function Feedback() {
-  const [showButton, SetShowButton] = useState(1);
+  // Start with undefined to prevent flash
+  const [showButton, setShowButton] = useState(undefined);
+
+  useEffect(() => {
+    const checkStoredState = () => {
+      const storedData = localStorage.getItem("feedbackBannerState");
+      if (storedData) {
+        const { hidden, timestamp } = JSON.parse(storedData);
+        const oneDayInMs = 24 * 60 * 60 * 1000;
+        const now = new Date().getTime();
+
+        // Show banner if more than 1 day has passed
+        if (now - timestamp > oneDayInMs) {
+          localStorage.removeItem("feedbackBannerState");
+          setShowButton(true);
+        } else {
+          setShowButton(!hidden);
+        }
+      } else {
+        // No stored state, show the banner
+        setShowButton(true);
+      }
+    };
+
+    // Check immediately on mount
+    checkStoredState();
+  }, []);
+
+  const handleDismiss = () => {
+    const stateData = {
+      hidden: true,
+      timestamp: new Date().getTime(),
+    };
+    localStorage.setItem("feedbackBannerState", JSON.stringify(stateData));
+    setShowButton(false);
+  };
+
+  // Don't render anything while loading
+  if (showButton === undefined) {
+    return null;
+  }
 
   return (
     <>
@@ -53,20 +93,16 @@ export default function Feedback() {
             </div>
             <div className="flex flex-1 justify-end">
               <button
-                onClick={() => SetShowButton(0)}
+                onClick={handleDismiss}
                 type="button"
                 className="-m-3 p-3 focus-visible:outline-offset-[-4px]"
               >
-                <span className="sr-only">Dismiss</span>
-                {/* <XMarkIcon aria-hidden="true" className="h-5 w-5 text-gray-900" /> */}
-                X
+                <span className="sr-only">Dismiss</span>X
               </button>
             </div>
           </div>
         </>
-      ) : (
-        <></>
-      )}
+      ) : null}
     </>
   );
 }

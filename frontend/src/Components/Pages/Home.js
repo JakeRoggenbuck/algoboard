@@ -1,12 +1,12 @@
-import { Link } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
-import icon_image from '../../images/icon_image.png';
-import bg_image from '../../images/algoboard_bg.png';
-import Feedback from '../../Components/Elements/Feedback.js';
-import Admin from '../../Components/Elements/Admin.js';
-import { User, LogIn, LogOut } from 'lucide-react';
+import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import icon_image from "../../images/icon_image.png";
+import bg_image from "../../images/algoboard_bg.png";
+import Feedback from "../../Components/Elements/Feedback.js";
+import Admin from "../../Components/Elements/Admin.js";
+import { User, LogIn, LogOut } from "lucide-react";
 
-const CLIENT_ID = 'Ov23liAdJ5YRCEzVsbOD';
+const CLIENT_ID = "Ov23liAdJ5YRCEzVsbOD";
 
 const random_flag = () => {
   return Boolean(Math.floor(Math.random() * 2));
@@ -24,16 +24,16 @@ export default function Component() {
   const [latency, setLatency] = useState(0);
 
   const [rerender, setRerender] = useState(false);
-  const [githubInfo, setGithubInfo] = useState({ login: '' });
+  const [githubInfo, setGithubInfo] = useState({ login: "" });
 
-  document.title = 'Home - AlgoBoard';
-  const tada = ' 🎉';
+  document.title = "Home - AlgoBoard";
+  const tada = " 🎉";
 
   async function getUserInfo() {
-    await fetch('https://api.algoboard.org/user-info', {
-      method: 'GET',
+    await fetch("https://api.algoboard.org/user-info", {
+      method: "GET",
       headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
       },
     })
       .then((response) => {
@@ -47,19 +47,19 @@ export default function Component() {
   useEffect(() => {
     const s = window.location.search;
     const url = new URLSearchParams(s);
-    const code = url.get('code');
+    const code = url.get("code");
 
-    if (code && localStorage.getItem('accessToken') === null) {
+    if (code && localStorage.getItem("accessToken") === null) {
       async function getAccessToken() {
-        await fetch('https://api.algoboard.org/access-token?code=' + code, {
-          method: 'GET',
+        await fetch("https://api.algoboard.org/access-token?code=" + code, {
+          method: "GET",
         })
           .then((response) => {
             return response.json();
           })
           .then((data) => {
             if (data.access_token) {
-              localStorage.setItem('accessToken', data.access_token);
+              localStorage.setItem("accessToken", data.access_token);
               setRerender(!rerender);
             }
           });
@@ -70,38 +70,38 @@ export default function Component() {
     }
 
     // Remove code from url bar
-    window.history.pushState({}, '', window.location.pathname);
+    window.history.pushState({}, "", window.location.pathname);
   }, [rerender]);
 
   function loginWithGitHub() {
     window.location.assign(
-      'https://github.com/login/oauth/authorize?client_id=' + CLIENT_ID,
+      "https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID,
     );
   }
 
   function logout() {
-    localStorage.removeItem('accessToken');
+    localStorage.removeItem("accessToken");
     window.location.reload();
   }
 
   const fetchSolvedProblems = async () => {
-    const cacheKey = 'solvedProblems';
-    const cacheTimeKey = 'solvedProblemsTime';
+    const cacheKey = "solvedProblems";
+    const cacheTimeKey = "solvedProblemsTime";
     const cacheTime = localStorage.getItem(cacheTimeKey);
     const now = new Date().getTime();
 
     if (cacheTime && now - parseInt(cacheTime) < 600000) {
       const cachedData = JSON.parse(localStorage.getItem(cacheKey));
       if (cachedData) {
-        setSolved(cachedData['easy'] + cachedData['med'] + cachedData['hard']);
+        setSolved(cachedData["easy"] + cachedData["med"] + cachedData["hard"]);
         return;
       }
     }
 
-    const response = await fetch('https://api.algoboard.org/solved');
+    const response = await fetch("https://api.algoboard.org/solved");
     const data = await response.json();
 
-    setSolved(data['easy'] + data['med'] + data['hard']);
+    setSolved(data["easy"] + data["med"] + data["hard"]);
 
     localStorage.setItem(cacheKey, JSON.stringify(data));
     localStorage.setItem(cacheTimeKey, now.toString());
@@ -112,11 +112,11 @@ export default function Component() {
     const fetchStatus = async () => {
       try {
         var starttime = new Date();
-        const response = await fetch('https://api.algoboard.org/status');
+        const response = await fetch("https://api.algoboard.org/status");
         const data = await response.json();
 
         // Check the status and update the state
-        if (data === 'okay') {
+        if (data === "okay") {
           setIsStatusOkay(true);
         } else {
           setIsStatusOkay(false);
@@ -125,7 +125,7 @@ export default function Component() {
         var endtime = new Date();
         setLatency(endtime - starttime);
       } catch (error) {
-        console.error('Failed to fetch status:', error);
+        console.error("Failed to fetch status:", error);
         setIsStatusOkay(false);
       }
 
@@ -174,7 +174,7 @@ export default function Component() {
 
           {FEATURES.login ? (
             <div className="flex items-center space-x-4">
-              {localStorage.getItem('accessToken') ? (
+              {localStorage.getItem("accessToken") ? (
                 <button
                   onClick={logout}
                   className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-cyan-600 hover:to-blue-700 transition h-10"
@@ -193,7 +193,7 @@ export default function Component() {
               )}
 
               <div className="flex items-center space-x-2 bg-gray-800 rounded-lg px-3 py-2 h-10">
-                {'avatar_url' in githubInfo ? (
+                {"avatar_url" in githubInfo ? (
                   <img
                     src={githubInfo.avatar_url}
                     height="24"
@@ -205,7 +205,7 @@ export default function Component() {
                 )}
 
                 <span className="font-medium text-gray-200">
-                  {githubInfo.login ? githubInfo.login : 'Guest'}
+                  {githubInfo.login ? githubInfo.login : "Guest"}
                 </span>
               </div>
             </div>
@@ -245,7 +245,7 @@ export default function Component() {
           </div>
 
           {/* Show admin panel to Jake because he is admin */}
-          {'login' in githubInfo && githubInfo.login === 'JakeRoggenbuck' ? (
+          {"login" in githubInfo && githubInfo.login === "JakeRoggenbuck" ? (
             <div className="p-12">
               <Admin />
             </div>
