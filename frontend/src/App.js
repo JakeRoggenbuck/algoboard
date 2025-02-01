@@ -1,5 +1,5 @@
 import logo from "./logo.svg";
-import Boards from "./Components/Pages/Boards/Boards";
+import Boards from "./Components/Pages/Boards";
 import "./App.css";
 
 function App() {

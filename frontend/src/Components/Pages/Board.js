@@ -1,7 +1,7 @@
-import UserList from "../../../Components/Elements/UserList/UserList";
+import UserList from "../../Components/Elements/UserList";
 import { Link, useParams } from "react-router-dom";
 
-import Feedback from "../../../Components/Elements/Feedback/Feedback.js";
+import Feedback from "../../Components/Elements/Feedback.js";
 
 export default function Board() {
   const params = useParams();
@@ -41,7 +41,7 @@ export default function Board() {
           </div>
 
           <div className="space-x-2">
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
               Board: {params.boardId}
             </button>
           </div>

@@ -1,17 +1,28 @@
 from fastapi import FastAPI, Query
-import pull
 from fastapi.middleware.cors import CORSMiddleware
-from pathlib import Path
 import sqlite3
-import json
 import pandas as pd
 from datetime import datetime
-from tqdm import tqdm
 import argparse
-from fastapi import FastAPI, Header, Response
+from fastapi import FastAPI, Header
 from fastapi.responses import JSONResponse
 import requests
 from typing import Union
+from pydantic import BaseModel
+from database_setup import repull_replace_data, setup_database
+from database import (
+    update_board_participant_counts,
+    calculate_total_solved_on_board,
+    get_last_entry_time,
+    add_user_to_board,
+    add_board,
+    add_user,
+    count_problems,
+)
+
+
+class User(BaseModel):
+    username: str
 
 
 app = FastAPI()
@@ -21,7 +32,7 @@ origins = [
     "http://50.116.10.252:3000",
     "http://algoboard.org",
     "https://algoboard.org",
-    "https://leaterboard.vercel.app"
+    "https://leaterboard.vercel.app",
 ]
 
 app.add_middleware(
@@ -51,10 +62,7 @@ def get_access_token(code: Union[str, None] = None):
     if code:
         params = "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&code=" + code
 
-        headers = {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-        }
+        headers = {"Accept": "application/json", "Content-Type": "application/json"}
 
         # Ask GitHub for the access token
         res = requests.post(
@@ -91,406 +99,32 @@ def get_user_info(authorization: str = Header(default=None)):
     return JSONResponse(content={"message": "Could not load"}, status_code=400)
 
 
-def setup_database():
-    created = Path("./ranking.db").exists()
+@app.get("/admin/create-user")
+def create_user_router(user: User, authorization: str = Header(default=None)):
 
-    con = sqlite3.connect("ranking.db")
+    headers = {"Authorization": authorization, "Accept": "application/json"}
 
-    cur = con.cursor()
+    res = requests.get("https://api.github.com/user", headers=headers)
 
-    if not created:
-        cur.execute(
-            """CREATE TABLE boards(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            urlname TEXT NOT NULL,
-            participants INTEGER NOT NULL)"""
-        )
+    data = res.json()
 
-        cur.execute(
-            """CREATE TABLE users(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            rank INTEGER NOT NULL,
-            easy_solved INTEGER NOT NULL,
-            med_solved INTEGER NOT NULL,
-            hard_solved INTEGER NOT NULL)"""
-        )
+    # We can safely assume that the user with the username equal to 'login'
+    # has access to the account. This means we can use this username and
+    # possibly the id (I think they are unique) to store with my internal
+    # user data structure to function like a login
+    if data.get("login") and data.get("id"):
+        if isinstance(data["login"], str) and isinstance(data["id"], int):
 
-        cur.execute(
-            """CREATE TABLE user_rank(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            rank INTEGER NOT NULL,
-            easy_solved INTEGER NOT NULL,
-            med_solved INTEGER NOT NULL,
-            hard_solved INTEGER NOT NULL,
-            whentime timestamp)"""
-        )
+            # I have admin permissions to add people
+            if data.get("login") == "JakeRoggenbuck":
+                add_user(user.username)
+                add_user_to_board(user.username, "everyone")
 
-        cur.execute(
-            """CREATE TABLE boards_users(
-            board_id INTEGER,
-            user_id INTEGER,
+            # Check if GitHub responded
+            if res.status_code == 200:
+                return JSONResponse(content=res.json(), status_code=200)
 
-            FOREIGN KEY(board_id) REFERENCES boards(id),
-            FOREIGN KEY(user_id) REFERENCES users(id))"""
-        )
-
-        cur.execute(
-            "INSERT into boards VALUES(NULL, 'Everyone', 'everyone', 1)",
-        )
-        board_id = cur.lastrowid
-
-        cur.execute(
-            "INSERT into boards VALUES(NULL, 'LeaterWorks', 'leaterworks', 1)",
-        )
-        works_id = cur.lastrowid
-
-        with open("../old-backend/aggieworks-swe-3-9-2024.json") as file:
-            data = json.load(file)
-
-            for row in data:
-                username = row["name"]
-                rank = row["rank"]
-                solved = row["solved"]["submitStatsGlobal"]["acSubmissionNum"]
-
-                easy = solved[1]
-                assert easy["difficulty"] == "Easy"
-
-                med = solved[2]
-                assert med["difficulty"] == "Medium"
-
-                hard = solved[3]
-                assert hard["difficulty"] == "Hard"
-
-                cur.execute(
-                    "INSERT into users VALUES(NULL, ?, ?, ?, ?, ?)",
-                    (
-                        username,
-                        rank,
-                        easy["count"],
-                        med["count"],
-                        hard["count"],
-                    ),
-                )
-
-                user_id = cur.lastrowid
-
-                cur.execute(
-                    "INSERT into boards_users VALUES(?, ?)",
-                    (
-                        works_id,
-                        user_id,
-                    ),
-                )
-
-                cur.execute(
-                    "INSERT into boards_users VALUES(?, ?)",
-                    (
-                        board_id,
-                        user_id,
-                    ),
-                )
-
-        con.commit()
-
-        cur.execute(
-            """SELECT board_id, COUNT(user_id) as user_count
-            FROM boards_users
-            GROUP BY board_id"""
-        )
-
-        board_user_counts = cur.fetchall()
-
-        for board_id, user_count in board_user_counts:
-            cur.execute(
-                """UPDATE boards
-                SET participants = ?
-                WHERE id = ?""",
-                (user_count, board_id),
-            )
-
-        con.commit()
-        con.close()
-
-
-def repull_replace_data():
-    con = sqlite3.connect("ranking.db")
-    cur = con.cursor()
-    val = cur.execute("SELECT * FROM users")
-    users = val.fetchall()
-
-    all_data = {}
-
-    con = sqlite3.connect("ranking.db")
-
-    cur = con.cursor()
-
-    for user in tqdm(users):
-        data = pull.pull_data(user[1])
-        ranking = pull.pull_rank(user[1])
-
-        data = {
-            "ranking": ranking["ranking"],
-            "easySolved": data["easySolved"],
-            "hardSolved": data["hardSolved"],
-            "mediumSolved": data["mediumSolved"]
-        }
-
-        all_data[user[1]] = data
-
-        to_update = (
-            (
-                data["ranking"],
-                data["easySolved"],
-                data["mediumSolved"],
-                data["hardSolved"],
-                user[1],
-            ),
-        )
-
-        cur.execute(
-            """UPDATE users
-            SET rank=?, easy_solved=?, med_solved=?, hard_solved=?
-            WHERE name=?""",
-            *to_update,
-        )
-
-        cur.execute(
-            "INSERT into user_rank VALUES(NULL, ?, ?, ?, ?, ?, ?)",
-            (
-                user[1],
-                data["ranking"],
-                data["easySolved"],
-                data["mediumSolved"],
-                data["hardSolved"],
-                datetime.now(),
-            ),
-        )
-
-    con.commit()
-    con.close()
-
-
-START_DATA = [
-    [99991, 'hansonn', 470919, 64, 94, 13, '2024-02-12 20:02:36.785595'],
-    [99992, '2003kevinle', 702659, 53, 62, 0, '2024-02-12 20:02:36.795578'],
-    [99993, 'feliciafengg', 784868, 75, 26, 0, '2024-02-12 20:02:36.842753'],
-    [99994, 'realchef', 891656, 63, 28, 0, '2024-02-12 20:02:36.712859'],
-    [99995, 'normando', 939765, 43, 35, 3, '2024-02-12 20:02:36.813943'],
-    [99996, 'AroopB', 1033796, 31, 39, 0, '2024-02-12 20:02:36.733985'],
-    [99997, 'jakeroggenbuck', 1151340, 50, 8, 2, '2024-02-12 20:02:36.722913'],
-    [99998, 'siddharthmmani', 1673868, 27, 6, 0, '2024-02-12 20:02:36.804582'],
-    [99999, 'ahujaanish11', 1718014, 21, 11, 0, '2024-02-12 20:02:36.852473'],
-    [100000, 'andchen1', 2425496, 13, 3, 0, '2024-02-12 20:02:36.833592'],
-    [100001, 'atata6', 3114099, 12, 1, 0, '2024-02-12 20:02:36.869488'],
-    [100002, 'vshl', 4476769, 3, 0, 0, '2024-02-12 20:02:36.824410'],
-    [100003, 'AggieWorker', 5000001, 2, 0, 0, '2024-02-12 20:02:36.775176'],
-    [
-        100004,
-        'isabellovecandy',
-        5000001,
-        0,
-        0,
-        0,
-        '2024-02-12 20:02:36.860291',
-    ],
-]
-
-
-def add_starting_data():
-    con = sqlite3.connect("ranking.db")
-    cur = con.cursor()
-
-    for user in START_DATA:
-        print((*user[1:],))
-
-        should = input(": ")
-        if should == "Y":
-            cur.execute(
-                "INSERT into user_rank VALUES(NULL, ?, ?, ?, ?, ?, ?)",
-                (*user[1:],),
-            )
-
-
-def count_problems(board: str):
-    con = sqlite3.connect("ranking.db")
-    cur = con.cursor()
-
-    problems = cur.execute(
-        """SELECT u.easy_solved, u.med_solved, u.hard_solved
-        FROM users as u
-        JOIN boards_users ON u.id = boards_users.user_id
-        JOIN boards ON boards_users.board_id = boards.id
-        WHERE boards.urlname = ?;""",
-        (board,),
-    ).fetchall()
-
-    counts = {"all": 0, "easy": 0, "medium": 0, "hard": 0}
-
-    for p in problems:
-        counts["all"] += p[0] + p[1] + p[2]
-        counts["easy"] += p[0]
-        counts["medium"] += p[1]
-        counts["hard"] += p[2]
-
-    return counts
-
-
-def add_user(username: str, verbose: bool = False):
-    con = sqlite3.connect("ranking.db")
-    cur = con.cursor()
-
-    cur.execute(
-        "INSERT into users VALUES(NULL, ?, ?, ?, ?, ?)",
-        (username, 0, 0, 0, 0),
-    )
-
-    if verbose:
-        print(f"Added {username}")
-
-    con.commit()
-    con.close()
-
-
-def add_board(board: str, verbose: bool = False):
-    con = sqlite3.connect("ranking.db")
-    cur = con.cursor()
-
-    urlname = board.lower()
-    urlname = urlname.replace(" ", "-")
-
-    cur.execute(
-        "INSERT into boards VALUES(NULL, ?, ?)",
-        (board, urlname, 0),
-    )
-
-    if verbose:
-        print(f"Added {board} as {urlname}")
-
-    con.commit()
-    con.close()
-
-
-def add_user_to_board(username: str, board: str, verbose: bool = False):
-    con = sqlite3.connect("ranking.db")
-    cur = con.cursor()
-
-    board_id = cur.execute(
-        "SELECT id FROM boards WHERE urlname = ?",
-        (board,),
-    ).fetchone()
-    user_id = cur.execute(
-        "SELECT id FROM users WHERE name = ?",
-        (username,),
-    ).fetchone()
-
-    cur.execute(
-        "INSERT into boards_users VALUES(?, ?)",
-        (
-            board_id[0],
-            user_id[0],
-        ),
-    )
-
-    if verbose:
-        print(f"Added {username} to {board}")
-
-    con.commit()
-    con.close()
-
-
-def get_last_entry_time() -> str:
-    con = sqlite3.connect("ranking.db")
-    cur = con.cursor()
-
-    timestamp = cur.execute(
-        "SELECT whentime FROM user_rank ORDER BY whentime DESC LIMIT 1;",
-    ).fetchone()
-
-    con.close()
-
-    return timestamp[0]
-
-def calculate_total_solved_on_board():
-    con = sqlite3.connect("ranking.db")
-    cur = con.cursor()
-
-    recent = cur.execute(
-        """
-        WITH RankedEntries AS (
-            SELECT name, easy_solved, med_solved, hard_solved, whentime,
-                    ROW_NUMBER() OVER (PARTITION BY name ORDER BY whentime DESC) AS rn
-            FROM user_rank
-        )
-        SELECT name, easy_solved, med_solved, hard_solved, whentime
-        FROM RankedEntries
-        WHERE rn = 1;
-        """
-    ).fetchall()
-
-    first = cur.execute(
-        """
-        WITH RankedEntries AS (
-            SELECT name, easy_solved, med_solved, hard_solved, whentime,
-                    ROW_NUMBER() OVER (PARTITION BY name ORDER BY whentime ASC) AS rn
-            FROM user_rank
-        )
-        SELECT name, easy_solved, med_solved, hard_solved, whentime
-        FROM RankedEntries
-        WHERE rn = 1;
-        """
-    ).fetchall()
-
-    con.close()
-
-    found = {}
-
-    for row in recent:
-        found[row[0]] = [(row[1], row[2], row[3])]
-
-    for row in first:
-        found[row[0]].append((row[1], row[2], row[3]))
-
-    sums = {"easy": 0, "med": 0, "hard": 0}
-
-    for _, v in found.items():
-        a = v[0]
-        b = v[1]
-
-        sums["easy"] += a[0] - b[0]
-        sums["med"] += a[1] - b[1]
-        sums["hard"] += a[2] - b[2]
-
-    return sums
-
-
-def update_board_participant_counts(verbose=True):
-    con = sqlite3.connect("ranking.db")
-    cur = con.cursor()
-
-    cur.execute(
-        """SELECT board_id, COUNT(user_id) as user_count
-        FROM boards_users
-        GROUP BY board_id"""
-    )
-
-    board_user_counts = cur.fetchall()
-
-    for board_id, user_count in board_user_counts:
-        if verbose:
-            print(board_id, user_count)
-
-        cur.execute(
-            """UPDATE boards
-            SET participants = ?
-            WHERE id = ?""",
-            (user_count, board_id),
-        )
-
-    con.commit()
-    con.close()
+    return JSONResponse(content={"message": "Could not load"}, status_code=400)
 
 
 @app.get("/")
