@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
 import pandas as pd
@@ -107,7 +107,8 @@ def get_user_info(authorization: str = Header(default=None)):
 @app.post("/admin/create-user")
 def create_user_router(user: User, authorization: str = Header(default=None)):
 
-    print(authorization)
+    if not authorization:
+        raise HTTPException(status_code=401, detail="Missing Authorization header")
 
     headers = {"Authorization": authorization, "Accept": "application/json"}
 

@@ -20,7 +20,7 @@ function Admin() {
         {
           method: 'POST',
           headers: {
-            Authorization: localStorage.getItem('github_token') || '',
+            Authorization: `Bearer ${localStorage.getItem('github_token')}`,
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
