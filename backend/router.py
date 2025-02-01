@@ -80,7 +80,10 @@ def get_user_info(authorization: str = Header(default=None)):
 
     headers = {"Authorization": authorization, "Accept": "application/json"}
 
-    res = requests.get("https://api.github.com/user", headers=headers)
+    res = requests.get(
+        "https://api.github.com/user?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET,
+        headers=headers,
+    )
 
     data = res.json()
 
@@ -104,7 +107,10 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
 
     headers = {"Authorization": authorization, "Accept": "application/json"}
 
-    res = requests.get("https://api.github.com/user", headers=headers)
+    res = requests.get(
+        "https://api.github.com/user?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET,
+        headers=headers,
+    )
 
     data = res.json()
 
@@ -118,7 +124,9 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
     if data.get("login") and data.get("id"):
         if isinstance(data["login"], str) and isinstance(data["id"], int):
 
-            print("Added user!", "A" + data.get("login") + "A", data.get("login") == "JakeRoggenbuck")
+            print(
+                "Added user!", "A" + data.get("login") + "A", data.get("login") == "JakeRoggenbuck"
+            )
             # I have admin permissions to add people
             if data.get("login") == "JakeRoggenbuck":
                 add_user(user.username)
