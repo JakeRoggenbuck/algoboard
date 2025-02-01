@@ -108,7 +108,7 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
     headers = {"Authorization": authorization, "Accept": "application/json"}
 
     res = requests.get(
-        "https://api.github.com/user?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET,
+        "https://api.github.com/user",
         headers=headers,
     )
 
