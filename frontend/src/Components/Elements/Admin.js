@@ -105,25 +105,25 @@ function Admin() {
   return (
     <>
       {isVisible ? (
-        <div className="p-6 max-w mx-auto bg-white rounded-lg shadow-md">
+        <div className="p-6 max-w mx-auto bg-[#161B22] rounded-lg shadow-md">
           <div className="space-y-4">
             <div className="flex">
-              <h2 className="text-xl font-bold text-gray-800">Admin Panel</h2>
+              <h2 className="text-xl font-bold text-gray-100">Admin Panel</h2>
 
               <button
                 onClick={handleClose}
-                className="py-1 px-2 mx-8 text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 flex justify-end"
+                className="py-1 px-2 mx-8 text-gray-100 flex justify-end"
               >
                 ✕
               </button>
             </div>
-            <p>
+            <p className="text-gray-100">
               By default a newly created user gets added to the "everyone"
               board.
             </p>
 
             {/* Create User Button */}
-            <h1 className="font-bold">Create a User</h1>
+            <h1 className="font-bold text-gray-100">Create a User</h1>
             <div className="flex gap-2">
               <input
                 type="text"
@@ -143,7 +143,7 @@ function Admin() {
             </div>
 
             {/* Add User to Board Button */}
-            <h1 className="font-bold">Add a User to a Board</h1>
+            <h1 className="font-bold text-gray-100">Add a User to a Board</h1>
             <div className="flex gap-2">
               <input
                 type="text"
@@ -186,7 +186,7 @@ function Admin() {
       ) : (
         <>
           <button onClick={showPanel}>
-            <p className="text-white">Show Admin Panel</p>
+            <p className="text-gray-400">Show Admin Panel</p>
           </button>
         </>
       )}
