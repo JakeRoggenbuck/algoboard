@@ -144,7 +144,7 @@ export default function Component() {
             src={bg_image}
             alt="Background"
             id="my_image"
-            class="absolute top-1/2 left-1/2 object-cover z-0 -translate-x-1/2 -translate-y-1/2 opacity-20 animate-fadeInOut"
+            className="absolute top-1/2 left-1/2 object-cover z-0 -translate-x-1/2 -translate-y-1/2 opacity-20 animate-fadeInOut"
           />
         ) : (
           <></>
@@ -155,8 +155,8 @@ export default function Component() {
         <Feedback />
         <header className="text-white z-10 p-5 text-sm flex flex justify-between items-center">
           <div className="flex flex-row items-center">
-            <img className="m-2 h-8" src={icon_image} />
-            <p class="text-xl">AlgoBoard</p>
+            <img alt="AlgoBoard Logo" className="m-2 h-8" src={icon_image} />
+            <p className="text-xl">AlgoBoard</p>
           </div>
 
           {FEATURES.top_text ? (
@@ -216,7 +216,7 @@ export default function Component() {
 
         <main className="flex z-10 flex-col items-center justify-center flex-grow">
           <h1 className="text-white text-8xl font-extrabold mb-8">AlgoBoard</h1>
-          {solved != -9999 ? (
+          {solved !== -9999 ? (
             <p className="text-2xl text-gray-400">
               <b>{solved}</b> Problems Solved! {tada}
             </p>

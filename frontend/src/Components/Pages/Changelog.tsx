@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import React from "react";
 import latency_image from "../../images/api-status-latency.png";
 import histagram_image from "../../images/histagram.png";
 import banner_logo from "../../images/banner_logo.png";
@@ -28,7 +29,7 @@ export default function Changelog() {
           <Link to="/">
             <div className="flex flex-row items-center">
               <img className="m-2 h-8" src={icon_image} />
-              <p class="text-xl">AlgoBoard</p>
+              <p className="text-xl">AlgoBoard</p>
             </div>
           </Link>
         </header>
