@@ -8,10 +8,6 @@ import { User, LogIn, LogOut } from "lucide-react";
 
 const CLIENT_ID = "Ov23liAdJ5YRCEzVsbOD";
 
-const random_flag = () => {
-  return Boolean(Math.floor(Math.random() * 2));
-};
-
 const FEATURES = {
   login: true,
   top_text: false,
@@ -163,7 +159,7 @@ export default function Component() {
             <nav>
               <a
                 className="text-white hover:text-blue-300 transition-colors duration-300"
-                href="#"
+                href="/"
               >
                 About
               </a>
@@ -196,6 +192,7 @@ export default function Component() {
                 {"avatar_url" in githubInfo ? (
                   <img
                     src={githubInfo.avatar_url}
+					alt="Profile"
                     height="24"
                     width="24"
                     className="rounded-full"
@@ -266,7 +263,7 @@ export default function Component() {
             <p className="text-gray-400"> - {latency}ms</p>
           </div>
           <span>
-            <a target="_blank" href="https://forms.gle/o2pdkqeoXEVV7kw78">
+            <a target="_blank" rel="noreferrer" href="https://forms.gle/o2pdkqeoXEVV7kw78">
               Feedback Form
             </a>
           </span>

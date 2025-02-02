@@ -28,7 +28,7 @@ export default function Changelog() {
         <header className="text-white p-5 text-sm flex justify-between items-center">
           <Link to="/">
             <div className="flex flex-row items-center">
-              <img className="m-2 h-8" src={icon_image} />
+              <img alt="AlgoBoard" className="m-2 h-8" src={icon_image} />
               <p className="text-xl">AlgoBoard</p>
             </div>
           </Link>
@@ -138,13 +138,13 @@ export default function Changelog() {
             <p className="my-4">
               I added updates that happen every 3 hours instead of once a day.
             </p>
-            <img className="m-2" src={hourly_updates} />
+            <img alt="Hourly Updates" className="m-2" src={hourly_updates} />
 
             <p className="my-4">
               I also changed the update script to update every three hours. This
               is a simple solution and it works great.
             </p>
-            <img className="m-2" src={new_update_script} />
+            <img alt="Update Script" className="m-2" src={new_update_script} />
           </div>
 
           <div className="m-4 w-3/5">
@@ -155,8 +155,8 @@ export default function Changelog() {
             <h3 className="my-4 text-white text-2xl">- New icon</h3>
             <p className="my-4">
               I created a new icon based on a previous logo idea.
-              <img className="m-2" src={icon_image} />
-              <img className="m-2" src={banner_logo} />
+              <img alt="New Icon" className="m-2" src={icon_image} />
+              <img alt="New Banner" className="m-2" src={banner_logo} />
             </p>
 
             <h3 className="my-4 text-white text-2xl">- Add page titles</h3>
@@ -191,15 +191,15 @@ export default function Changelog() {
               I added a tag that displays the API latency on the home page.
             </p>
 
-            <img src={latency_image} />
+            <img alt="Latency Indicator" src={latency_image} />
 
-            <h3 className="my-4 text-white text-2xl">- Added a Histagram</h3>
+            <h3 className="my-4 text-white text-2xl">- Added a Histogram</h3>
             <p className="my-4">
-              I added a Histagram view for the total score. I also added button
+              I added a Histogram view for the total score. I also added button
               to switch between the views.
             </p>
 
-            <img className="object-contain h-80" src={histagram_image} />
+            <img alt="Histogram" className="object-contain h-80" src={histagram_image} />
           </div>
         </div>
       </div>
