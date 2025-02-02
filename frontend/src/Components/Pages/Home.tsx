@@ -192,7 +192,7 @@ export default function Component() {
                 {"avatar_url" in githubInfo ? (
                   <img
                     src={githubInfo.avatar_url}
-					alt="Profile"
+                    alt="Profile"
                     height="24"
                     width="24"
                     className="rounded-full"
@@ -263,7 +263,11 @@ export default function Component() {
             <p className="text-gray-400"> - {latency}ms</p>
           </div>
           <span>
-            <a target="_blank" rel="noreferrer" href="https://forms.gle/o2pdkqeoXEVV7kw78">
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://forms.gle/o2pdkqeoXEVV7kw78"
+            >
               Feedback Form
             </a>
           </span>

@@ -199,7 +199,11 @@ export default function Changelog() {
               to switch between the views.
             </p>
 
-            <img alt="Histogram" className="object-contain h-80" src={histagram_image} />
+            <img
+              alt="Histogram"
+              className="object-contain h-80"
+              src={histagram_image}
+            />
           </div>
         </div>
       </div>
