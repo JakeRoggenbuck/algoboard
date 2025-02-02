@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import StatsTable from "./StatsTable.js";
-import ScoreLine from "./ScoreLine.js";
-import ScoreHistogram from "./ScoreHistogram.js";
+import StatsTable from "./StatsTable.tsx";
+import ScoreLine from "./ScoreLine.tsx";
+import ScoreHistogram from "./ScoreHistogram.tsx";
 import "chartjs-adapter-luxon";
 
 import Chart from "chart.js/auto";

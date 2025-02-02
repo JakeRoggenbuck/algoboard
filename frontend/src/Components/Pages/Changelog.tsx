@@ -5,8 +5,8 @@ import banner_logo from "../../images/banner_logo.png";
 import icon_image from "../../images/icon_image.png";
 import hourly_updates from "../../images/hourly-updates.png";
 import new_update_script from "../../images/new_update_script.png";
-import Feedback from "../../Components/Elements/Feedback.js";
-import ChangelogLoginDemo from "../../Components/Elements/ChangelogLoginDemo.js";
+import Feedback from "../../Components/Elements/Feedback.tsx";
+import ChangelogLoginDemo from "../../Components/Elements/ChangelogLoginDemo.tsx";
 
 export default function Changelog() {
   const diamond = " 💎";
