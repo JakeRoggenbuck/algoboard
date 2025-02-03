@@ -2,15 +2,11 @@ import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import icon_image from "../../images/icon_image.png";
 import bg_image from "../../images/algoboard_bg.png";
-import Feedback from "../../Components/Elements/Feedback.js";
-import Admin from "../../Components/Elements/Admin.js";
+import Feedback from "../../Components/Elements/Feedback.tsx";
+import Admin from "../../Components/Elements/Admin.tsx";
 import { User, LogIn, LogOut } from "lucide-react";
 
 const CLIENT_ID = "Ov23liAdJ5YRCEzVsbOD";
-
-const random_flag = () => {
-  return Boolean(Math.floor(Math.random() * 2));
-};
 
 const FEATURES = {
   login: true,
@@ -144,7 +140,7 @@ export default function Component() {
             src={bg_image}
             alt="Background"
             id="my_image"
-            class="absolute top-1/2 left-1/2 object-cover z-0 -translate-x-1/2 -translate-y-1/2 opacity-20 animate-fadeInOut"
+            className="absolute top-1/2 left-1/2 object-cover z-0 -translate-x-1/2 -translate-y-1/2 opacity-20 animate-fadeInOut"
           />
         ) : (
           <></>
@@ -155,15 +151,15 @@ export default function Component() {
         <Feedback />
         <header className="text-white z-10 p-5 text-sm flex flex justify-between items-center">
           <div className="flex flex-row items-center">
-            <img className="m-2 h-8" src={icon_image} />
-            <p class="text-xl">AlgoBoard</p>
+            <img alt="AlgoBoard Logo" className="m-2 h-8" src={icon_image} />
+            <p className="text-xl">AlgoBoard</p>
           </div>
 
           {FEATURES.top_text ? (
             <nav>
               <a
                 className="text-white hover:text-blue-300 transition-colors duration-300"
-                href="#"
+                href="/"
               >
                 About
               </a>
@@ -196,6 +192,7 @@ export default function Component() {
                 {"avatar_url" in githubInfo ? (
                   <img
                     src={githubInfo.avatar_url}
+                    alt="Profile"
                     height="24"
                     width="24"
                     className="rounded-full"
@@ -216,7 +213,7 @@ export default function Component() {
 
         <main className="flex z-10 flex-col items-center justify-center flex-grow">
           <h1 className="text-white text-8xl font-extrabold mb-8">AlgoBoard</h1>
-          {solved != -9999 ? (
+          {solved !== -9999 ? (
             <p className="text-2xl text-gray-400">
               <b>{solved}</b> Problems Solved! {tada}
             </p>
@@ -266,7 +263,11 @@ export default function Component() {
             <p className="text-gray-400"> - {latency}ms</p>
           </div>
           <span>
-            <a target="_blank" href="https://forms.gle/o2pdkqeoXEVV7kw78">
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://forms.gle/o2pdkqeoXEVV7kw78"
+            >
               Feedback Form
             </a>
           </span>
