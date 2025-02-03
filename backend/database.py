@@ -31,7 +31,7 @@ def add_user(username: str, verbose: bool = False):
 
     cur.execute(
         "INSERT into users VALUES(NULL, ?, ?, ?, ?, ?)",
-        (username, 0, 0, 0, 0),
+        (username, 10_000, 0, 0, 0),
     )
 
     if verbose:
