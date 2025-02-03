@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import Chart from "chart.js/auto";
 
 const ScoreLine = (props) => {
@@ -196,8 +196,8 @@ const ScoreLine = (props) => {
 
   return (
     <div>
-      <h1 className="text-center">Problems Solved by Type in the Last Week</h1>
-      <canvas ref={chartRef} width="400" height="110" className="m-4"></canvas>
+      <h1 class="text-center">Problems Solved by Type in the Last Week</h1>
+      <canvas ref={chartRef} width="400" height="110" class="m-4"></canvas>
     </div>
   );
 };

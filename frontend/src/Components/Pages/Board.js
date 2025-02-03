@@ -1,8 +1,7 @@
-import UserList from "../../Components/Elements/UserList.tsx";
+import UserList from "../../Components/Elements/UserList";
 import { Link, useParams } from "react-router-dom";
-import React from "react";
 
-import Feedback from "../../Components/Elements/Feedback.tsx";
+import Feedback from "../../Components/Elements/Feedback.js";
 
 export default function Board() {
   const params = useParams();

@@ -7,10 +7,11 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import "./index.css";
-import Board from "./Components/Pages/Board.tsx";
-import Boards from "./Components/Pages/Boards.tsx";
-import Changelog from "./Components/Pages/Changelog.tsx";
-import Home from "./Components/Pages/Home.tsx";
+import App from "./App";
+import Board from "./Components/Pages/Board";
+import Boards from "./Components/Pages/Boards";
+import Changelog from "./Components/Pages/Changelog";
+import Home from "./Components/Pages/Home";
 import reportWebVitals from "./reportWebVitals";
 
 const routes = createRoutesFromElements(
