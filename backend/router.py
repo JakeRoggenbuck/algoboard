@@ -116,6 +116,12 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
             detail="Missing Authorization header",
         )
 
+    if not user.username.isalnum():
+        raise HTTPException(
+            status_code=422,
+            detail="Invalid username given",
+        )
+
     headers = {"Authorization": authorization, "Accept": "application/json"}
 
     res = requests.get(
@@ -155,6 +161,19 @@ def add_user_to_board_route(
         raise HTTPException(
             status_code=401,
             detail="Missing Authorization header",
+        )
+
+    if not userboard.username.isalnum():
+        raise HTTPException(
+            status_code=422,
+            detail="Invalid username given",
+        )
+
+    boardname_without_dash = userboard.board.replace("-", "")
+    if not boardname_without_dash.isalnum():
+        raise HTTPException(
+            status_code=422,
+            detail="Invalid board name given",
         )
 
     headers = {"Authorization": authorization, "Accept": "application/json"}
