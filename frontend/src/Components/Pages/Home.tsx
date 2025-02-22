@@ -272,8 +272,8 @@ export default function Component() {
             </a>
           </span>
           <span>
-            Contact: <a href="mailto:bug@jr0.org">bug@jr0.org</a> or text{" "}
-            <a href="tel:+15302120126">(530) 212-0126</a>
+            Contact: <a className="text-blue-300" href="mailto:bug@jr0.org">bug@jr0.org</a> or text{" "}
+            <a className="text-blue-300" href="tel:+15302120126">(530) 212-0126</a>
           </span>
         </footer>
       </div>
