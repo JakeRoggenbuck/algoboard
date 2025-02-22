@@ -271,7 +271,10 @@ export default function Component() {
               Feedback Form
             </a>
           </span>
-          <span>Contact: bug@jr0.org</span>
+          <span>
+            Contact: <a href="mailto:bug@jr0.org">bug@jr0.org</a> or text{" "}
+            <a href="tel:+15302120126">(530) 212-0126</a>
+          </span>
         </footer>
       </div>
     </>
