@@ -25,13 +25,13 @@ def count_problems(board: str):
     return counts
 
 
-def log_email(email: str):
+def log_email(email: str, username: str):
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
 
     cur.execute(
-        "INSERT into emails VALUES(NULL, ?)",
-        (email),
+        "INSERT into emails VALUES(NULL, ?, ?)",
+        (email, username),
     )
 
 
