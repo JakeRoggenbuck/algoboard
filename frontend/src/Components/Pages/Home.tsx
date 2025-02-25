@@ -26,6 +26,24 @@ export default function Component() {
   const tada = " 🎉";
 
   async function getUserInfo() {
+    const cacheKey = "githubUserInfo";
+    const cacheTimeKey = "githubUserInfoTime";
+    const cacheTime = localStorage.getItem(cacheTimeKey);
+    const now = new Date().getTime();
+
+    if (cacheTime && now - parseInt(cacheTime) < 600_000) {
+      let k = localStorage.getItem(cacheKey);
+
+      if (k != null) {
+        const cachedData = JSON.parse(k);
+
+        if (cachedData) {
+          setGithubInfo(cachedData);
+          return;
+        }
+      }
+    }
+
     await fetch("https://api.algoboard.org/user-info", {
       method: "GET",
       headers: {
@@ -37,6 +55,9 @@ export default function Component() {
       })
       .then((data) => {
         setGithubInfo(data);
+
+        localStorage.setItem(cacheKey, JSON.stringify(data));
+        localStorage.setItem(cacheTimeKey, now.toString());
       });
   }
 
@@ -71,7 +92,9 @@ export default function Component() {
 
   function loginWithGitHub() {
     window.location.assign(
-      "https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID + "&scope=user:email",
+      "https://github.com/login/oauth/authorize?client_id=" +
+        CLIENT_ID +
+        "&scope=user:email",
     );
   }
 
@@ -272,8 +295,14 @@ export default function Component() {
             </a>
           </span>
           <span>
-            Contact: <a className="text-blue-300" href="mailto:bug@jr0.org">bug@jr0.org</a> or text{" "}
-            <a className="text-blue-300" href="tel:+15302120126">(530) 212-0126</a>
+            Contact:{" "}
+            <a className="text-blue-300" href="mailto:bug@jr0.org">
+              bug@jr0.org
+            </a>{" "}
+            or text{" "}
+            <a className="text-blue-300" href="tel:+15302120126">
+              (530) 212-0126
+            </a>
           </span>
         </footer>
       </div>
