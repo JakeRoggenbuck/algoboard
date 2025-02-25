@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 
 
 def count_problems(board: str):
@@ -30,8 +31,8 @@ def log_email(email: str, username: str):
     cur = con.cursor()
 
     cur.execute(
-        "INSERT into emails VALUES(NULL, ?, ?)",
-        (email, username),
+        "INSERT into emails (email, username, timestamp) VALUES(NULL, ?, ?, ?)",
+        (email, username, datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
     )
 
     con.commit()
