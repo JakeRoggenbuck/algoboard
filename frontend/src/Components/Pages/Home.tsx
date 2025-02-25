@@ -31,7 +31,7 @@ export default function Component() {
     const cacheTime = localStorage.getItem(cacheTimeKey);
     const now = new Date().getTime();
 
-	// Cache for 10 minutes
+    // Cache for 10 minutes
     if (cacheTime && now - parseInt(cacheTime) < 600_000) {
       let k = localStorage.getItem(cacheKey);
 
@@ -212,23 +212,25 @@ export default function Component() {
                 </button>
               )}
 
-              <div className="flex items-center space-x-2 bg-gray-800 rounded-lg px-3 py-2 h-10">
-                {"avatar_url" in githubInfo ? (
-                  <img
-                    src={githubInfo.avatar_url}
-                    alt="Profile"
-                    height="24"
-                    width="24"
-                    className="rounded-full"
-                  />
-                ) : (
-                  <User className="text-cyan-400" size={20} />
-                )}
+              <Link to="/account">
+                <div className="flex items-center space-x-2 bg-gray-800 rounded-lg px-3 py-2 h-10">
+                  {"avatar_url" in githubInfo ? (
+                    <img
+                      src={githubInfo.avatar_url}
+                      alt="Profile"
+                      height="24"
+                      width="24"
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <User className="text-cyan-400" size={20} />
+                  )}
 
-                <span className="font-medium text-gray-200">
-                  {githubInfo.login ? githubInfo.login : "Guest"}
-                </span>
-              </div>
+                  <span className="font-medium text-gray-200">
+                    {githubInfo.login ? githubInfo.login : "Guest"}
+                  </span>
+                </div>
+              </Link>
             </div>
           ) : (
             <></>
