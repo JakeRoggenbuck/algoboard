@@ -31,6 +31,7 @@ export default function Component() {
     const cacheTime = localStorage.getItem(cacheTimeKey);
     const now = new Date().getTime();
 
+	// Cache for 10 minutes
     if (cacheTime && now - parseInt(cacheTime) < 600_000) {
       let k = localStorage.getItem(cacheKey);
 
