@@ -19,6 +19,7 @@ from database import (
     add_user,
     count_problems,
     log_email,
+    get_logins,
 )
 
 
@@ -179,9 +180,50 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
                 add_user_to_board(user.username, "everyone")
                 update_board_participant_counts()
 
+            # TODO: Should I actually return the GitHub data again?
             # Check if GitHub responded
             if res.status_code == 200:
                 return JSONResponse(content=res.json(), status_code=200)
+
+    return JSONResponse(content={"message": "Could not load"}, status_code=400)
+
+
+@app.get("/admin/get-logins")
+def get_logins_route(user: User, authorization: str = Header(default=None)):
+
+    if not authorization:
+        raise HTTPException(
+            status_code=401,
+            detail="Missing Authorization header",
+        )
+
+    if not user.username.isalnum():
+        raise HTTPException(
+            status_code=422,
+            detail="Invalid username given",
+        )
+
+    headers = {"Authorization": authorization, "Accept": "application/json"}
+
+    res = requests.get(
+        "https://api.github.com/user",
+        headers=headers,
+    )
+
+    data = res.json()
+
+    # We can safely assume that the user with the username equal to 'login'
+    # has access to the account. This means we can use this username and
+    # possibly the id (I think they are unique) to store with my internal
+    # user data structure to function like a login
+    if data.get("login") and data.get("id"):
+        if isinstance(data["login"], str) and isinstance(data["id"], int):
+
+            # I have admin permissions
+            if data.get("login") == "JakeRoggenbuck":
+                logins = get_logins()
+
+                return JSONResponse(content=logins, status_code=200)
 
     return JSONResponse(content={"message": "Could not load"}, status_code=400)
 

@@ -38,6 +38,17 @@ def log_email(email: str, username: str):
     con.commit()
 
 
+def get_logins() -> list:
+    con = sqlite3.connect("ranking.db")
+    cur = con.cursor()
+
+    logins = cur.execute(
+        "SELECT * from emails;"
+    ).fetchall()
+
+    return list(logins)
+
+
 def add_user(username: str, verbose: bool = False):
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
