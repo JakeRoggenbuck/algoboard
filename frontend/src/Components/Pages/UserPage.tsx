@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function UserPage() {
   const [githubInfo, setGithubInfo] = useState({ login: "" });
 
   document.title = "User Page - AlgoBoard";
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
 
   async function getUserInfo() {
     const cacheKey = "githubUserInfo";
@@ -20,6 +24,9 @@ export default function UserPage() {
 
         if (cachedData) {
           setGithubInfo(cachedData);
+
+          console.log(githubInfo);
+
           return;
         }
       }
@@ -35,7 +42,6 @@ export default function UserPage() {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         setGithubInfo(data);
 
         localStorage.setItem(cacheKey, JSON.stringify(data));
@@ -43,16 +49,12 @@ export default function UserPage() {
       });
   }
 
-  getUserInfo();
-
   return (
     <>
       <div className="bg-[#0D1117] text-white min-h-screen p-8">
         <div className="flex justify-between items-center mb-6">
           <div className="text-sm font-semibold">
             <h1>Hey!</h1>
-
-            <p>{githubInfo}</p>
           </div>
         </div>
       </div>
