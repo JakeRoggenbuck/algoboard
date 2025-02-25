@@ -18,7 +18,7 @@ const UserPage = () => {
     const cacheTimeKey = "githubUserInfoTime";
     const cacheTime = localStorage.getItem(cacheTimeKey);
     const now = new Date().getTime();
-    
+
     // Cache for 10 minutes
     if (cacheTime && now - parseInt(cacheTime) < 600_000) {
       let k = localStorage.getItem(cacheKey);
@@ -31,7 +31,7 @@ const UserPage = () => {
         }
       }
     }
-    
+
     try {
       const response = await fetch("https://api.algoboard.org/user-info", {
         method: "GET",
@@ -39,11 +39,11 @@ const UserPage = () => {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
         },
       });
-      
+
       if (!response.ok) {
         throw new Error("Failed to fetch user data");
       }
-      
+
       const data = await response.json();
       setGithubInfo(data);
       localStorage.setItem(cacheKey, JSON.stringify(data));
@@ -62,28 +62,30 @@ const UserPage = () => {
       setError("Username cannot be empty");
       return;
     }
-    
+
     setLoading(true);
+
     try {
-      // This is a placeholder. In a real app, you would implement the API call to update the username
-      const response = await fetch("https://api.algoboard.org/update-username", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      const response = await fetch(
+        "https://api.algoboard.org/update-username",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          body: JSON.stringify({ newUsername }),
         },
-        body: JSON.stringify({ newUsername }),
-      });
-      
+      );
+
       if (!response.ok) {
         throw new Error("Failed to update username");
       }
-      
-      // Update local data
+
       const updatedInfo = { ...githubInfo, login: newUsername };
       setGithubInfo(updatedInfo);
       localStorage.setItem("githubUserInfo", JSON.stringify(updatedInfo));
-      
+
       setSuccessMessage("Username updated successfully!");
       setNewUsername("");
       setError("");
@@ -95,49 +97,59 @@ const UserPage = () => {
     }
   };
 
-  // Calculate solved problems
   const solvedProblemsData = localStorage.getItem("solvedProblems");
-  const problemStats = solvedProblemsData ? JSON.parse(solvedProblemsData) : { easy: 0, med: 0, hard: 0 };
+
+  const problemStats =
+    solvedProblemsData !== null && solvedProblemsData["total"] == 1571
+      ? JSON.parse(solvedProblemsData)
+      : { easy: 0, med: 0, hard: 0 };
   const totalSolved = problemStats.easy + problemStats.med + problemStats.hard;
 
   if (loading && !githubInfo.login) {
     return (
-      <div className="bg-gray-900 text-white min-h-screen p-8 flex items-center justify-center">
+      <div className="bg-[#0D1117] text-white min-h-screen p-8 flex items-center justify-center">
         <div className="animate-pulse">Loading profile data...</div>
       </div>
     );
   }
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen p-8">
+    <div className="bg-[#0D1117] text-white min-h-screen p-8">
       <div className="max-w-4xl mx-auto">
         <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-          {/* Header with avatar and name */}
           <div className="p-6 flex flex-col md:flex-row items-center gap-6 border-b border-gray-700">
             <div className="flex-shrink-0">
-              <img 
-                src={githubInfo.avatar_url} 
-                alt="Profile" 
+              <img
+                src={githubInfo.avatar_url}
+                alt="Profile"
                 className="w-32 h-32 rounded-full border-4 border-blue-500"
               />
             </div>
             <div className="text-center md:text-left">
-              <h1 className="text-2xl font-bold">{githubInfo.name || githubInfo.login}</h1>
+              <h1 className="text-2xl font-bold">
+                {githubInfo.name || githubInfo.login}
+              </h1>
               <div className="text-blue-400 mb-2">@{githubInfo.login}</div>
-              {githubInfo.bio && <p className="text-gray-300 mb-4">{githubInfo.bio}</p>}
+              {githubInfo.bio && (
+                <p className="text-gray-300 mb-4">{githubInfo.bio}</p>
+              )}
               <div className="flex flex-wrap gap-4 text-sm">
-                <a 
-                  href={githubInfo.html_url} 
-                  target="_blank" 
+                <a
+                  href={githubInfo.html_url}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-full transition"
                 >
                   GitHub Profile
                 </a>
                 {githubInfo.blog && (
-                  <a 
-                    href={githubInfo.blog.startsWith('http') ? githubInfo.blog : `https://${githubInfo.blog}`} 
-                    target="_blank" 
+                  <a
+                    href={
+                      githubInfo.blog.startsWith("http")
+                        ? githubInfo.blog
+                        : `https://${githubInfo.blog}`
+                    }
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-full transition"
                   >
@@ -189,13 +201,24 @@ const UserPage = () => {
 
           {/* Update Username Form */}
           <div className="p-6">
-            <h2 className="text-xl font-bold mb-4">Update Username</h2>
-            {error && <div className="mb-4 p-3 bg-red-900 bg-opacity-50 rounded text-red-200">{error}</div>}
-            {successMessage && <div className="mb-4 p-3 bg-green-900 bg-opacity-50 rounded text-green-200">{successMessage}</div>}
-            
+            <h2 className="text-xl font-bold mb-4">Update Leetcode Username</h2>
+            {error && (
+              <div className="mb-4 p-3 bg-red-900 bg-opacity-50 rounded text-red-200">
+                {error}
+              </div>
+            )}
+            {successMessage && (
+              <div className="mb-4 p-3 bg-green-900 bg-opacity-50 rounded text-green-200">
+                {successMessage}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="newUsername" className="block text-sm font-medium text-gray-400 mb-1">
+                <label
+                  htmlFor="newUsername"
+                  className="block text-sm font-medium text-gray-400 mb-1"
+                >
                   New Username
                 </label>
                 <input
@@ -220,8 +243,13 @@ const UserPage = () => {
         </div>
 
         <div className="mt-4 text-gray-400 text-sm text-center">
-          <p>Account created: {new Date(githubInfo.created_at).toLocaleDateString()}</p>
-          <p>Last updated: {new Date(githubInfo.updated_at).toLocaleDateString()}</p>
+          <p>
+            Account created:{" "}
+            {new Date(githubInfo.created_at).toLocaleDateString()}
+          </p>
+          <p>
+            Last updated: {new Date(githubInfo.updated_at).toLocaleDateString()}
+          </p>
         </div>
       </div>
     </div>

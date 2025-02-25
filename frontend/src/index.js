@@ -1,18 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import React from "react";
+import ReactDOM from "react-dom/client";
 import {
   createBrowserRouter,
   RouterProvider,
   Route,
   createRoutesFromElements,
-} from 'react-router-dom';
-import './index.css';
-import Board from './Components/Pages/Board.tsx';
-import Boards from './Components/Pages/Boards.tsx';
-import Changelog from './Components/Pages/Changelog.tsx';
-import Home from './Components/Pages/Home.tsx';
-import UserPage from './Components/Pages/UserPage.tsx';
-import reportWebVitals from './reportWebVitals';
+} from "react-router-dom";
+import "./index.css";
+import Board from "./Components/Pages/Board.tsx";
+import Boards from "./Components/Pages/Boards.tsx";
+import Changelog from "./Components/Pages/Changelog.tsx";
+import Home from "./Components/Pages/Home.tsx";
+import UserPage from "./Components/Pages/UserPage.tsx";
+import reportWebVitals from "./reportWebVitals";
 
 const routes = createRoutesFromElements(
   <Route>
@@ -26,7 +26,7 @@ const routes = createRoutesFromElements(
 
 const router = createBrowserRouter(routes);
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <RouterProvider router={router} />
