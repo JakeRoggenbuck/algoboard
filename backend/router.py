@@ -189,7 +189,7 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
 
 
 @app.get("/admin/get-logins")
-def get_logins_route(user: User, authorization: str = Header(default=None)):
+def get_logins_route(authorization: str = Header(default=None)):
 
     if not authorization:
         raise HTTPException(
