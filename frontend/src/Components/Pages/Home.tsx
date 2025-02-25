@@ -28,14 +28,15 @@ export default function Component() {
   async function getUserInfo() {
     const cacheKey = "githubUserInfo";
     const cacheTimeKey = "githubUserInfoTime";
+
     const cacheTime = localStorage.getItem(cacheTimeKey);
     const now = new Date().getTime();
 
-	// Cache for 10 minutes
+    // Cache for 10 minutes
     if (cacheTime && now - parseInt(cacheTime) < 600_000) {
       let k = localStorage.getItem(cacheKey);
 
-      if (k != null) {
+      if (k !== null) {
         const cachedData = JSON.parse(k);
 
         if (cachedData) {
@@ -100,21 +101,27 @@ export default function Component() {
   }
 
   function logout() {
-    localStorage.removeItem("accessToken");
+    localStorage.clear();
     window.location.reload();
   }
 
   const fetchSolvedProblems = async () => {
     const cacheKey = "solvedProblems";
     const cacheTimeKey = "solvedProblemsTime";
+
     const cacheTime = localStorage.getItem(cacheTimeKey);
     const now = new Date().getTime();
 
-    if (cacheTime && now - parseInt(cacheTime) < 600000) {
-      const cachedData = JSON.parse(localStorage.getItem(cacheKey));
-      if (cachedData) {
-        setSolved(cachedData["easy"] + cachedData["med"] + cachedData["hard"]);
-        return;
+    if (cacheTime && now - parseInt(cacheTime) < 600_000) {
+      let k = localStorage.getItem(cacheKey);
+      if (k !== null) {
+        const cachedData = JSON.parse(k);
+        if (cachedData) {
+          setSolved(
+            cachedData["easy"] + cachedData["med"] + cachedData["hard"],
+          );
+          return;
+        }
       }
     }
 
