@@ -270,7 +270,9 @@ const UserPage = () => {
 
             {/* AlgoBoard Stats */}
             <div className="p-6 border-b border-gray-700">
-              <h2 className="text-xl font-bold mb-4">Problem Solving Stats (Coming Soon!)</h2>
+              <h2 className="text-xl font-bold mb-4">
+                Problem Solving Stats (Coming Soon!)
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="bg-green-900 bg-opacity-50 p-4 rounded-lg">
                   <h3 className="text-green-400 text-sm mb-2">Easy</h3>
