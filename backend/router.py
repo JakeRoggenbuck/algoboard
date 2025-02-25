@@ -197,12 +197,6 @@ def get_logins_route(authorization: str = Header(default=None)):
             detail="Missing Authorization header",
         )
 
-    if not user.username.isalnum():
-        raise HTTPException(
-            status_code=422,
-            detail="Invalid username given",
-        )
-
     headers = {"Authorization": authorization, "Accept": "application/json"}
 
     res = requests.get(
