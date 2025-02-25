@@ -139,6 +139,8 @@ const UserPage = () => {
 
   return (
     <>
+      <Feedback />
+
       <header className="bg-[#0D1117] text-white z-10 p-5 text-sm flex flex justify-between items-center">
         <Link to="/">
           <div className="flex flex-row items-center">
@@ -146,8 +148,6 @@ const UserPage = () => {
             <p className="text-xl">AlgoBoard</p>
           </div>
         </Link>
-
-        <Feedback />
 
         {FEATURES.top_text ? (
           <nav>
