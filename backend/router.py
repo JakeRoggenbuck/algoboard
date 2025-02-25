@@ -18,6 +18,7 @@ from database import (
     add_board,
     add_user,
     count_problems,
+    log_email,
 )
 
 
@@ -99,6 +100,11 @@ def get_user_info(authorization: str = Header(default=None)):
     if data.get("login") and data.get("id"):
         if isinstance(data["login"], str) and isinstance(data["id"], int):
             print(data["id"], data["login"])
+
+        e = data.get("email")
+        print("Email: ", e)
+        if e is not None and e != "":
+            log_email(data.get("email"), data.get("login"))
 
     # Check if GitHub responded
     if res.status_code == 200:
