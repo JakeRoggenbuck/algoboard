@@ -66,7 +66,14 @@ with open("config.secret") as file:
 def get_access_token(code: Union[str, None] = None):
 
     if code:
-        params = "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&code=" + code
+        params = (
+            "?client_id="
+            + CLIENT_ID
+            + "&client_secret="
+            + CLIENT_SECRET
+            + "&code="
+            + code
+        )
 
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
 
@@ -94,7 +101,7 @@ def get_user_info(authorization: str = Header(default=None)):
     data = res.json()
 
     email_response = requests.get(
-        'https://api.github.com/user/emails',
+        "https://api.github.com/user/emails",
         headers=headers,
     )
 
@@ -103,15 +110,15 @@ def get_user_info(authorization: str = Header(default=None)):
 
         primary_email = None
         for email_obj in email_data:
-            if email_obj.get('primary'):
-                primary_email = email_obj.get('email')
+            if email_obj.get("primary"):
+                primary_email = email_obj.get("email")
                 break
 
         if not primary_email and email_data:
-            primary_email = email_data[0].get('email')
+            primary_email = email_data[0].get("email")
 
-        data['primary_email'] = primary_email
-        data['all_emails'] = email_data
+        data["primary_email"] = primary_email
+        data["all_emails"] = email_data
 
         if primary_email:
             log_email(primary_email, data.get("login"))
@@ -124,8 +131,9 @@ def get_user_info(authorization: str = Header(default=None)):
         if isinstance(data["login"], str) and isinstance(data["id"], int):
             print(data["id"], data["login"])
 
-        e = data.get("email")
-        print("GitHub Profile Email: ", e)
+        print(
+            "GitHub Profile Email: ", data.get("primary_email"), data.get("all_emails")
+        )
 
     # Check if GitHub responded
     if res.status_code == 200:
@@ -331,7 +339,7 @@ def get_board(board_id: str):
 
     all_rows = sorted(all_rows, key=lambda x: x["score"])
 
-    df = pd.json_normalize(all_rows, sep='_')
+    df = pd.json_normalize(all_rows, sep="_")
     summary_statistics = df.describe().to_dict()
 
     return {
