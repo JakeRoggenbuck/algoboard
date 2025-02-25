@@ -102,7 +102,8 @@ def get_user_info(authorization: str = Header(default=None)):
             print(data["id"], data["login"])
 
         e = data.get("email")
-        if e != None and e != "":
+        print("Email: ", e)
+        if e is not None and e != "":
             log_email(data.get("email"), data.get("login"))
 
     # Check if GitHub responded
