@@ -66,14 +66,7 @@ with open("config.secret") as file:
 def get_access_token(code: Union[str, None] = None):
 
     if code:
-        params = (
-            "?client_id="
-            + CLIENT_ID
-            + "&client_secret="
-            + CLIENT_SECRET
-            + "&code="
-            + code
-        )
+        params = "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&code=" + code
 
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
 
@@ -131,15 +124,19 @@ def get_user_info(authorization: str = Header(default=None)):
         if isinstance(data["login"], str) and isinstance(data["id"], int):
             print(data["id"], data["login"])
 
-        print(
-            "GitHub Profile Email: ", data.get("primary_email"), data.get("all_emails")
-        )
+        print("GitHub Profile Email: ", data.get("primary_email"), data.get("all_emails"))
 
     # Check if GitHub responded
     if res.status_code == 200:
         return JSONResponse(content=res.json(), status_code=200)
 
-    return JSONResponse(content={"message": "Could not load"}, status_code=400)
+    return JSONResponse(
+        content={
+            "message": "Could not load",
+            "result": res.json(),
+        },
+        status_code=400,
+    )
 
 
 @app.post("/admin/create-user")
