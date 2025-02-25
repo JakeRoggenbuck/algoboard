@@ -173,6 +173,7 @@ export default function Component() {
         <div className="" />
 
         <Feedback />
+
         <header className="text-white z-10 p-5 text-sm flex flex justify-between items-center">
           <div className="flex flex-row items-center">
             <img alt="AlgoBoard Logo" className="m-2 h-8" src={icon_image} />
