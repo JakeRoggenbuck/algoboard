@@ -34,6 +34,8 @@ def log_email(email: str, username: str):
         (email, username),
     )
 
+    con.commit()
+
 
 def add_user(username: str, verbose: bool = False):
     con = sqlite3.connect("ranking.db")
