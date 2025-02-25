@@ -25,9 +25,11 @@ export default function Component() {
   document.title = "Home - AlgoBoard";
   const tada = " 🎉";
 
+  const cacheKey = "githubUserInfo";
+  const cacheTimeKey = "githubUserInfoTime";
+
   async function getUserInfo() {
-    const cacheKey = "githubUserInfo";
-    const cacheTimeKey = "githubUserInfoTime";
+
     const cacheTime = localStorage.getItem(cacheTimeKey);
     const now = new Date().getTime();
 
@@ -101,6 +103,8 @@ export default function Component() {
 
   function logout() {
     localStorage.removeItem("accessToken");
+    localStorage.removeItem(cacheKey);
+    localStorage.removeItem(cacheTimeKey);
     window.location.reload();
   }
 
