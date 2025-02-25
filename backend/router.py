@@ -116,6 +116,12 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
             detail="Missing Authorization header",
         )
 
+    if not user.username.isalnum():
+        raise HTTPException(
+            status_code=422,
+            detail="Invalid username given",
+        )
+
     headers = {"Authorization": authorization, "Accept": "application/json"}
 
     res = requests.get(
@@ -136,6 +142,7 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
             if data.get("login") == "JakeRoggenbuck":
                 add_user(user.username)
                 add_user_to_board(user.username, "everyone")
+                update_board_participant_counts()
 
             # Check if GitHub responded
             if res.status_code == 200:
@@ -154,6 +161,19 @@ def add_user_to_board_route(
         raise HTTPException(
             status_code=401,
             detail="Missing Authorization header",
+        )
+
+    if not userboard.username.isalnum():
+        raise HTTPException(
+            status_code=422,
+            detail="Invalid username given",
+        )
+
+    boardname_without_dash = userboard.board.replace("-", "")
+    if not boardname_without_dash.isalnum():
+        raise HTTPException(
+            status_code=422,
+            detail="Invalid board name given",
         )
 
     headers = {"Authorization": authorization, "Accept": "application/json"}
@@ -175,6 +195,7 @@ def add_user_to_board_route(
             # I have admin permissions to add people
             if data.get("login") == "JakeRoggenbuck":
                 add_user_to_board(userboard.username, userboard.board)
+                update_board_participant_counts()
 
             # Check if GitHub responded
             if res.status_code == 200:

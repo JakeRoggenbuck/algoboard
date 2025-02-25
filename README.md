@@ -1,6 +1,8 @@
 # AlgoBoard
 ![image](https://github.com/user-attachments/assets/0bc4f5f4-9618-4af6-82f6-0f000ea17336)
 
+![Screenshot 2025-01-31 at 21-05-58 Home - AlgoBoard](https://github.com/user-attachments/assets/97edd7f7-341a-49da-9b40-851541fa8a88)
+
 ![image](https://github.com/JakeRoggenbuck/leaterboard/assets/35516367/0320b18e-7f08-4d6f-91d1-ea1bb9481025)
 
 

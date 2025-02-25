@@ -1,16 +1,12 @@
-import { Link } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
-import icon_image from '../../images/icon_image.png';
-import bg_image from '../../images/algoboard_bg.png';
-import Feedback from '../../Components/Elements/Feedback.js';
-import Admin from '../../Components/Elements/Admin.js';
-import { User, LogIn, LogOut } from 'lucide-react';
+import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import icon_image from "../../images/icon_image.png";
+import bg_image from "../../images/algoboard_bg.png";
+import Feedback from "../../Components/Elements/Feedback.tsx";
+import Admin from "../../Components/Elements/Admin.tsx";
+import { User, LogIn, LogOut } from "lucide-react";
 
-const CLIENT_ID = 'Ov23liAdJ5YRCEzVsbOD';
-
-const random_flag = () => {
-  return Boolean(Math.floor(Math.random() * 2));
-};
+const CLIENT_ID = "Ov23liAdJ5YRCEzVsbOD";
 
 const FEATURES = {
   login: true,
@@ -24,16 +20,16 @@ export default function Component() {
   const [latency, setLatency] = useState(0);
 
   const [rerender, setRerender] = useState(false);
-  const [githubInfo, setGithubInfo] = useState({ login: '' });
+  const [githubInfo, setGithubInfo] = useState({ login: "" });
 
-  document.title = 'Home - AlgoBoard';
-  const tada = ' 🎉';
+  document.title = "Home - AlgoBoard";
+  const tada = " 🎉";
 
   async function getUserInfo() {
-    await fetch('https://api.algoboard.org/user-info', {
-      method: 'GET',
+    await fetch("https://api.algoboard.org/user-info", {
+      method: "GET",
       headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
       },
     })
       .then((response) => {
@@ -47,19 +43,19 @@ export default function Component() {
   useEffect(() => {
     const s = window.location.search;
     const url = new URLSearchParams(s);
-    const code = url.get('code');
+    const code = url.get("code");
 
-    if (code && localStorage.getItem('accessToken') === null) {
+    if (code && localStorage.getItem("accessToken") === null) {
       async function getAccessToken() {
-        await fetch('https://api.algoboard.org/access-token?code=' + code, {
-          method: 'GET',
+        await fetch("https://api.algoboard.org/access-token?code=" + code, {
+          method: "GET",
         })
           .then((response) => {
             return response.json();
           })
           .then((data) => {
             if (data.access_token) {
-              localStorage.setItem('accessToken', data.access_token);
+              localStorage.setItem("accessToken", data.access_token);
               setRerender(!rerender);
             }
           });
@@ -70,38 +66,38 @@ export default function Component() {
     }
 
     // Remove code from url bar
-    window.history.pushState({}, '', window.location.pathname);
+    window.history.pushState({}, "", window.location.pathname);
   }, [rerender]);
 
   function loginWithGitHub() {
     window.location.assign(
-      'https://github.com/login/oauth/authorize?client_id=' + CLIENT_ID,
+      "https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID + "&scope=user:email",
     );
   }
 
   function logout() {
-    localStorage.removeItem('accessToken');
+    localStorage.removeItem("accessToken");
     window.location.reload();
   }
 
   const fetchSolvedProblems = async () => {
-    const cacheKey = 'solvedProblems';
-    const cacheTimeKey = 'solvedProblemsTime';
+    const cacheKey = "solvedProblems";
+    const cacheTimeKey = "solvedProblemsTime";
     const cacheTime = localStorage.getItem(cacheTimeKey);
     const now = new Date().getTime();
 
     if (cacheTime && now - parseInt(cacheTime) < 600000) {
       const cachedData = JSON.parse(localStorage.getItem(cacheKey));
       if (cachedData) {
-        setSolved(cachedData['easy'] + cachedData['med'] + cachedData['hard']);
+        setSolved(cachedData["easy"] + cachedData["med"] + cachedData["hard"]);
         return;
       }
     }
 
-    const response = await fetch('https://api.algoboard.org/solved');
+    const response = await fetch("https://api.algoboard.org/solved");
     const data = await response.json();
 
-    setSolved(data['easy'] + data['med'] + data['hard']);
+    setSolved(data["easy"] + data["med"] + data["hard"]);
 
     localStorage.setItem(cacheKey, JSON.stringify(data));
     localStorage.setItem(cacheTimeKey, now.toString());
@@ -112,11 +108,11 @@ export default function Component() {
     const fetchStatus = async () => {
       try {
         var starttime = new Date();
-        const response = await fetch('https://api.algoboard.org/status');
+        const response = await fetch("https://api.algoboard.org/status");
         const data = await response.json();
 
         // Check the status and update the state
-        if (data === 'okay') {
+        if (data === "okay") {
           setIsStatusOkay(true);
         } else {
           setIsStatusOkay(false);
@@ -125,7 +121,7 @@ export default function Component() {
         var endtime = new Date();
         setLatency(endtime - starttime);
       } catch (error) {
-        console.error('Failed to fetch status:', error);
+        console.error("Failed to fetch status:", error);
         setIsStatusOkay(false);
       }
 
@@ -144,7 +140,7 @@ export default function Component() {
             src={bg_image}
             alt="Background"
             id="my_image"
-            class="absolute top-1/2 left-1/2 object-cover z-0 -translate-x-1/2 -translate-y-1/2 opacity-20 animate-fadeInOut"
+            className="absolute top-1/2 left-1/2 object-cover z-0 -translate-x-1/2 -translate-y-1/2 opacity-20 animate-fadeInOut"
           />
         ) : (
           <></>
@@ -155,15 +151,15 @@ export default function Component() {
         <Feedback />
         <header className="text-white z-10 p-5 text-sm flex flex justify-between items-center">
           <div className="flex flex-row items-center">
-            <img className="m-2 h-8" src={icon_image} />
-            <p class="text-xl">AlgoBoard</p>
+            <img alt="AlgoBoard Logo" className="m-2 h-8" src={icon_image} />
+            <p className="text-xl">AlgoBoard</p>
           </div>
 
           {FEATURES.top_text ? (
             <nav>
               <a
                 className="text-white hover:text-blue-300 transition-colors duration-300"
-                href="#"
+                href="/"
               >
                 About
               </a>
@@ -174,7 +170,7 @@ export default function Component() {
 
           {FEATURES.login ? (
             <div className="flex items-center space-x-4">
-              {localStorage.getItem('accessToken') ? (
+              {localStorage.getItem("accessToken") ? (
                 <button
                   onClick={logout}
                   className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-cyan-600 hover:to-blue-700 transition h-10"
@@ -193,9 +189,10 @@ export default function Component() {
               )}
 
               <div className="flex items-center space-x-2 bg-gray-800 rounded-lg px-3 py-2 h-10">
-                {'avatar_url' in githubInfo ? (
+                {"avatar_url" in githubInfo ? (
                   <img
                     src={githubInfo.avatar_url}
+                    alt="Profile"
                     height="24"
                     width="24"
                     className="rounded-full"
@@ -205,7 +202,7 @@ export default function Component() {
                 )}
 
                 <span className="font-medium text-gray-200">
-                  {githubInfo.login ? githubInfo.login : 'Guest'}
+                  {githubInfo.login ? githubInfo.login : "Guest"}
                 </span>
               </div>
             </div>
@@ -216,7 +213,7 @@ export default function Component() {
 
         <main className="flex z-10 flex-col items-center justify-center flex-grow">
           <h1 className="text-white text-8xl font-extrabold mb-8">AlgoBoard</h1>
-          {solved != -9999 ? (
+          {solved !== -9999 ? (
             <p className="text-2xl text-gray-400">
               <b>{solved}</b> Problems Solved! {tada}
             </p>
@@ -245,7 +242,7 @@ export default function Component() {
           </div>
 
           {/* Show admin panel to Jake because he is admin */}
-          {'login' in githubInfo && githubInfo.login === 'JakeRoggenbuck' ? (
+          {"login" in githubInfo && githubInfo.login === "JakeRoggenbuck" ? (
             <div className="p-12">
               <Admin />
             </div>
@@ -266,11 +263,18 @@ export default function Component() {
             <p className="text-gray-400"> - {latency}ms</p>
           </div>
           <span>
-            <a target="_blank" href="https://forms.gle/o2pdkqeoXEVV7kw78">
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://forms.gle/o2pdkqeoXEVV7kw78"
+            >
               Feedback Form
             </a>
           </span>
-          <span>Contact: bug@jr0.org</span>
+          <span>
+            Contact: <a className="text-blue-300" href="mailto:bug@jr0.org">bug@jr0.org</a> or text{" "}
+            <a className="text-blue-300" href="tel:+15302120126">(530) 212-0126</a>
+          </span>
         </footer>
       </div>
     </>

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import StatsTable from "./StatsTable.js";
-import ScoreLine from "./ScoreLine.js";
-import ScoreHistogram from "./ScoreHistogram.js";
+import StatsTable from "./StatsTable.tsx";
+import ScoreLine from "./ScoreLine.tsx";
+import ScoreHistogram from "./ScoreHistogram.tsx";
 import "chartjs-adapter-luxon";
-
-import Chart from "chart.js/auto";
 
 const FEATURES = {
   show_days_input: false,
@@ -78,8 +76,6 @@ const UserList = (props) => {
         const star = " ⭐";
         const star2 = " 🌟";
         const lightning = " ⚡";
-        const exclamation = " ❗";
-        const exclamation2 = " ‼️";
 
         for (let i = 0; i < data.participants.length; i++) {
           if (data.participants[i].score < 1000000) {
