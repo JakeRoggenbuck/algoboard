@@ -71,7 +71,7 @@ export default function Component() {
 
   function loginWithGitHub() {
     window.location.assign(
-      "https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID,
+      "https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID + "&scope=user:email",
     );
   }
 
