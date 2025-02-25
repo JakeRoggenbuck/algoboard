@@ -31,7 +31,7 @@ def log_email(email: str, username: str):
     cur = con.cursor()
 
     cur.execute(
-        "INSERT into emails (email, username, timestamp) VALUES(NULL, ?, ?, ?)",
+        "INSERT into emails (email, username, timestamp) VALUES(?, ?, ?)",
         (email, username, datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
     )
 
