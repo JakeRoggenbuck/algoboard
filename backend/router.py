@@ -93,6 +93,29 @@ def get_user_info(authorization: str = Header(default=None)):
 
     data = res.json()
 
+    email_response = requests.get(
+        'https://api.github.com/user/emails',
+        headers=headers,
+    )
+
+    if email_response.status_code == 200:
+        email_data = email_response.json()
+
+        primary_email = None
+        for email_obj in email_data:
+            if email_obj.get('primary'):
+                primary_email = email_obj.get('email')
+                break
+
+        if not primary_email and email_data:
+            primary_email = email_data[0].get('email')
+
+        data['primary_email'] = primary_email
+        data['all_emails'] = email_data
+
+        if primary_email:
+            log_email(primary_email, data.get("login"))
+
     # We can safely assume that the user with the username equal to 'login'
     # has access to the account. This means we can use this username and
     # possibly the id (I think they are unique) to store with my internal
@@ -102,9 +125,7 @@ def get_user_info(authorization: str = Header(default=None)):
             print(data["id"], data["login"])
 
         e = data.get("email")
-        print("Email: ", e)
-        if e is not None and e != "":
-            log_email(data.get("email"), data.get("login"))
+        print("GitHub Profile Email: ", e)
 
     # Check if GitHub responded
     if res.status_code == 200:
