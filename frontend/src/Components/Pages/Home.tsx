@@ -220,9 +220,9 @@ export default function Component() {
                 </button>
               )}
 
-              <div className="flex items-center space-x-2 bg-gray-800 rounded-lg px-3 py-2 h-10">
-                {"avatar_url" in githubInfo ? (
-                  <Link to="/account">
+              <Link to={githubInfo.login ? "/account" : ""}>
+                <div className="flex items-center space-x-2 bg-gray-800 rounded-lg px-3 py-2 h-10">
+                  {"avatar_url" in githubInfo ? (
                     <img
                       src={githubInfo.avatar_url}
                       alt="Profile"
@@ -230,15 +230,15 @@ export default function Component() {
                       width="24"
                       className="rounded-full"
                     />
-                  </Link>
-                ) : (
-                  <User className="text-cyan-400" size={20} />
-                )}
+                  ) : (
+                    <User className="text-cyan-400" size={20} />
+                  )}
 
-                <span className="font-medium text-gray-200">
-                  {githubInfo.login ? githubInfo.login : "Guest"}
-                </span>
-              </div>
+                  <span className="font-medium text-gray-200">
+                    {githubInfo.login ? githubInfo.login : "Guest"}
+                  </span>
+                </div>
+              </Link>
             </div>
           ) : (
             <></>
