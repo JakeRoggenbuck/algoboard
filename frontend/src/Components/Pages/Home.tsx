@@ -56,10 +56,13 @@ export default function Component() {
         return response.json();
       })
       .then((data) => {
-        setGithubInfo(data);
+        // Only cache when the data returned successfully
+        if ("login" in data) {
+          setGithubInfo(data);
 
-        localStorage.setItem(cacheKey, JSON.stringify(data));
-        localStorage.setItem(cacheTimeKey, now.toString());
+          localStorage.setItem(cacheKey, JSON.stringify(data));
+          localStorage.setItem(cacheTimeKey, now.toString());
+        }
       });
   }
 
