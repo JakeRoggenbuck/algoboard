@@ -3,6 +3,7 @@ import { User, LogIn, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import icon_image from "../../images/icon_image.png";
 import Feedback from "../../Components/Elements/Feedback.tsx";
+import { track } from "@amplitude/analytics-browser";
 
 const CLIENT_ID = "Ov23liAdJ5YRCEzVsbOD";
 

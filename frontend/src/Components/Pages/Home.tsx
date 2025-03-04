@@ -5,6 +5,7 @@ import bg_image from "../../images/algoboard_bg.png";
 import Feedback from "../../Components/Elements/Feedback.tsx";
 import Admin from "../../Components/Elements/Admin.tsx";
 import { User, LogIn, LogOut } from "lucide-react";
+import { track } from "@amplitude/analytics-browser";
 
 const CLIENT_ID = "Ov23liAdJ5YRCEzVsbOD";
 
@@ -62,6 +63,8 @@ export default function Component() {
 
           localStorage.setItem(cacheKey, JSON.stringify(data));
           localStorage.setItem(cacheTimeKey, now.toString());
+
+          track("user-logged-in", { loggin: data["login"] });
         }
       });
   }
@@ -96,6 +99,8 @@ export default function Component() {
   }, [rerender]);
 
   function loginWithGitHub() {
+    track("user-logged-clicked", { data: "login-clicked" });
+
     window.location.assign(
       "https://github.com/login/oauth/authorize?client_id=" +
         CLIENT_ID +
@@ -104,6 +109,7 @@ export default function Component() {
   }
 
   function logout() {
+    track("user-logged-out-clicked", { data: "logout-clicked" });
     localStorage.clear();
     window.location.reload();
   }
