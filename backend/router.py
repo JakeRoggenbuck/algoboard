@@ -23,6 +23,10 @@ from database import (
 )
 
 
+def linear_weight(e: int, m: int, h: int) -> float:
+    return e + 2 * m + 3 * h
+
+
 class User(BaseModel):
     username: str
 
@@ -394,12 +398,16 @@ def get_board(board_id: str, start_date: datetime = Query(None), end_date: datet
             scores[name]["score_min"] = min(scores[name].get("score_min", val[2]), val[2])
 
         for name, data in scores.items():
+            easy = data["easy_max"] - data["easy_min"]
+            med = data["med_max"] - data["med_min"]
+            hard = data["hard_max"] - data["hard_min"]
+
             all_rows.append(
                 {
                     "id": data["id"],
-                    "solved": {"easy": data["easy_max"] - data["easy_min"], "medium": data["med_max"] - data["med_min"], "hard": data["hard_max"] - data["hard_min"]},
+                    "solved": {"easy": easy, "medium": med, "hard": hard},
                     "name": name,
-                    "score": data["score_max"] - data["score_min"],
+                    "score": linear_weight(easy, med, hard)
                 }
             )
 
