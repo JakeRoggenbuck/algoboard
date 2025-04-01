@@ -5,6 +5,7 @@ import bg_image from "../../images/algoboard_bg.png";
 import Feedback from "../../Components/Elements/Feedback.tsx";
 import Admin from "../../Components/Elements/Admin.tsx";
 import { User, LogIn, LogOut } from "lucide-react";
+import { track } from "@amplitude/analytics-browser";
 
 const CLIENT_ID = "Ov23liAdJ5YRCEzVsbOD";
 
@@ -56,10 +57,15 @@ export default function Component() {
         return response.json();
       })
       .then((data) => {
-        setGithubInfo(data);
+        // Only cache when the data returned successfully
+        if ("login" in data) {
+          setGithubInfo(data);
 
-        localStorage.setItem(cacheKey, JSON.stringify(data));
-        localStorage.setItem(cacheTimeKey, now.toString());
+          localStorage.setItem(cacheKey, JSON.stringify(data));
+          localStorage.setItem(cacheTimeKey, now.toString());
+
+          track("user-logged-in", { loggin: data["login"] });
+        }
       });
   }
 
@@ -93,6 +99,8 @@ export default function Component() {
   }, [rerender]);
 
   function loginWithGitHub() {
+    track("user-logged-clicked", { data: "login-clicked" });
+
     window.location.assign(
       "https://github.com/login/oauth/authorize?client_id=" +
         CLIENT_ID +
@@ -101,6 +109,7 @@ export default function Component() {
   }
 
   function logout() {
+    track("user-logged-out-clicked", { data: "logout-clicked" });
     localStorage.clear();
     window.location.reload();
   }
@@ -180,6 +189,7 @@ export default function Component() {
         <div className="" />
 
         <Feedback />
+
         <header className="text-white z-10 p-5 text-sm flex flex justify-between items-center">
           <div className="flex flex-row items-center">
             <img alt="AlgoBoard Logo" className="m-2 h-8" src={icon_image} />
@@ -219,23 +229,25 @@ export default function Component() {
                 </button>
               )}
 
-              <div className="flex items-center space-x-2 bg-gray-800 rounded-lg px-3 py-2 h-10">
-                {"avatar_url" in githubInfo ? (
-                  <img
-                    src={githubInfo.avatar_url}
-                    alt="Profile"
-                    height="24"
-                    width="24"
-                    className="rounded-full"
-                  />
-                ) : (
-                  <User className="text-cyan-400" size={20} />
-                )}
+              <Link to={githubInfo.login ? "/account" : ""}>
+                <div className="flex items-center space-x-2 bg-gray-800 rounded-lg px-3 py-2 h-10">
+                  {"avatar_url" in githubInfo ? (
+                    <img
+                      src={githubInfo.avatar_url}
+                      alt="Profile"
+                      height="24"
+                      width="24"
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <User className="text-cyan-400" size={20} />
+                  )}
 
-                <span className="font-medium text-gray-200">
-                  {githubInfo.login ? githubInfo.login : "Guest"}
-                </span>
-              </div>
+                  <span className="font-medium text-gray-200">
+                    {githubInfo.login ? githubInfo.login : "Guest"}
+                  </span>
+                </div>
+              </Link>
             </div>
           ) : (
             <></>
