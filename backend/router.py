@@ -381,17 +381,17 @@ def get_board(board_id: str, start_date: datetime = Query(None), end_date: datet
             if name not in scores:
                 scores[name] = {"id": val[0]}
 
-                scores[name]["easy_max"] = max(scores[name].get("easy_max", val[3]), val[3])
-                scores[name]["easy_min"] = min(scores[name].get("easy_min", val[3]), val[3])
+            scores[name]["easy_max"] = max(scores[name].get("easy_max", val[3]), val[3])
+            scores[name]["easy_min"] = min(scores[name].get("easy_min", val[3]), val[3])
 
-                scores[name]["med_max"] = max(scores[name].get("med_max", val[4]), val[4])
-                scores[name]["med_min"] = min(scores[name].get("med_min", val[4]), val[4])
+            scores[name]["med_max"] = max(scores[name].get("med_max", val[4]), val[4])
+            scores[name]["med_min"] = min(scores[name].get("med_min", val[4]), val[4])
 
-                scores[name]["hard_max"] = max(scores[name].get("hard_max", val[5]), val[5])
-                scores[name]["hard_min"] = min(scores[name].get("hard_min", val[5]), val[5])
+            scores[name]["hard_max"] = max(scores[name].get("hard_max", val[5]), val[5])
+            scores[name]["hard_min"] = min(scores[name].get("hard_min", val[5]), val[5])
 
-                scores[name]["score_max"] = max(scores[name].get("score_max", val[2]), val[2])
-                scores[name]["score_min"] = min(scores[name].get("score_min", val[2]), val[2])
+            scores[name]["score_max"] = max(scores[name].get("score_max", val[2]), val[2])
+            scores[name]["score_min"] = min(scores[name].get("score_min", val[2]), val[2])
 
         for name, data in scores.items():
             all_rows.append(
