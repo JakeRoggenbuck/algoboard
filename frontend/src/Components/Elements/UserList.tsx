@@ -24,23 +24,23 @@ const UserList = (props) => {
     set_show_line(false);
   };
 
-  var END_DATE = new Date();
+  var end_date = new Date();
   const DAY = 24 * 60 * 60 * 1000;
-  var START_DATE = new Date(END_DATE.getTime() - days_to_graph * DAY);
+  var start_date = new Date(end_date.getTime() - days_to_graph * DAY);
 
   useEffect(() => {
     const fetchEntries = async () => {
       try {
-        const formattedStartDate = START_DATE
-          ? new Date(START_DATE).toISOString()
+        const formattedStartDate = start_date
+          ? new Date(start_date).toISOString()
           : undefined;
-        const formattedEndDate = END_DATE
-          ? new Date(END_DATE).toISOString()
+        const formattedEndDate = end_date
+          ? new Date(end_date).toISOString()
           : undefined;
 
         const queryParams = new URLSearchParams({
-          ...(formattedStartDate && { START_DATE: formattedStartDate }),
-          ...(formattedEndDate && { END_DATE: formattedEndDate }),
+          ...(formattedStartDate && { start_date: formattedStartDate }),
+          ...(formattedEndDate && { end_date: formattedEndDate }),
         }).toString();
 
         const url = `https://api.algoboard.org/entries/${props.boardId}?${queryParams}`;
@@ -63,16 +63,16 @@ const UserList = (props) => {
     const fetchUsers = async () => {
       try {
 
-        const formattedStartDate = START_DATE
-          ? new Date(START_DATE).toISOString()
+        const formattedStartDate = start_date
+          ? new Date(start_date).toISOString()
           : undefined;
-        const formattedEndDate = END_DATE
-          ? new Date(END_DATE).toISOString()
+        const formattedEndDate = end_date
+          ? new Date(end_date).toISOString()
           : undefined;
 
         const queryParams = new URLSearchParams({
-          ...(formattedStartDate && { START_DATE: formattedStartDate }),
-          ...(formattedEndDate && { END_DATE: formattedEndDate }),
+          ...(formattedStartDate && { start_date: formattedStartDate }),
+          ...(formattedEndDate && { end_date: formattedEndDate }),
         }).toString();
 
         const response = await fetch(
