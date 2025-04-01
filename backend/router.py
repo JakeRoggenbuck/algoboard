@@ -433,7 +433,7 @@ def get_board(board_id: str, start_date: datetime = Query(None), end_date: datet
                 }
             )
 
-    all_rows = sorted(all_rows, key=lambda x: x["score"])
+    all_rows = sorted(all_rows, key=lambda x: x["score"], reverse=True)
 
     # df = pd.json_normalize(all_rows, sep="_")
     # summary_statistics = df.describe().to_dict()
