@@ -24,24 +24,25 @@ const UserList = (props) => {
     set_show_line(false);
   };
 
-  var end_date = new Date();
+  var END_DATE = new Date();
   const DAY = 24 * 60 * 60 * 1000;
-  var start_date = new Date(end_date.getTime() - days_to_graph * DAY);
+  var START_DATE = new Date(END_DATE.getTime() - days_to_graph * DAY);
 
   useEffect(() => {
     const fetchEntries = async () => {
       try {
-        const formattedStartDate = start_date
-          ? new Date(start_date).toISOString()
+        const formattedStartDate = START_DATE
+          ? new Date(START_DATE).toISOString()
           : undefined;
-        const formattedEndDate = end_date
-          ? new Date(end_date).toISOString()
+        const formattedEndDate = END_DATE
+          ? new Date(END_DATE).toISOString()
           : undefined;
 
         const queryParams = new URLSearchParams({
-          ...(formattedStartDate && { start_date: formattedStartDate }),
-          ...(formattedEndDate && { end_date: formattedEndDate }),
+          ...(formattedStartDate && { START_DATE: formattedStartDate }),
+          ...(formattedEndDate && { END_DATE: formattedEndDate }),
         }).toString();
+
         const url = `https://api.algoboard.org/entries/${props.boardId}?${queryParams}`;
 
         const response = await fetch(url);
@@ -61,12 +62,27 @@ const UserList = (props) => {
 
     const fetchUsers = async () => {
       try {
+
+        const formattedStartDate = START_DATE
+          ? new Date(START_DATE).toISOString()
+          : undefined;
+        const formattedEndDate = END_DATE
+          ? new Date(END_DATE).toISOString()
+          : undefined;
+
+        const queryParams = new URLSearchParams({
+          ...(formattedStartDate && { START_DATE: formattedStartDate }),
+          ...(formattedEndDate && { END_DATE: formattedEndDate }),
+        }).toString();
+
         const response = await fetch(
-          "https://api.algoboard.org/boards/" + props.boardId,
+          "https://api.algoboard.org/boards/" + props.boardId + "?" + queryParams,
         );
+
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
+
         const data = await response.json();
 
         const diamond = " 💎";

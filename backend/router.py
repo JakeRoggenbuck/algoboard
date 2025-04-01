@@ -344,31 +344,48 @@ def get_entries(
 
 
 @app.get("/boards/{board_id}")
-def get_board(board_id: str):
+def get_board(board_id: str, start_date: datetime = Query(None), end_date: datetime = Query(None),):
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
 
-    val = cur.execute(
-        """
-    SELECT users.*
-    FROM users
-    JOIN boards_users ON users.id = boards_users.user_id
-    JOIN boards ON boards_users.board_id = boards.id
-    WHERE users.id NOT IN (11, 6, 7)
-    AND boards.urlname = ?;""",
-        (board_id,),
-    )
+    val = None
+    use_date_range = True
 
     all_rows = []
-    for row in val.fetchall():
-        all_rows.append(
-            {
-                "id": row[0],
-                "solved": {"easy": row[3], "medium": row[4], "hard": row[5]},
-                "name": row[1],
-                "score": row[2],
-            }
+
+    if use_date_range:
+        query = """
+        SELECT ur.*
+        FROM user_rank ur
+        INNER JOIN users u ON ur.name = u.name
+        INNER JOIN boards_users bu ON u.id = bu.user_id
+        WHERE bu.board_id = ?
+        AND ur.whentime BETWEEN ? AND ?
+        AND ur.id NOT IN (11, 6, 7)
+        ORDER BY ur.whentime ASC
+        """
+        val = cur.execute(query, (board_id, start_date, end_date))
+    else:
+        val = cur.execute(
+            """
+        SELECT users.*
+        FROM users
+        JOIN boards_users ON users.id = boards_users.user_id
+        JOIN boards ON boards_users.board_id = boards.id
+        WHERE users.id NOT IN (11, 6, 7)
+        AND boards.urlname = ?;""",
+            (board_id,),
         )
+
+        for row in val.fetchall():
+            all_rows.append(
+                {
+                    "id": row[0],
+                    "solved": {"easy": row[3], "medium": row[4], "hard": row[5]},
+                    "name": row[1],
+                    "score": row[2],
+                }
+            )
 
     all_rows = sorted(all_rows, key=lambda x: x["score"])
 
