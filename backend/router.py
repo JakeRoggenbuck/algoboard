@@ -353,6 +353,11 @@ def get_board(board_id: str, start_date: datetime = Query(None), end_date: datet
 
     all_rows = []
 
+    real_board_id = cur.execute(
+        "SELECT id FROM boards WHERE boards.urlname = ?",
+        (board_id,),
+    ).fetchone()[0]
+
     if use_date_range:
         query = """
         SELECT ur.*
@@ -364,7 +369,40 @@ def get_board(board_id: str, start_date: datetime = Query(None), end_date: datet
         AND ur.id NOT IN (11, 6, 7)
         ORDER BY ur.whentime ASC
         """
-        val = cur.execute(query, (board_id, start_date, end_date))
+        vals = cur.execute(query, (real_board_id, start_date, end_date))
+
+        # [(729, 'jakeroggenbuck', 151747, 303, 86, 12, '2024-05-21 10:48:05.716504')]
+
+        scores = {}
+
+        for val in vals.fetchall():
+
+            name = val[1]
+            if name not in scores:
+                scores[name] = {"id": val[0]}
+
+                scores[name]["easy_max"] = max(scores[name].get("easy_max", val[3]), val[3])
+                scores[name]["easy_min"] = min(scores[name].get("easy_min", val[3]), val[3])
+
+                scores[name]["med_max"] = max(scores[name].get("med_max", val[4]), val[4])
+                scores[name]["med_min"] = min(scores[name].get("med_min", val[4]), val[4])
+
+                scores[name]["hard_max"] = max(scores[name].get("hard_max", val[5]), val[5])
+                scores[name]["hard_min"] = min(scores[name].get("hard_min", val[5]), val[5])
+
+                scores[name]["score_max"] = max(scores[name].get("score_max", val[2]), val[2])
+                scores[name]["score_min"] = min(scores[name].get("score_min", val[2]), val[2])
+
+        for name, data in scores.items():
+            all_rows.append(
+                {
+                    "id": data["id"],
+                    "solved": {"easy": data["easy_max"] - data["easy_min"], "medium": data["med_max"] - data["med_min"], "hard": data["hard_max"] - data["hard_min"]},
+                    "name": name,
+                    "score": data["score_max"] - data["score_min"],
+                }
+            )
+
     else:
         val = cur.execute(
             """
