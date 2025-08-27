@@ -47,10 +47,7 @@ load_dotenv(override=True)
 
 app = FastAPI()
 
-app.add_middleware(
-    SessionMiddleware,
-    secret_key=getenv("FASTAPI_SECRET_KEY")
-)
+app.add_middleware(SessionMiddleware, secret_key=getenv("FASTAPI_SECRET_KEY"))
 
 origins = [
     "http://localhost:3000",
@@ -130,7 +127,7 @@ async def auth(request: Request):
 
     try:
         user_info_endpoint = "https://www.googleapis.com/oauth2/v2/userinfo"
-        headers = {"Authorization": f'Bearer {token["access_token"]}'}
+        headers = {"Authorization": f"Bearer {token['access_token']}"}
         google_response = requests.get(user_info_endpoint, headers=headers)
         user_info = google_response.json()
     except Exception as e:
@@ -154,7 +151,9 @@ async def auth(request: Request):
         raise HTTPException(status_code=401, detail="Google authentication failed.")
 
     access_token_expires = timedelta(seconds=expires_in)
-    access_token = create_access_token(data={"sub": user_id, "email": user_email}, expires_delta=access_token_expires)
+    access_token = create_access_token(
+        data={"sub": user_id, "email": user_email}, expires_delta=access_token_expires
+    )
 
     session_id = str(uuid.uuid4())
 
@@ -190,9 +189,15 @@ with open("config.secret") as file:
 
 @app.get("/access-token")
 def get_access_token(code: Union[str, None] = None):
-
     if code:
-        params = "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&code=" + code
+        params = (
+            "?client_id="
+            + CLIENT_ID
+            + "&client_secret="
+            + CLIENT_SECRET
+            + "&code="
+            + code
+        )
 
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
 
@@ -209,7 +214,6 @@ def get_access_token(code: Union[str, None] = None):
 
 @app.get("/user-info")
 def get_user_info(authorization: str = Header(default=None)):
-
     headers = {"Authorization": authorization, "Accept": "application/json"}
 
     res = requests.get(
@@ -250,7 +254,9 @@ def get_user_info(authorization: str = Header(default=None)):
         if isinstance(data["login"], str) and isinstance(data["id"], int):
             print(data["id"], data["login"])
 
-        print("GitHub Profile Email: ", data.get("primary_email"), data.get("all_emails"))
+        print(
+            "GitHub Profile Email: ", data.get("primary_email"), data.get("all_emails")
+        )
 
     # Check if GitHub responded
     if res.status_code == 200:
@@ -267,7 +273,6 @@ def get_user_info(authorization: str = Header(default=None)):
 
 @app.post("/admin/create-user")
 def create_user_router(user: User, authorization: str = Header(default=None)):
-
     if not authorization:
         raise HTTPException(
             status_code=401,
@@ -295,7 +300,6 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
     # user data structure to function like a login
     if data.get("login") and data.get("id"):
         if isinstance(data["login"], str) and isinstance(data["id"], int):
-
             # I have admin permissions to add people
             if data.get("login") == "JakeRoggenbuck":
                 add_user(user.username)
@@ -312,7 +316,6 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
 
 @app.get("/admin/get-logins")
 def get_logins_route(authorization: str = Header(default=None)):
-
     if not authorization:
         raise HTTPException(
             status_code=401,
@@ -334,7 +337,6 @@ def get_logins_route(authorization: str = Header(default=None)):
     # user data structure to function like a login
     if data.get("login") and data.get("id"):
         if isinstance(data["login"], str) and isinstance(data["id"], int):
-
             # I have admin permissions
             if data.get("login") == "JakeRoggenbuck":
                 logins = get_logins()
@@ -349,7 +351,6 @@ def add_user_to_board_route(
     userboard: UserBoard,
     authorization: str = Header(default=None),
 ):
-
     if not authorization:
         raise HTTPException(
             status_code=401,
@@ -384,7 +385,6 @@ def add_user_to_board_route(
     # user data structure to function like a login
     if data.get("login") and data.get("id"):
         if isinstance(data["login"], str) and isinstance(data["id"], int):
-
             # I have admin permissions to add people
             if data.get("login") == "JakeRoggenbuck":
                 add_user_to_board(userboard.username, userboard.board)
@@ -469,7 +469,11 @@ def get_entries(
 
 
 @app.get("/boards/{board_id}")
-def get_board(board_id: str, start_date: datetime = Query(None), end_date: datetime = Query(None),):
+def get_board(
+    board_id: str,
+    start_date: datetime = Query(None),
+    end_date: datetime = Query(None),
+):
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
 
@@ -501,7 +505,6 @@ def get_board(board_id: str, start_date: datetime = Query(None), end_date: datet
         scores = {}
 
         for val in vals.fetchall():
-
             name = val[1]
             if name not in scores:
                 scores[name] = {"id": val[0]}
@@ -515,8 +518,12 @@ def get_board(board_id: str, start_date: datetime = Query(None), end_date: datet
             scores[name]["hard_max"] = max(scores[name].get("hard_max", val[5]), val[5])
             scores[name]["hard_min"] = min(scores[name].get("hard_min", val[5]), val[5])
 
-            scores[name]["score_max"] = max(scores[name].get("score_max", val[2]), val[2])
-            scores[name]["score_min"] = min(scores[name].get("score_min", val[2]), val[2])
+            scores[name]["score_max"] = max(
+                scores[name].get("score_max", val[2]), val[2]
+            )
+            scores[name]["score_min"] = min(
+                scores[name].get("score_min", val[2]), val[2]
+            )
 
         for name, data in scores.items():
             easy = data["easy_max"] - data["easy_min"]
@@ -528,7 +535,7 @@ def get_board(board_id: str, start_date: datetime = Query(None), end_date: datet
                     "id": data["id"],
                     "solved": {"easy": easy, "medium": med, "hard": hard},
                     "name": name,
-                    "score": linear_weight(easy, med, hard)
+                    "score": linear_weight(easy, med, hard),
                 }
             )
 
