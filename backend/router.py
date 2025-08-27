@@ -169,7 +169,7 @@ async def auth(request: Request):
 
     access_token_expires = timedelta(seconds=expires_in)
     access_token = jwt_create_access_token(
-        data={"sub": user_id, "email": user_email}, expires_delta=access_token_expires
+        data={"sub": user_id, "email": user_email}, expires=access_token_expires
     )
 
     session_id = str(uuid.uuid4())
