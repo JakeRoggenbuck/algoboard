@@ -1,10 +1,10 @@
-from fastapi import FastAPI, Query, HTTPException
+from fastapi import FastAPI, Query, HTTPException, Cookie, Request, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
 from datetime import datetime
 import argparse
 from fastapi import FastAPI, Header
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 import requests
 from typing import Union
 from pydantic import BaseModel
@@ -25,8 +25,9 @@ from os import getenv
 from starlette.middleware.sessions import SessionMiddleware
 from authlib.integrations.starlette_client import OAuth
 from decouple import config
-from datetime import datetime, timedeltaA
+from datetime import datetime, timedelta
 from jose import jwt, ExpiredSignatureError, JWTError
+import uuid
 
 
 def linear_weight(e: int, m: int, h: int) -> float:
@@ -109,6 +110,70 @@ def get_current_user(token: str = Cookie(None)):
         raise HTTPException(status_code=401, detail="Token expired")
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid Token")
+
+
+@app.get("/login")
+async def login(request: Request):
+    request.session.clear()
+    referer = request.header.get("refer")
+    frontend_url = getenv("FRONTEND_URL")
+    redirect_url = getenv("REDIRECT_URL")
+    request.session["login_redirect"] = frontend_url
+
+
+@app.route("/auth")
+async def auth(request: Request):
+    try:
+        token = await oauth.AlgoBoard.authorize_access_token(request)
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Google auth failed.")
+
+    try:
+        user_info_endpoint = "https://www.googleapis.com/oauth2/v2/userinfo"
+        headers = {"Authorization": f'Bearer {token["access_token"]}'}
+        google_response = requests.get(user_info_endpoint, headers=headers)
+        user_info = google_response.json()
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Google authentication failed.")
+
+    user = token.get("userinfo")
+    expires_in = token.get("expires_in")
+    user_id = user.get("sub")
+    iss = user.get("iss")
+    user_email = user.get("email")
+    first_logged_in = datetime.now()
+    last_accessed = datetime.now()
+
+    user_name = user_info.get("name")
+    user_pic = user_info.get("picture")
+
+    if iss not in ["https://accounts.google.com", "accounts.google.com"]:
+        raise HTTPException(status_code=401, detail="Google authentication failed.")
+
+    if user_id is None:
+        raise HTTPException(status_code=401, detail="Google authentication failed.")
+
+    access_token_expires = timedelta(seconds=expires_in)
+    access_token = create_access_token(data={"sub": user_id, "email": user_email}, expires_delta=access_token_expires)
+
+    session_id = str(uuid.uuid4())
+
+    # Internal Logging that is not implemented
+    # log_user(user_id, user_email, user_name, user_pic, first_logged_in, last_accessed)
+    # log_token(access_token, user_email, session_id)
+
+    redirect_url = request.session.pop("login_redirect", "")
+    response = RedirectResponse(redirect_url)
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        secure=True,
+        samesite="strict",
+    )
+
+    return response
+
 
 # GitHub Client stuff
 CLIENT_ID = ""
