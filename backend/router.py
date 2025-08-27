@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query, HTTPException, Cookie, Request, APIRouter
+from fastapi import FastAPI, Query, HTTPException, Cookie, Request, APIRouter, status
 from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
 from datetime import datetime
@@ -24,10 +24,15 @@ from dotenv import load_dotenv
 from os import getenv
 from starlette.middleware.sessions import SessionMiddleware
 from authlib.integrations.starlette_client import OAuth
-from decouple import config
 from datetime import datetime, timedelta
 from jose import jwt, ExpiredSignatureError, JWTError
 import uuid
+import traceback
+from starlette.config import Config
+import time
+
+
+config = Config(".env")
 
 
 def linear_weight(e: int, m: int, h: int) -> float:
@@ -48,6 +53,16 @@ load_dotenv(override=True)
 app = FastAPI()
 
 app.add_middleware(SessionMiddleware, secret_key=getenv("FASTAPI_SECRET_KEY"))
+
+
+@app.middleware("http")
+async def log_response_time(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    print(f"Request: {request.url.path} completed in {process_time:.4f} seconds")
+    return response
+
 
 origins = [
     "http://localhost:3000",
@@ -89,14 +104,14 @@ if SECRET_KEY is None:
 ALGORITHM = "HS256"
 
 
-def create_access_token(data: dict, expires: Union[timedelta, None] = None):
+def jwt_create_access_token(data: dict, expires: Union[timedelta, None] = None):
     to_encode = data.copy()
     expire = datetime.now() + (expires or timedelta(minutes=30))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
-def get_current_user(token: str = Cookie(None)):
+def jwt_get_current_user(token: str = Cookie(None)):
     if not token:
         raise HTTPException(status_code=401, detail="Not authenticated")
 
@@ -151,7 +166,7 @@ async def auth(request: Request):
         raise HTTPException(status_code=401, detail="Google authentication failed.")
 
     access_token_expires = timedelta(seconds=expires_in)
-    access_token = create_access_token(
+    access_token = jwt_create_access_token(
         data={"sub": user_id, "email": user_email}, expires_delta=access_token_expires
     )
 
@@ -172,6 +187,45 @@ async def auth(request: Request):
     )
 
     return response
+
+
+def get_current_user(token: str = Cookie(None)):
+    if not token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    credentials_exception = HTTPException(
+        status_code=401,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+
+        user_id: str = payload.get("sub")
+        user_email: str = payload.get("email")
+
+        if user_id is None or user_email is None:
+            raise credentials_exception
+
+        return {"user_id": user_id, "user_email": user_email}
+
+    except ExpiredSignatureError:
+        # Specifically handle expired tokens
+        traceback.print_exc()
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Session expired. Please login again.")
+    except JWTError:
+        # Handle other JWT-related errors
+        traceback.print_exc()
+        raise credentials_exception
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=401, detail="Not Authenticated")
+
+
+def validate_user_request(token: str = Cookie(None)):
+    session_details = get_current_user(token)
+
+    return session_details
 
 
 # GitHub Client stuff
