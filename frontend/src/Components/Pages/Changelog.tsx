@@ -35,23 +35,36 @@ export default function Changelog() {
         </header>
 
         <div className="flex flex-col text-white items-center min-h-screen my-4">
-
           <div className="m-4 w-3/5">
             <h1 className="my-4 font-bold text-white text-5xl">
               Changelog for 4-1-2025
             </h1>
 
-            <h3 className="my-4 text-white text-2xl">- Ranking now has a time range</h3>
-            <p className="my-4">Before, the user list rank would be "all time" but now that rank is based on the last 2 weeks.</p>
+            <h3 className="my-4 text-white text-2xl">
+              - Ranking now has a time range
+            </h3>
+            <p className="my-4">
+              Before, the user list rank would be "all time" but now that rank
+              is based on the last 2 weeks.
+            </p>
 
             <h3 className="my-4 text-white text-2xl">- Ranking function</h3>
-			<p className="my-4">The ranking is now based on the function <b>f(x) = easy + (2 * medium) + (3 * hard)</b></p>
+            <p className="my-4">
+              The ranking is now based on the function{" "}
+              <b>f(x) = easy + (2 * medium) + (3 * hard)</b>
+            </p>
 
             <h3 className="my-4 text-white text-2xl">- Open Graph Preview</h3>
-			<p className="my-4">I added Open Graph, which is a way to display a short preview on other websites.</p>
+            <p className="my-4">
+              I added Open Graph, which is a way to display a short preview on
+              other websites.
+            </p>
 
             <h3 className="my-4 text-white text-2xl">- Account Page</h3>
-			<p className="my-4">I added an <a href="https://algoboard.org/account">account page</a></p>
+            <p className="my-4">
+              I added an{" "}
+              <a href="https://algoboard.org/account">account page</a>
+            </p>
           </div>
 
           <div className="m-4 w-3/5">

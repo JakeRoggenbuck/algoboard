@@ -62,7 +62,6 @@ const UserList = (props) => {
 
     const fetchUsers = async () => {
       try {
-
         const formattedStartDate = start_date
           ? new Date(start_date).toISOString()
           : undefined;
@@ -76,7 +75,10 @@ const UserList = (props) => {
         }).toString();
 
         const response = await fetch(
-          "https://api.algoboard.org/boards/" + props.boardId + "?" + queryParams,
+          "https://api.algoboard.org/boards/" +
+            props.boardId +
+            "?" +
+            queryParams,
         );
 
         if (!response.ok) {
