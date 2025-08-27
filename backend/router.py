@@ -91,7 +91,7 @@ oauth.register(
     access_token_params=None,
     refresh_token_url=None,
     authorize_state=config("SECRET_KEY"),
-    redirect_uri="http://algoboard.org/auth",
+    redirect_uri="http://127.0.0.1:8000/auth",
     jwks_uri="https://www.googleapis.com/oauth2/v3/certs",
     client_kwargs={"scope": "openid profile email"},
 )
@@ -127,10 +127,12 @@ def jwt_get_current_user(token: str = Cookie(None)):
 @app.get("/login")
 async def login(request: Request):
     request.session.clear()
-    referer = request.header.get("refer")
+    referer = request.headers.get("refer")
     frontend_url = getenv("FRONTEND_URL")
     redirect_url = getenv("REDIRECT_URL")
     request.session["login_redirect"] = frontend_url
+
+    return await oauth.AlgoBoard.authorize_redirect(request, redirect_url, prompt="consent",)
 
 
 @app.route("/auth")
