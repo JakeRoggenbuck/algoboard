@@ -13,7 +13,7 @@ import Changelog from "./Components/Pages/Changelog.tsx";
 import Home from "./Components/Pages/Home.tsx";
 import UserPage from "./Components/Pages/UserPage.tsx";
 import reportWebVitals from "./reportWebVitals";
-import AuthCallback from "./Components/Pages/AuthCallback";
+import AuthCallback from "./Components/Pages/AuthCallback.tsx";
 
 const routes = createRoutesFromElements(
   <Route>
