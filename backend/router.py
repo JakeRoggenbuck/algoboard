@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
-import pandas as pd
 from datetime import datetime
 import argparse
 from fastapi import FastAPI, Header
@@ -21,6 +20,11 @@ from database import (
     log_email,
     get_logins,
 )
+from dotenv import load_dotenv
+from os import getenv
+from starlette.middleware.sessions import SessionMiddleware
+from authlib.integrations.starlette_client import OAuth
+from decouple import config
 
 
 def linear_weight(e: int, m: int, h: int) -> float:
@@ -36,7 +40,14 @@ class UserBoard(BaseModel):
     board: str
 
 
+load_dotenv(override=True)
+
 app = FastAPI()
+
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=getenv("FASTAPI_SECRET_KEY")
+)
 
 origins = [
     "http://localhost:3000",
@@ -54,6 +65,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+oauth = OAuth()
+oauth.register(
+    name="AlgoBoard",
+    client_id=config("GOOGLE_CLIENT_ID"),
+    client_secret=config("GOOGLE_CLIENT_SECRET"),
+    authorize_url="https://accounts.google.com/o/oauth2/auth",
+    authorize_params=None,
+    access_token_url="https://accounts.google.com/o/oauth2/token",
+    access_token_params=None,
+    refresh_token_url=None,
+    authorize_state=config("SECRET_KEY"),
+    redirect_uri="http://algoboard.org/auth",
+    jwks_uri="https://www.googleapis.com/oauth2/v3/certs",
+    client_kwargs={"scope": "openid profile email"},
+)
+
+SECRET_KEY = getenv("JWT_SECRET_KEY")
+ALGORITHM = "HS256"
 
 CLIENT_ID = ""
 CLIENT_SECRET = ""
