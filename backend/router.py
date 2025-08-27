@@ -25,6 +25,8 @@ from os import getenv
 from starlette.middleware.sessions import SessionMiddleware
 from authlib.integrations.starlette_client import OAuth
 from decouple import config
+from datetime import datetime, timedeltaA
+from jose import jwt, ExpiredSignatureError, JWTError
 
 
 def linear_weight(e: int, m: int, h: int) -> float:
@@ -82,8 +84,33 @@ oauth.register(
 )
 
 SECRET_KEY = getenv("JWT_SECRET_KEY")
+
+if SECRET_KEY is None:
+    raise Exception("JWT_SECRET_KEY not found!")
+
 ALGORITHM = "HS256"
 
+
+def create_access_token(data: dict, expires: Union[timedelta, None] = None):
+    to_encode = data.copy()
+    expire = datetime.now() + (expires or timedelta(minutes=30))
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
+
+def get_current_user(token: str = Cookie(None)):
+    if not token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return {"user_id": payload.get("sub"), "email": payload.get("email")}
+    except ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid Token")
+
+# GitHub Client stuff
 CLIENT_ID = ""
 CLIENT_SECRET = ""
 
