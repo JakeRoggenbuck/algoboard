@@ -1,11 +1,10 @@
-from fastapi import FastAPI, Query, HTTPException
+from fastapi import FastAPI, Query, HTTPException, Cookie, Request, APIRouter, status
 from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
-import pandas as pd
 from datetime import datetime
 import argparse
 from fastapi import FastAPI, Header
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 import requests
 from typing import Union
 from pydantic import BaseModel
@@ -21,6 +20,19 @@ from database import (
     log_email,
     get_logins,
 )
+from dotenv import load_dotenv
+from os import getenv
+from starlette.middleware.sessions import SessionMiddleware
+from authlib.integrations.starlette_client import OAuth
+from datetime import datetime, timedelta
+from jose import jwt, ExpiredSignatureError, JWTError
+import uuid
+import traceback
+from starlette.config import Config
+import time
+
+
+config = Config(".env")
 
 
 def linear_weight(e: int, m: int, h: int) -> float:
@@ -36,10 +48,25 @@ class UserBoard(BaseModel):
     board: str
 
 
+load_dotenv(override=True)
+
 app = FastAPI()
+
+app.add_middleware(SessionMiddleware, secret_key=getenv("FASTAPI_SECRET_KEY"))
+
+
+@app.middleware("http")
+async def log_response_time(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    print(f"Request: {request.url.path} completed in {process_time:.4f} seconds")
+    return response
+
 
 origins = [
     "http://localhost:3000",
+    "http://127.0.0.1:3000",
     "http://50.116.10.252:3000",
     "http://algoboard.org",
     "https://algoboard.org",
@@ -54,7 +81,157 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+oauth = OAuth()
+oauth.register(
+    name="AlgoBoard",
+    client_id=config("GOOGLE_CLIENT_ID"),
+    client_secret=config("GOOGLE_CLIENT_SECRET"),
+    authorize_url="https://accounts.google.com/o/oauth2/auth",
+    authorize_params=None,
+    access_token_url="https://accounts.google.com/o/oauth2/token",
+    access_token_params=None,
+    refresh_token_url=None,
+    authorize_state=config("SECRET_KEY"),
+    redirect_uri="http://127.0.0.1:3000/auth/callback",
+    jwks_uri="https://www.googleapis.com/oauth2/v3/certs",
+    client_kwargs={"scope": "openid profile email"},
+)
 
+SECRET_KEY = getenv("JWT_SECRET_KEY")
+
+if SECRET_KEY is None:
+    raise Exception("JWT_SECRET_KEY not found!")
+
+ALGORITHM = "HS256"
+
+
+def jwt_create_access_token(data: dict, expires: Union[timedelta, None] = None):
+    to_encode = data.copy()
+    expire = datetime.now() + (expires or timedelta(minutes=30))
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
+
+def jwt_get_current_user(token: str = Cookie(None)):
+    if not token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return {"user_id": payload.get("sub"), "email": payload.get("email")}
+    except ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid Token")
+
+
+@app.get("/login")
+async def login(request: Request):
+    request.session.clear()
+    referer = request.headers.get("refer")
+    frontend_url = getenv("FRONTEND_URL")
+    redirect_url = getenv("REDIRECT_URL")
+    request.session["login_redirect"] = frontend_url
+
+    return await oauth.AlgoBoard.authorize_redirect(request, redirect_url, prompt="consent",)
+
+
+@app.route("/auth")
+async def auth(request: Request):
+    try:
+        token = await oauth.AlgoBoard.authorize_access_token(request)
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Google auth failed.")
+
+    try:
+        user_info_endpoint = "https://www.googleapis.com/oauth2/v2/userinfo"
+        headers = {"Authorization": f"Bearer {token['access_token']}"}
+        google_response = requests.get(user_info_endpoint, headers=headers)
+        user_info = google_response.json()
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Google authentication failed.")
+
+    user = token.get("userinfo")
+    expires_in = token.get("expires_in")
+    user_id = user.get("sub")
+    iss = user.get("iss")
+    user_email = user.get("email")
+    first_logged_in = datetime.now()
+    last_accessed = datetime.now()
+
+    user_name = user_info.get("name")
+    user_pic = user_info.get("picture")
+
+    if iss not in ["https://accounts.google.com", "accounts.google.com"]:
+        raise HTTPException(status_code=401, detail="Google authentication failed.")
+
+    if user_id is None:
+        raise HTTPException(status_code=401, detail="Google authentication failed.")
+
+    access_token_expires = timedelta(seconds=expires_in)
+    access_token = jwt_create_access_token(
+        data={"sub": user_id, "email": user_email}, expires=access_token_expires
+    )
+
+    session_id = str(uuid.uuid4())
+
+    # Internal Logging that is not implemented
+    # log_user(user_id, user_email, user_name, user_pic, first_logged_in, last_accessed)
+    # log_token(access_token, user_email, session_id)
+
+    redirect_url = request.session.pop("login_redirect", "")
+    response = RedirectResponse(redirect_url)
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        secure=True,
+        samesite="strict",
+    )
+
+    return response
+
+
+def get_current_user(token: str = Cookie(None)):
+    if not token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    credentials_exception = HTTPException(
+        status_code=401,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+
+        user_id: str = payload.get("sub")
+        user_email: str = payload.get("email")
+
+        if user_id is None or user_email is None:
+            raise credentials_exception
+
+        return {"user_id": user_id, "user_email": user_email}
+
+    except ExpiredSignatureError:
+        # Specifically handle expired tokens
+        traceback.print_exc()
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Session expired. Please login again.")
+    except JWTError:
+        # Handle other JWT-related errors
+        traceback.print_exc()
+        raise credentials_exception
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=401, detail="Not Authenticated")
+
+
+def validate_user_request(token: str = Cookie(None)):
+    session_details = get_current_user(token)
+
+    return session_details
+
+
+# GitHub Client stuff
 CLIENT_ID = ""
 CLIENT_SECRET = ""
 
@@ -69,9 +246,15 @@ with open("config.secret") as file:
 
 @app.get("/access-token")
 def get_access_token(code: Union[str, None] = None):
-
     if code:
-        params = "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&code=" + code
+        params = (
+            "?client_id="
+            + CLIENT_ID
+            + "&client_secret="
+            + CLIENT_SECRET
+            + "&code="
+            + code
+        )
 
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
 
@@ -88,7 +271,6 @@ def get_access_token(code: Union[str, None] = None):
 
 @app.get("/user-info")
 def get_user_info(authorization: str = Header(default=None)):
-
     headers = {"Authorization": authorization, "Accept": "application/json"}
 
     res = requests.get(
@@ -129,7 +311,9 @@ def get_user_info(authorization: str = Header(default=None)):
         if isinstance(data["login"], str) and isinstance(data["id"], int):
             print(data["id"], data["login"])
 
-        print("GitHub Profile Email: ", data.get("primary_email"), data.get("all_emails"))
+        print(
+            "GitHub Profile Email: ", data.get("primary_email"), data.get("all_emails")
+        )
 
     # Check if GitHub responded
     if res.status_code == 200:
@@ -146,7 +330,6 @@ def get_user_info(authorization: str = Header(default=None)):
 
 @app.post("/admin/create-user")
 def create_user_router(user: User, authorization: str = Header(default=None)):
-
     if not authorization:
         raise HTTPException(
             status_code=401,
@@ -174,7 +357,6 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
     # user data structure to function like a login
     if data.get("login") and data.get("id"):
         if isinstance(data["login"], str) and isinstance(data["id"], int):
-
             # I have admin permissions to add people
             if data.get("login") == "JakeRoggenbuck":
                 add_user(user.username)
@@ -191,7 +373,6 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
 
 @app.get("/admin/get-logins")
 def get_logins_route(authorization: str = Header(default=None)):
-
     if not authorization:
         raise HTTPException(
             status_code=401,
@@ -213,7 +394,6 @@ def get_logins_route(authorization: str = Header(default=None)):
     # user data structure to function like a login
     if data.get("login") and data.get("id"):
         if isinstance(data["login"], str) and isinstance(data["id"], int):
-
             # I have admin permissions
             if data.get("login") == "JakeRoggenbuck":
                 logins = get_logins()
@@ -228,7 +408,6 @@ def add_user_to_board_route(
     userboard: UserBoard,
     authorization: str = Header(default=None),
 ):
-
     if not authorization:
         raise HTTPException(
             status_code=401,
@@ -263,7 +442,6 @@ def add_user_to_board_route(
     # user data structure to function like a login
     if data.get("login") and data.get("id"):
         if isinstance(data["login"], str) and isinstance(data["id"], int):
-
             # I have admin permissions to add people
             if data.get("login") == "JakeRoggenbuck":
                 add_user_to_board(userboard.username, userboard.board)
@@ -348,7 +526,11 @@ def get_entries(
 
 
 @app.get("/boards/{board_id}")
-def get_board(board_id: str, start_date: datetime = Query(None), end_date: datetime = Query(None),):
+def get_board(
+    board_id: str,
+    start_date: datetime = Query(None),
+    end_date: datetime = Query(None),
+):
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
 
@@ -380,7 +562,6 @@ def get_board(board_id: str, start_date: datetime = Query(None), end_date: datet
         scores = {}
 
         for val in vals.fetchall():
-
             name = val[1]
             if name not in scores:
                 scores[name] = {"id": val[0]}
@@ -394,8 +575,12 @@ def get_board(board_id: str, start_date: datetime = Query(None), end_date: datet
             scores[name]["hard_max"] = max(scores[name].get("hard_max", val[5]), val[5])
             scores[name]["hard_min"] = min(scores[name].get("hard_min", val[5]), val[5])
 
-            scores[name]["score_max"] = max(scores[name].get("score_max", val[2]), val[2])
-            scores[name]["score_min"] = min(scores[name].get("score_min", val[2]), val[2])
+            scores[name]["score_max"] = max(
+                scores[name].get("score_max", val[2]), val[2]
+            )
+            scores[name]["score_min"] = min(
+                scores[name].get("score_min", val[2]), val[2]
+            )
 
         for name, data in scores.items():
             easy = data["easy_max"] - data["easy_min"]
@@ -407,7 +592,7 @@ def get_board(board_id: str, start_date: datetime = Query(None), end_date: datet
                     "id": data["id"],
                     "solved": {"easy": easy, "medium": med, "hard": hard},
                     "name": name,
-                    "score": linear_weight(easy, med, hard)
+                    "score": linear_weight(easy, med, hard),
                 }
             )
 

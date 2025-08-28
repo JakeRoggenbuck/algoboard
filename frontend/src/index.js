@@ -13,6 +13,7 @@ import Changelog from "./Components/Pages/Changelog.tsx";
 import Home from "./Components/Pages/Home.tsx";
 import UserPage from "./Components/Pages/UserPage.tsx";
 import reportWebVitals from "./reportWebVitals";
+import AuthCallback from "./Components/Pages/AuthCallback.tsx";
 
 const routes = createRoutesFromElements(
   <Route>
@@ -21,6 +22,7 @@ const routes = createRoutesFromElements(
     <Route path="/changelog" element={<Changelog />} />
     <Route path="/account" element={<UserPage />} />
     <Route path="/boards/:boardId" element={<Board />} />
+    <Route path="/auth/callback" element={<AuthCallback />} />
   </Route>,
 );
 
