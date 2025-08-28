@@ -12,7 +12,7 @@ export default function AuthCallback() {
 
     async function fetchToken() {
       console.log("🔐 AuthCallback: Starting fetchToken function");
-      
+
       // Parse query params from the URL
       const params = new URLSearchParams(location.search);
       const code = params.get("code");
@@ -27,24 +27,35 @@ export default function AuthCallback() {
       console.log("  - error_description:", errorDescription);
 
       if (error) {
-        console.error("🔐 AuthCallback: OAuth error received:", error, errorDescription);
+        console.error(
+          "🔐 AuthCallback: OAuth error received:",
+          error,
+          errorDescription,
+        );
         navigate("/");
         return;
       }
 
       if (!code) {
-        console.error("🔐 AuthCallback: No authorization code found in callback URL");
-        console.log("🔐 AuthCallback: Available params:", Array.from(params.entries()));
+        console.error(
+          "🔐 AuthCallback: No authorization code found in callback URL",
+        );
+        console.log(
+          "🔐 AuthCallback: Available params:",
+          Array.from(params.entries()),
+        );
         navigate("/");
         return;
       }
 
-      console.log("🔐 AuthCallback: Authorization code found, proceeding with token exchange");
+      console.log(
+        "🔐 AuthCallback: Authorization code found, proceeding with token exchange",
+      );
 
       try {
         const authUrl = `http://127.0.0.1:8000/auth?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state || "")}`;
         console.log("🔐 AuthCallback: Making request to:", authUrl);
-        
+
         // Send the code to your backend to exchange for a JWT
         const res = await fetch(authUrl, {
           method: "GET",
@@ -58,11 +69,11 @@ export default function AuthCallback() {
 
         if (res.ok) {
           console.log("🔐 AuthCallback: Token exchange successful");
-          
+
           // Check if we have cookies set
           const cookies = document.cookie;
           console.log("🔐 AuthCallback: Current cookies:", cookies);
-          
+
           // Try to get response body for debugging
           try {
             const responseText = await res.text();
@@ -70,19 +81,26 @@ export default function AuthCallback() {
           } catch (e) {
             console.log("🔐 AuthCallback: Could not read response body:", e);
           }
-          
+
           console.log("🔐 AuthCallback: Navigating to home page");
           navigate("/");
         } else {
           console.error("🔐 AuthCallback: Token exchange failed");
           const errorText = await res.text();
           console.error("🔐 AuthCallback: Error response:", errorText);
-          console.log("🔐 AuthCallback: Navigating to login page due to failure");
+          console.log(
+            "🔐 AuthCallback: Navigating to login page due to failure",
+          );
           navigate("/login");
         }
       } catch (err) {
-        console.error("🔐 AuthCallback: Network error during token exchange:", err);
-        console.log("🔐 AuthCallback: Navigating to login page due to network error");
+        console.error(
+          "🔐 AuthCallback: Network error during token exchange:",
+          err,
+        );
+        console.log(
+          "🔐 AuthCallback: Navigating to login page due to network error",
+        );
         navigate("/login");
       }
     }
@@ -98,7 +116,9 @@ export default function AuthCallback() {
       <div className="text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
         <p className="text-lg">Logging you in...</p>
-        <p className="text-sm text-gray-400 mt-2">Please wait while we complete authentication</p>
+        <p className="text-sm text-gray-400 mt-2">
+          Please wait while we complete authentication
+        </p>
       </div>
     </div>
   );

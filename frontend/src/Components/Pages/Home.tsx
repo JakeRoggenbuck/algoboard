@@ -300,12 +300,12 @@ export default function Component() {
           {"login" in githubInfo && githubInfo.login === "JakeRoggenbuck" ? (
             <div className="p-12">
               <Admin />
+
+              <LoginButton />
             </div>
           ) : (
             <></>
           )}
-
-          <LoginButton />
         </main>
 
         <footer className="text-white p-5 text-sm flex justify-between items-center">
