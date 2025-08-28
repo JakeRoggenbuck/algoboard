@@ -91,7 +91,7 @@ oauth.register(
     access_token_params=None,
     refresh_token_url=None,
     authorize_state=config("SECRET_KEY"),
-    redirect_uri="http://127.0.0.1:8000/auth/callback",
+    redirect_uri="http://127.0.0.1:3000/auth/callback",
     jwks_uri="https://www.googleapis.com/oauth2/v3/certs",
     client_kwargs={"scope": "openid profile email"},
 )
