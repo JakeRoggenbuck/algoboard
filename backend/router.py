@@ -66,6 +66,7 @@ async def log_response_time(request: Request, call_next):
 
 origins = [
     "http://localhost:3000",
+    "http://127.0.0.1:3000",
     "http://50.116.10.252:3000",
     "http://algoboard.org",
     "https://algoboard.org",
