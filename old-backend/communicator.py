@@ -10,18 +10,17 @@ URL = "https://leetcode.com/"
 
 
 def pull_full_page(username: str) -> str:
-
     file_path = Path("users_cache") / Path(username)
 
     if file_path.exists():
-
         # Get times for time delta
-        time = datetime.datetime.fromtimestamp(file_path.stat().st_mtime, tz=datetime.timezone.utc)
+        time = datetime.datetime.fromtimestamp(
+            file_path.stat().st_mtime, tz=datetime.timezone.utc
+        )
         now = datetime.datetime.now(tz=datetime.timezone.utc)
 
         # Check if file is older than 100 minutes
         if now - time < datetime.timedelta(minutes=100):
-
             with open(file_path, "r") as file:
                 return file.read()
 
@@ -35,10 +34,9 @@ def pull_full_page(username: str) -> str:
 
 
 def get_json_data(page: str) -> dict:
-
     html_id = "__NEXT_DATA__"
 
-    soup = BeautifulSoup(page, 'html.parser')
+    soup = BeautifulSoup(page, "html.parser")
 
     found_data = soup.find(id=html_id)
 
@@ -51,7 +49,7 @@ def get_json_data(page: str) -> dict:
 
 
 def get_rank(json_data: dict) -> int:
-    '''
+    """
     {
     "props": {
         "pageProps": {
@@ -69,12 +67,12 @@ def get_rank(json_data: dict) -> int:
                     "linkedinUrl": null,
                     "profile": {
                         "ranking": 2975231,
-    '''
+    """
 
     try:
-        ranking = json_data["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"][
-            "matchedUser"
-        ]["profile"]["ranking"]
+        ranking = json_data["props"]["pageProps"]["dehydratedState"]["queries"][0][
+            "state"
+        ]["data"]["matchedUser"]["profile"]["ranking"]
     except KeyError:
         ranking = -1
 
@@ -82,7 +80,7 @@ def get_rank(json_data: dict) -> int:
 
 
 def get_solved(json_data: dict) -> int:
-    '''
+    """
     {
     "props": {
         "pageProps": {
@@ -100,7 +98,7 @@ def get_solved(json_data: dict) -> int:
                     "linkedinUrl": null,
                     "profile": {
                         "ranking": 2975231,
-    '''
+    """
 
     try:
         solved = json_data["props"]["pageProps"]["dehydratedState"]["queries"]

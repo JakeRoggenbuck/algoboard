@@ -26,7 +26,6 @@ if not has_created:
 
 @app.get("/leaterboard/{board_id}")
 def get_leaterboard(board_id: str):
-
     users_in_board = []
 
     # Get users

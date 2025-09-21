@@ -10,25 +10,25 @@ for user in json_data:
     # Extracting the count of solved problems by difficulty
     count_easy = next(
         (
-            item['count']
-            for item in user['solved']['submitStatsGlobal']['acSubmissionNum']
-            if item['difficulty'] == 'Easy'
+            item["count"]
+            for item in user["solved"]["submitStatsGlobal"]["acSubmissionNum"]
+            if item["difficulty"] == "Easy"
         ),
         0,
     )
     count_medium = next(
         (
-            item['count']
-            for item in user['solved']['submitStatsGlobal']['acSubmissionNum']
-            if item['difficulty'] == 'Medium'
+            item["count"]
+            for item in user["solved"]["submitStatsGlobal"]["acSubmissionNum"]
+            if item["difficulty"] == "Medium"
         ),
         0,
     )
     count_hard = next(
         (
-            item['count']
-            for item in user['solved']['submitStatsGlobal']['acSubmissionNum']
-            if item['difficulty'] == 'Hard'
+            item["count"]
+            for item in user["solved"]["submitStatsGlobal"]["acSubmissionNum"]
+            if item["difficulty"] == "Hard"
         ),
         0,
     )
@@ -37,12 +37,12 @@ for user in json_data:
     transformed_data.append(
         [
             starting_id,
-            user['name'],
-            user['rank'],
+            user["name"],
+            user["rank"],
             count_easy,
             count_medium,
             count_hard,
-            user['date'],
+            user["date"],
         ]
     )
 

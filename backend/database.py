@@ -42,9 +42,7 @@ def get_logins() -> list:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
 
-    logins = cur.execute(
-        "SELECT * from emails;"
-    ).fetchall()
+    logins = cur.execute("SELECT * from emails;").fetchall()
 
     return list(logins)
 

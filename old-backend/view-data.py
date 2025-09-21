@@ -91,7 +91,13 @@ day_6 = [
     [{"name": "atata6", "rank": 3114099, "date": "2024-02-12 19:19:52.950097"}],
     [{"name": "vshl", "rank": 4476769, "date": "2024-02-12 19:19:52.906337"}],
     [{"name": "AggieWorker", "rank": 5000001, "date": "2024-02-12 19:19:52.859786"}],
-    [{"name": "isabellovecandy", "rank": 5000001, "date": "2024-02-12 19:19:52.941459"}],
+    [
+        {
+            "name": "isabellovecandy",
+            "rank": 5000001,
+            "date": "2024-02-12 19:19:52.941459",
+        }
+    ],
 ]
 
 with open("./aggieworks-swe-2-13-2024.json") as file:
@@ -134,10 +140,10 @@ for d, val in diffs.items():
 
 plt.figure(figsize=(10, 6))
 for name, rank in ranks.items():
-    plt.plot(rank, label=name, marker='o')
+    plt.plot(rank, label=name, marker="o")
 
-plt.xlabel('Time')
-plt.ylabel('Rank')
-plt.title('Rank change')
+plt.xlabel("Time")
+plt.ylabel("Rank")
+plt.title("Rank change")
 plt.legend()
 plt.show()

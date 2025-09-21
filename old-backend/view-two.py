@@ -17,21 +17,21 @@ with open("aggieworks-swe-2-12-2024.3.json") as file2:
 df = pd.DataFrame(data)
 
 # Extract and format date
-df['date'] = pd.to_datetime(df['date'])
+df["date"] = pd.to_datetime(df["date"])
 
 # Initialize a dictionary to hold the data for plotting
-plot_data = {'Easy': {}, 'Medium': {}, 'Hard': {}}
+plot_data = {"Easy": {}, "Medium": {}, "Hard": {}}
 
 # Populate plot_data with counts for each difficulty level for each user
 for index, row in df.iterrows():
-    name = row['name']
-    date = row['date']
-    for difficulty in ['Easy', 'Medium', 'Hard']:
+    name = row["name"]
+    date = row["date"]
+    for difficulty in ["Easy", "Medium", "Hard"]:
         count = next(
             (
-                item['count']
-                for item in row['solved']['submitStatsGlobal']['acSubmissionNum']
-                if item['difficulty'] == difficulty
+                item["count"]
+                for item in row["solved"]["submitStatsGlobal"]["acSubmissionNum"]
+                if item["difficulty"] == difficulty
             ),
             None,
         )
@@ -40,7 +40,7 @@ for index, row in df.iterrows():
                 plot_data[difficulty][name] = []
             plot_data[difficulty][name].append((date, count))
 
-colors = {'Easy': 'green', 'Medium': 'blue', 'Hard': 'red'}
+colors = {"Easy": "green", "Medium": "blue", "Hard": "red"}
 
 # Plotting with actual values displayed on each dot
 plt.figure(figsize=(15, 10))
@@ -50,19 +50,21 @@ for difficulty, users in plot_data.items():
         # Check for datapoint change
         if data_points[0][1] != data_points[-1][1]:
             dates, counts = zip(*sorted(data_points))
-            plt.plot(
-                dates, counts, label=f'{user} - {difficulty}', marker='o'
-            )
+            plt.plot(dates, counts, label=f"{user} - {difficulty}", marker="o")
             for i, txt in enumerate(counts):
                 plt.annotate(
-                    txt, (dates[i], counts[i]), textcoords="offset points", xytext=(0, 5), ha='center'
+                    txt,
+                    (dates[i], counts[i]),
+                    textcoords="offset points",
+                    xytext=(0, 5),
+                    ha="center",
                 )
 
-plt.xlabel('Date')
-plt.ylabel('Problems Solved')
-plt.title('Problems Solved Over Time by Difficulty with Values')
+plt.xlabel("Date")
+plt.ylabel("Problems Solved")
+plt.title("Problems Solved Over Time by Difficulty with Values")
 plt.xticks(rotation=45)
-plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
+plt.legend(loc="upper left", bbox_to_anchor=(1, 1))
 plt.tight_layout()
 
 plt.show()

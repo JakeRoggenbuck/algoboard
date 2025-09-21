@@ -133,7 +133,11 @@ async def login(request: Request):
     redirect_url = getenv("REDIRECT_URL")
     request.session["login_redirect"] = frontend_url
 
-    return await oauth.AlgoBoard.authorize_redirect(request, redirect_url, prompt="consent",)
+    return await oauth.AlgoBoard.authorize_redirect(
+        request,
+        redirect_url,
+        prompt="consent",
+    )
 
 
 @app.route("/auth")
@@ -215,7 +219,10 @@ def get_current_user(token: str = Cookie(None)):
     except ExpiredSignatureError:
         # Specifically handle expired tokens
         traceback.print_exc()
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Session expired. Please login again.")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Session expired. Please login again.",
+        )
     except JWTError:
         # Handle other JWT-related errors
         traceback.print_exc()
