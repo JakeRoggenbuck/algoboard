@@ -3,8 +3,15 @@ from datetime import datetime
 from typing import Dict, List, Tuple
 from alg import linear_weight
 
+"""Naming for database.py file
 
-def fetch_problems(board: str) -> List[Tuple]:
+Anything that start with `_ab` is an internal function only for this file.
+
+`_ab_fetch` prefix -> fetches data and returns it
+`_ab_calc` prefix -> calculate on data given (no DB operation)
+"""
+
+def _ab_fetch_problems(board: str) -> List[Tuple]:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
 
@@ -20,7 +27,7 @@ def fetch_problems(board: str) -> List[Tuple]:
     return problems
 
 
-def count_problems(problems) -> Dict[str, int]:
+def _ab_calc_count_problems(problems) -> Dict[str, int]:
     counts = {"all": 0, "easy": 0, "medium": 0, "hard": 0}
 
     for p in problems:
@@ -33,8 +40,8 @@ def count_problems(problems) -> Dict[str, int]:
 
 
 def total_problems(board: str) -> Dict[str, int]:
-    problems = fetch_problems(board)
-    return count_problems(problems)
+    problems = _ab_fetch_problems(board)
+    return _ab_calc_count_problems(problems)
 
 
 def log_email(email: str, username: str) -> None:
@@ -134,7 +141,7 @@ def get_last_entry_time() -> str:
     return timestamp[0]
 
 
-def fetch_total_solved_on_board() -> Tuple[List[Tuple], List[Tuple]]:
+def _ab_fetch_total_solved_on_board() -> Tuple[List[Tuple], List[Tuple]]:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
 
@@ -169,7 +176,7 @@ def fetch_total_solved_on_board() -> Tuple[List[Tuple], List[Tuple]]:
     return recent, first
 
 
-def calculate_total_solved_on_board(recent, first) -> Dict[str, int]:
+def _ab_calc_total_solved_on_board(recent, first) -> Dict[str, int]:
     found = {}
 
     for row in recent:
@@ -192,8 +199,8 @@ def calculate_total_solved_on_board(recent, first) -> Dict[str, int]:
 
 
 def total_solved_on_board() -> Dict[str, int]:
-    recent, first = fetch_total_solved_on_board()
-    return calculate_total_solved_on_board(recent, first)
+    recent, first = _ab_fetch_total_solved_on_board()
+    return _ab_calc_total_solved_on_board(recent, first)
 
 
 def update_board_participant_counts(verbose=True) -> None:
