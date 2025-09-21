@@ -2,7 +2,7 @@ from fastapi import FastAPI, Query, HTTPException, Cookie, Request, APIRouter, s
 from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
 from datetime import datetime
-import argparse
+from args import parser
 from fastapi import FastAPI, Header
 from fastapi.responses import JSONResponse, RedirectResponse
 import requests
@@ -10,6 +10,7 @@ from typing import Union
 from pydantic import BaseModel
 from database_setup import repull_replace_data, setup_database
 from database import (
+    get_board_data,
     update_board_participant_counts,
     total_solved_on_board,
     get_last_entry_time,
@@ -33,10 +34,6 @@ import time
 
 
 config = Config(".env")
-
-
-def linear_weight(e: int, m: int, h: int) -> float:
-    return e + 2 * m + 3 * h
 
 
 class User(BaseModel):
@@ -81,6 +78,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# TODO: Split auth into own file - issue #130
 oauth = OAuth()
 oauth.register(
     name="AlgoBoard",
@@ -538,98 +536,13 @@ def get_board(
     start_date: datetime = Query(None),
     end_date: datetime = Query(None),
 ):
-    con = sqlite3.connect("ranking.db")
-    cur = con.cursor()
-
-    val = None
-    use_date_range = True
-
-    all_rows = []
-
-    real_board_id = cur.execute(
-        "SELECT id FROM boards WHERE boards.urlname = ?",
-        (board_id,),
-    ).fetchone()[0]
-
-    if use_date_range:
-        query = """
-        SELECT ur.*
-        FROM user_rank ur
-        INNER JOIN users u ON ur.name = u.name
-        INNER JOIN boards_users bu ON u.id = bu.user_id
-        WHERE bu.board_id = ?
-        AND ur.whentime BETWEEN ? AND ?
-        AND ur.id NOT IN (11, 6, 7)
-        ORDER BY ur.whentime ASC
-        """
-        vals = cur.execute(query, (real_board_id, start_date, end_date))
-
-        # [(729, 'jakeroggenbuck', 151747, 303, 86, 12, '2024-05-21 10:48:05.716504')]
-
-        scores = {}
-
-        for val in vals.fetchall():
-            name = val[1]
-            if name not in scores:
-                scores[name] = {"id": val[0]}
-
-            scores[name]["easy_max"] = max(scores[name].get("easy_max", val[3]), val[3])
-            scores[name]["easy_min"] = min(scores[name].get("easy_min", val[3]), val[3])
-
-            scores[name]["med_max"] = max(scores[name].get("med_max", val[4]), val[4])
-            scores[name]["med_min"] = min(scores[name].get("med_min", val[4]), val[4])
-
-            scores[name]["hard_max"] = max(scores[name].get("hard_max", val[5]), val[5])
-            scores[name]["hard_min"] = min(scores[name].get("hard_min", val[5]), val[5])
-
-            scores[name]["score_max"] = max(
-                scores[name].get("score_max", val[2]), val[2]
-            )
-            scores[name]["score_min"] = min(
-                scores[name].get("score_min", val[2]), val[2]
-            )
-
-        for name, data in scores.items():
-            easy = data["easy_max"] - data["easy_min"]
-            med = data["med_max"] - data["med_min"]
-            hard = data["hard_max"] - data["hard_min"]
-
-            all_rows.append(
-                {
-                    "id": data["id"],
-                    "solved": {"easy": easy, "medium": med, "hard": hard},
-                    "name": name,
-                    "score": linear_weight(easy, med, hard),
-                }
-            )
-
-    else:
-        val = cur.execute(
-            """
-        SELECT users.*
-        FROM users
-        JOIN boards_users ON users.id = boards_users.user_id
-        JOIN boards ON boards_users.board_id = boards.id
-        WHERE users.id NOT IN (11, 6, 7)
-        AND boards.urlname = ?;""",
-            (board_id,),
-        )
-
-        for row in val.fetchall():
-            all_rows.append(
-                {
-                    "id": row[0],
-                    "solved": {"easy": row[3], "medium": row[4], "hard": row[5]},
-                    "name": row[1],
-                    "score": row[2],
-                }
-            )
-
-    all_rows = sorted(all_rows, key=lambda x: x["score"], reverse=True)
+    all_rows = get_board_data(board_id, start_date, end_date)
 
     # df = pd.json_normalize(all_rows, sep="_")
     # summary_statistics = df.describe().to_dict()
 
+    # I forget why this is set back to an empty dict
+    # TODO: Fix this!
     summary_statistics = {}
 
     return {
@@ -672,45 +585,6 @@ LeaterBoard Backend CLI        |___/
     print(f"Problems Solved (Just LeaterWorks):\n\t{lw_count}")
     print("\nLast pulled:", get_last_entry_time())
     print()
-
-
-def parser():
-    parse = argparse.ArgumentParser(description="LeaterBoard Backend CLI")
-    parse.add_argument(
-        "-p",
-        "--pull",
-        help="Pull new data",
-        action="store_true",
-    )
-    parse.add_argument(
-        "-c",
-        "--create",
-        help="Add new user",
-    )
-    parse.add_argument(
-        "-a",
-        "--assign",
-        help="Add user to board [user:board]",
-    )
-    parse.add_argument(
-        "-b",
-        "--board",
-        help="Create a new board",
-    )
-    parse.add_argument(
-        "-u",
-        "--update_participant_counts",
-        help="Update participant counts",
-        action="store_true",
-    )
-    parse.add_argument(
-        "-s",
-        "--setup",
-        help="Setup the database (can be run anytime)",
-        action="store_true",
-    )
-
-    return parse
 
 
 if __name__ == "__main__":
