@@ -11,12 +11,12 @@ from pydantic import BaseModel
 from database_setup import repull_replace_data, setup_database
 from database import (
     update_board_participant_counts,
-    calculate_total_solved_on_board,
+    total_solved_on_board,
     get_last_entry_time,
     add_user_to_board,
     add_board,
     add_user,
-    count_problems,
+    total_problems,
     log_email,
     get_logins,
 )
@@ -486,7 +486,7 @@ def get_boards():
 
 @app.get("/solved/")
 def get_solved():
-    return calculate_total_solved_on_board()
+    return total_solved_on_board()
 
 
 @app.get("/entries/{board_id}")
@@ -635,7 +635,7 @@ def get_board(
     return {
         "participants": all_rows,
         "stats": summary_statistics,
-        "counts": count_problems(board_id),
+        "counts": total_problems(board_id),
     }
 
 
@@ -661,10 +661,10 @@ LeaterBoard Backend CLI        |___/
     ).fetchone()[0]
     boards = cur.execute("SELECT count(*) FROM boards").fetchone()[0]
 
-    count = count_problems("everyone")
-    lw_count = count_problems("leaterworks")
+    count = total_problems("everyone")
+    lw_count = total_problems("leaterworks")
 
-    print("Solved: ", calculate_total_solved_on_board())
+    print("Solved: ", total_solved_on_board())
 
     print(f"Boards: {boards}")
     print(f"Entries: {user_ranks}\n")
