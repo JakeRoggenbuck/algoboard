@@ -1,8 +1,9 @@
 import sqlite3
 from datetime import datetime
+from typing import Dict, List, Tuple
 
 
-def count_problems(board: str):
+def fetch_problems(board: str) -> List[Tuple]:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
 
@@ -15,6 +16,10 @@ def count_problems(board: str):
         (board,),
     ).fetchall()
 
+    return problems
+
+
+def count_problems(problems) -> Dict[str, int]:
     counts = {"all": 0, "easy": 0, "medium": 0, "hard": 0}
 
     for p in problems:
@@ -26,7 +31,12 @@ def count_problems(board: str):
     return counts
 
 
-def log_email(email: str, username: str):
+def total_problems(board: str) -> Dict[str, int]:
+    problems = fetch_problems(board)
+    return count_problems(problems)
+
+
+def log_email(email: str, username: str) -> None:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
 
@@ -38,7 +48,7 @@ def log_email(email: str, username: str):
     con.commit()
 
 
-def get_logins() -> list:
+def get_logins() -> List[str]:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
 
@@ -47,7 +57,7 @@ def get_logins() -> list:
     return list(logins)
 
 
-def add_user(username: str, verbose: bool = False):
+def add_user(username: str, verbose: bool = False) -> None:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
 
@@ -63,7 +73,7 @@ def add_user(username: str, verbose: bool = False):
     con.close()
 
 
-def add_board(board: str, verbose: bool = False):
+def add_board(board: str, verbose: bool = False) -> None:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
 
@@ -82,7 +92,7 @@ def add_board(board: str, verbose: bool = False):
     con.close()
 
 
-def add_user_to_board(username: str, board: str, verbose: bool = False):
+def add_user_to_board(username: str, board: str, verbose: bool = False) -> None:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
 
@@ -123,7 +133,7 @@ def get_last_entry_time() -> str:
     return timestamp[0]
 
 
-def calculate_total_solved_on_board():
+def fetch_total_solved_on_board() -> Tuple[List[Tuple], List[Tuple]]:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
 
@@ -155,6 +165,10 @@ def calculate_total_solved_on_board():
 
     con.close()
 
+    return recent, first
+
+
+def calculate_total_solved_on_board(recent, first) -> Dict[str, int]:
     found = {}
 
     for row in recent:
@@ -176,7 +190,12 @@ def calculate_total_solved_on_board():
     return sums
 
 
-def update_board_participant_counts(verbose=True):
+def total_solved_on_board() -> Dict[str, int]:
+    recent, first = fetch_total_solved_on_board()
+    return calculate_total_solved_on_board(recent, first)
+
+
+def update_board_participant_counts(verbose=True) -> None:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
 
