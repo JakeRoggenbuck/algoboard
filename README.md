@@ -2,7 +2,7 @@
 
 ## About
 
-Algo Board is a website to promote friendly competition for solving algorithmic coding problems. Algo Board lets you host weekly / monthly competitions for your fiends, clubs, and other organizations. 
+🏆 Algo Board is a website to promote friendly competition for solving algorithmic coding problems. Algo Board lets you host weekly / monthly competitions for your fiends, clubs, and other organizations. 
 
 ## Preview
 
