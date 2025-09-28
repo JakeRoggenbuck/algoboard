@@ -39,6 +39,9 @@ config = Config(".env")
 class User(BaseModel):
     username: str
 
+    def valid_usersname(self):
+        return all(c.isalnum() or c == "-" for c in self.username)
+
 
 class UserBoard(BaseModel):
     username: str
@@ -341,7 +344,7 @@ def create_user_router(user: User, authorization: str = Header(default=None)):
             detail="Missing Authorization header",
         )
 
-    if not user.username.isalnum():
+    if not user.valid_usersname():
         raise HTTPException(
             status_code=422,
             detail="Invalid username given",
@@ -419,7 +422,7 @@ def add_user_to_board_route(
             detail="Missing Authorization header",
         )
 
-    if not userboard.username.isalnum():
+    if not user.valid_usersname():
         raise HTTPException(
             status_code=422,
             detail="Invalid username given",
