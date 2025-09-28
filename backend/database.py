@@ -89,7 +89,7 @@ def add_board(board: str, verbose: bool = False) -> None:
     urlname = urlname.replace(" ", "-")
 
     cur.execute(
-        "INSERT into boards VALUES(NULL, ?, ?)",
+        "INSERT into boards VALUES(NULL, ?, ?, ?)",
         (board, urlname, 0),
     )
 
