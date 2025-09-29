@@ -1,4 +1,4 @@
-# AlgoBoard
+# AlgoBoard - [algoboard.org](https://algoboard.org)
 
 ## About
 
