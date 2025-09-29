@@ -208,7 +208,16 @@ const UserList = (props) => {
         </>
       )}
 
-      <p className="mx-2 my-4 text-gray-400">Last updated: {update_time}</p>
+      <p className="mx-2 my-4 text-gray-400">
+        Last updated: <span className="italic text-white">{update_time}</span>
+      </p>
+
+      <p className="mx-2 my-4 text-gray-400">
+        Scoring Algorithm:{" "}
+        <span className="italic text-white">
+          score = easy_solved + (2 * medium_solved) + (3 * hard_solved)
+        </span>
+      </p>
 
       {users.map((user, index) => (
         <div
