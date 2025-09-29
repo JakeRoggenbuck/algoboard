@@ -154,7 +154,7 @@ const ScoreLine = (props) => {
           },
           title: {
             display: true,
-            text: "Problems Solved This Week", // Update title to reflect your data context
+            text: "Problems Solved This Month", // Update title to reflect your data context
           },
         },
         scales: {
@@ -196,7 +196,7 @@ const ScoreLine = (props) => {
 
   return (
     <div>
-      <h1 className="text-center">Problems Solved by Type in the Last Week</h1>
+      <h1 className="text-center">Problems Solved by Type in the last month</h1>
       <canvas ref={chartRef} width="400" height="110" className="m-4"></canvas>
     </div>
   );
