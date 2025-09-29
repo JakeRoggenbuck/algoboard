@@ -4,6 +4,13 @@
 
 🏆 Algo Board is a website to promote friendly competition for solving algorithmic coding problems. Algo Board lets you host weekly / monthly competitions for your fiends, clubs, and other organizations. 
 
+## Why
+
+There are a few reasons I work on this project:
+
+1. The primary goal is to help friends and myself improve at programming problems. I've gone from ~10 problems solved to >600 problems solved since I built this website. This website was the main way I encouraged myself to continue learning.
+2. The secondary reason is that it's really useful to have a website I can test stuff out with. I've tested different auth methods, different database designs, different deployment setups, and more. Having a website with actual data that is already hosted is a great way for me to put my ideas into practice and have a "sandbox" of sorts that I can modify at any time.
+
 ## Preview
 
 ### Home Page
