@@ -14,7 +14,7 @@ const UserList = (props) => {
   const [entries, setEntries] = useState([]);
   const [show_line, set_show_line] = useState(true);
   const [update_time, set_update_time] = useState("");
-  const [days_to_graph, set_days_to_graph] = useState(15);
+  const [days_to_graph, set_days_to_graph] = useState(30);
 
   const change_to_line_view = () => {
     set_show_line(true);
@@ -62,7 +62,6 @@ const UserList = (props) => {
 
     const fetchUsers = async () => {
       try {
-
         const formattedStartDate = start_date
           ? new Date(start_date).toISOString()
           : undefined;
@@ -76,7 +75,10 @@ const UserList = (props) => {
         }).toString();
 
         const response = await fetch(
-          "https://api.algoboard.org/boards/" + props.boardId + "?" + queryParams,
+          "https://api.algoboard.org/boards/" +
+            props.boardId +
+            "?" +
+            queryParams,
         );
 
         if (!response.ok) {
@@ -94,31 +96,31 @@ const UserList = (props) => {
         const lightning = " ⚡";
 
         for (let i = 0; i < data.participants.length; i++) {
-          if (data.participants[i].score < 1000000) {
+          if (data.participants[i].score > 2) {
             data.participants[i].name += lightning;
           }
 
-          if (data.participants[i].score < 500000) {
+          if (data.participants[i].score > 5) {
             data.participants[i].name += star;
           }
 
-          if (data.participants[i].score < 400000) {
+          if (data.participants[i].score > 10) {
             data.participants[i].name += star2;
           }
 
-          if (data.participants[i].score < 300000) {
+          if (data.participants[i].score > 30) {
             data.participants[i].name += raised_hands;
           }
 
-          if (data.participants[i].score < 200000) {
+          if (data.participants[i].score > 50) {
             data.participants[i].name += tada;
           }
 
-          if (data.participants[i].score < 100000) {
+          if (data.participants[i].score > 100) {
             data.participants[i].name += rocket;
           }
 
-          if (data.participants[i].score < 50000) {
+          if (data.participants[i].score > 200) {
             data.participants[i].name += diamond;
           }
         }

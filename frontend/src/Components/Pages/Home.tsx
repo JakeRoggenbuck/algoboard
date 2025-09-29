@@ -15,6 +15,18 @@ const FEATURES = {
   show_background_image: true,
 };
 
+function LoginButton() {
+  const handleLogin = () => {
+    window.location.href = "http://127.0.0.1:8000" + "/login";
+  };
+
+  return (
+    <button class="text-white" onClick={handleLogin}>
+      Login with Google
+    </button>
+  );
+}
+
 export default function Component() {
   const [isStatusOkay, setIsStatusOkay] = useState(false);
   const [solved, setSolved] = useState(-9999);
@@ -288,6 +300,9 @@ export default function Component() {
           {"login" in githubInfo && githubInfo.login === "JakeRoggenbuck" ? (
             <div className="p-12">
               <Admin />
+
+              <br />
+              <LoginButton />
             </div>
           ) : (
             <></>
