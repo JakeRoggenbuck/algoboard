@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import icon_image from "../../images/icon_image.png";
+import { Link } from "react-router-dom";
 import * as Chart from "chart.js/auto";
 
 export default function ProblemsChart() {
@@ -262,6 +264,9 @@ export default function ProblemsChart() {
             ],
           },
           options: {
+            animation: {
+              duration: 0,
+            },
             responsive: true,
             maintainAspectRatio: false,
             scales: {
@@ -329,9 +334,18 @@ export default function ProblemsChart() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-6">
+    <div className="min-h-screen bg-[#0D1117] text-gray-100 p-6">
+      <header className="text-white z-10 p-5 text-sm flex flex justify-between items-center">
+        <Link to="/">
+          <div className="flex flex-row items-center">
+            <img alt="AlgoBoard Logo" className="m-2 h-8" src={icon_image} />
+            <p className="text-xl">AlgoBoard</p>
+          </div>
+        </Link>
+      </header>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
+
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">
             Problems Solved by Type in the last year
@@ -448,12 +462,7 @@ export default function ProblemsChart() {
               )}
 
               {/* Footer Info */}
-              <div className="text-gray-500 text-sm">
-                <p>
-                  Scoring Algorithm: score = easy_solved + (2 * medium_solved) +
-                  (3 * hard_solved)
-                </p>
-              </div>
+              <div className="text-gray-500 text-sm"></div>
             </div>
           </div>
         )}

@@ -24,7 +24,7 @@ const routes = createRoutesFromElements(
     <Route path="/account" element={<UserPage />} />
     <Route path="/boards/:boardId" element={<Board />} />
     <Route path="/auth/callback" element={<AuthCallback />} />
-    <Route path="/stats" element={<MonthlyStats/>} />
+    <Route path="/stats" element={<MonthlyStats />} />
   </Route>,
 );
 
