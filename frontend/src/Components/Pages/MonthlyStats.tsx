@@ -68,20 +68,45 @@ export default function ProblemsChart() {
         }
       });
       
-      // Sort months and get last 12 months
-      const sortedMonths = Object.keys(monthlyData).sort();
-      const last12Months = sortedMonths.slice(-12);
+      // Find the earliest and latest dates in the data
+      let earliestDate = null;
+      let latestDate = null;
+      
+      Object.values(userEntries).forEach(entries => {
+        entries.forEach(entry => {
+          const date = new Date(entry.timestamp);
+          if (!earliestDate || date < earliestDate) earliestDate = date;
+          if (!latestDate || date > latestDate) latestDate = date;
+        });
+      });
+      
+      // Generate all months from earliest to latest (or to current date)
+      const now = new Date();
+      const endDate = latestDate > now ? latestDate : now;
+      const allMonths = [];
+      
+	  // Add 1 to the month since the first month just has "before data",
+	  // e.g. if someone did 100 problems in the year previous, it would
+	  // count for march, which isn't correct.
+      let currentDate = new Date(earliestDate.getFullYear(), earliestDate.getMonth() + 1, 1);
+      const lastDate = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+      
+      while (currentDate <= lastDate) {
+        const monthKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+        allMonths.push(monthKey);
+        currentDate.setMonth(currentDate.getMonth() + 1);
+      }
       
       // Prepare data for chart
-      const labels = last12Months.map(month => {
+      const labels = allMonths.map(month => {
         const [year, m] = month.split('-');
         const date = new Date(year, m - 1);
         return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
       });
       
-      const easyData = last12Months.map(month => monthlyData[month].easy);
-      const mediumData = last12Months.map(month => monthlyData[month].medium);
-      const hardData = last12Months.map(month => monthlyData[month].hard);
+      const easyData = allMonths.map(month => monthlyData[month]?.easy || 0);
+      const mediumData = allMonths.map(month => monthlyData[month]?.medium || 0);
+      const hardData = allMonths.map(month => monthlyData[month]?.hard || 0);
       
       // Calculate totals
       const totalEasy = easyData.reduce((a, b) => a + b, 0);
