@@ -14,6 +14,7 @@ import Home from "./Components/Pages/Home.tsx";
 import UserPage from "./Components/Pages/UserPage.tsx";
 import reportWebVitals from "./reportWebVitals";
 import AuthCallback from "./Components/Pages/AuthCallback.tsx";
+import MonthlyStats from "./Components/Pages/MonthlyStats.tsx";
 
 const routes = createRoutesFromElements(
   <Route>
@@ -23,6 +24,7 @@ const routes = createRoutesFromElements(
     <Route path="/account" element={<UserPage />} />
     <Route path="/boards/:boardId" element={<Board />} />
     <Route path="/auth/callback" element={<AuthCallback />} />
+    <Route path="/stats" element={<MonthlyStats/>} />
   </Route>,
 );
 
