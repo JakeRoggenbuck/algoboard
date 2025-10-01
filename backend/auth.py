@@ -3,6 +3,7 @@ import requests
 from fastapi.responses import JSONResponse
 from database import log_email
 from typing import Union
+from fastapi import HTTPException
 
 
 # GitHub Client stuff
@@ -18,7 +19,7 @@ with open("config.secret") as file:
     CLIENT_SECRET = file.readline().rstrip()
 
 
-def get_user_info(authorization: str = Header(default=None)):
+def get_user_info(authorization: str = Header(default=None)) -> JSONResponse:
     headers = {"Authorization": authorization, "Accept": "application/json"}
 
     res = requests.get(
@@ -78,7 +79,7 @@ def get_user_info(authorization: str = Header(default=None)):
     )
 
 
-def get_access_token(code: Union[str, None] = None):
+def get_access_token(code: Union[str, None] = None) -> JSONResponse:
     if code:
         params = (
             "?client_id="
@@ -103,3 +104,33 @@ def get_access_token(code: Union[str, None] = None):
         return JSONResponse(content=res.json(), status_code=200)
 
     return JSONResponse(content={"message": "Could not load"}, status_code=400)
+
+
+def is_github_authenticated(authorization: str = Header(default=None)) -> bool:
+    if not authorization:
+        raise HTTPException(
+            status_code=401,
+            detail="Missing Authorization header",
+        )
+
+    headers = {"Authorization": authorization, "Accept": "application/json"}
+
+    res = requests.get(
+        "https://api.github.com/user",
+        headers=headers,
+    )
+
+    data = res.json()
+
+    # We can safely assume that the user with the username equal to 'login'
+    # has access to the account. This means we can use this username and
+    # possibly the id (I think they are unique) to store with my internal
+    # user data structure to function like a login
+    if data.get("login") and data.get("id"):
+        if isinstance(data["login"], str) and isinstance(data["id"], int):
+            # I have admin permissions to add people
+            # TODO: Change this to a list of authorized users
+            if data.get("login") == "JakeRoggenbuck":
+                return True
+
+    return False
