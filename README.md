@@ -20,3 +20,19 @@ There are a few reasons I work on this project:
 ### Board View
 
 <img width="1904" height="944" alt="image" src="https://github.com/user-attachments/assets/b505e058-831a-4153-93af-e3fb13cf13b3" />
+
+## Development
+
+### Backend
+
+You will need a [`.env`](https://github.com/JakeRoggenbuck/algoboard/blob/main/backend/example.env) file in the backend directory that at least defines these values. These aren't yet used for Google OAuth.
+
+```env
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+SECRET_KEY=
+REDIRECT_URL=
+JWT_SECRET_KEY=
+FASTAPI_SECRET_KEY=
+FRONTEND_URL=
+```
