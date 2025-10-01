@@ -106,30 +106,42 @@ export default function ProblemsChart() {
         
         const ctx = chartRef.current.getContext('2d');
         chartInstance.current = new Chart.Chart(ctx, {
-          type: 'bar',
+          type: 'line',
           data: {
             labels: labels,
             datasets: [
               {
                 label: 'Easy',
                 data: easyData,
-                backgroundColor: 'rgba(76, 175, 80, 0.7)',
+                backgroundColor: 'rgba(76, 175, 80, 0.2)',
                 borderColor: 'rgba(76, 175, 80, 1)',
-                borderWidth: 2
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 5,
+                pointHoverRadius: 7
               },
               {
                 label: 'Medium',
                 data: mediumData,
-                backgroundColor: 'rgba(255, 152, 0, 0.7)',
+                backgroundColor: 'rgba(255, 152, 0, 0.2)',
                 borderColor: 'rgba(255, 152, 0, 1)',
-                borderWidth: 2
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 5,
+                pointHoverRadius: 7
               },
               {
                 label: 'Hard',
                 data: hardData,
-                backgroundColor: 'rgba(244, 67, 54, 0.7)',
+                backgroundColor: 'rgba(244, 67, 54, 0.2)',
                 borderColor: 'rgba(244, 67, 54, 1)',
-                borderWidth: 2
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 5,
+                pointHoverRadius: 7
               }
             ]
           },
