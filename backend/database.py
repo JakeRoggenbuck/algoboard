@@ -11,6 +11,7 @@ Anything that start with `_ab` is an internal function only for this file.
 `_calc` prefix -> calculate on data given (no DB operation)
 """
 
+
 def _fetch_problems(board: str) -> List[Tuple]:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
