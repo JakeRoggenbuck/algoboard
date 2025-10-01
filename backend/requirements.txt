@@ -1,0 +1,7 @@
+fastapi
+dotenv
+itsdangerous
+requests
+ruff
+tqdm
+uvicorn

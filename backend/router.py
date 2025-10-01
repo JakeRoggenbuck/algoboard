@@ -1,13 +1,11 @@
-from fastapi import FastAPI, Query, HTTPException, Cookie, Request, APIRouter, status
+from fastapi import FastAPI, Query, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
 from datetime import datetime
 from fastapi import FastAPI, Header
-from fastapi.responses import JSONResponse, RedirectResponse
-import requests
+from fastapi.responses import JSONResponse
 from typing import Union
 from pydantic import BaseModel
-from starlette.config import Config
 import time
 from starlette.middleware.sessions import SessionMiddleware
 from os import getenv
@@ -28,9 +26,6 @@ from database import (
     get_logins,
 )
 from auth import get_access_token, get_user_info, is_github_authenticated
-
-
-config = Config(".env")
 
 
 class User(BaseModel):

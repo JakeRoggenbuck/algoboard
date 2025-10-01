@@ -1,12 +1,17 @@
 from os import getenv
+from fastapi import HTTPException, Request
 from authlib.integrations.starlette_client import OAuth
 from datetime import datetime, timedelta
 from jose import jwt, ExpiredSignatureError, JWTError
 import uuid
 import traceback
+from starlette.config import Config
+from typing import Union
 
 
-# TODO: Split auth into own file - issue #130
+config = Config(".env")
+
+
 oauth = OAuth()
 oauth.register(
     name="AlgoBoard",
