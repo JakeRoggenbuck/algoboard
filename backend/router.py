@@ -255,6 +255,36 @@ with open("config.secret") as file:
     CLIENT_SECRET = file.readline().rstrip()
 
 
+def is_github_authenticated(authorization: str = Header(default=None)):
+    if not authorization:
+        raise HTTPException(
+            status_code=401,
+            detail="Missing Authorization header",
+        )
+
+    headers = {"Authorization": authorization, "Accept": "application/json"}
+
+    res = requests.get(
+        "https://api.github.com/user",
+        headers=headers,
+    )
+
+    data = res.json()
+
+    # We can safely assume that the user with the username equal to 'login'
+    # has access to the account. This means we can use this username and
+    # possibly the id (I think they are unique) to store with my internal
+    # user data structure to function like a login
+    if data.get("login") and data.get("id"):
+        if isinstance(data["login"], str) and isinstance(data["id"], int):
+            # I have admin permissions to add people
+            # TODO: Change this to a list of authorized users
+            if data.get("login") == "JakeRoggenbuck":
+                return True
+
+    return False
+
+
 @app.get("/access-token")
 def get_access_token(code: Union[str, None] = None):
     if code:
@@ -341,75 +371,30 @@ def get_user_info(authorization: str = Header(default=None)):
 
 @app.post("/admin/create-user")
 def create_user_router(user: User, authorization: str = Header(default=None)):
-    if not authorization:
-        raise HTTPException(
-            status_code=401,
-            detail="Missing Authorization header",
-        )
-
     if not user.valid_usersname():
         raise HTTPException(
             status_code=422,
             detail="Invalid username given",
         )
 
-    headers = {"Authorization": authorization, "Accept": "application/json"}
+    if is_github_authenticated(authorization):
+        add_user(user.username)
+        add_user_to_board(user.username, "everyone")
+        update_board_participant_counts()
 
-    res = requests.get(
-        "https://api.github.com/user",
-        headers=headers,
-    )
-
-    data = res.json()
-
-    # We can safely assume that the user with the username equal to 'login'
-    # has access to the account. This means we can use this username and
-    # possibly the id (I think they are unique) to store with my internal
-    # user data structure to function like a login
-    if data.get("login") and data.get("id"):
-        if isinstance(data["login"], str) and isinstance(data["id"], int):
-            # I have admin permissions to add people
-            if data.get("login") == "JakeRoggenbuck":
-                add_user(user.username)
-                add_user_to_board(user.username, "everyone")
-                update_board_participant_counts()
-
-            # TODO: Should I actually return the GitHub data again?
-            # Check if GitHub responded
-            if res.status_code == 200:
-                return JSONResponse(content=res.json(), status_code=200)
+        return JSONResponse(
+            content={"created_user": user.username},
+            status_code=200,
+        )
 
     return JSONResponse(content={"message": "Could not load"}, status_code=400)
 
 
 @app.get("/admin/get-logins")
 def get_logins_route(authorization: str = Header(default=None)):
-    if not authorization:
-        raise HTTPException(
-            status_code=401,
-            detail="Missing Authorization header",
-        )
-
-    headers = {"Authorization": authorization, "Accept": "application/json"}
-
-    res = requests.get(
-        "https://api.github.com/user",
-        headers=headers,
-    )
-
-    data = res.json()
-
-    # We can safely assume that the user with the username equal to 'login'
-    # has access to the account. This means we can use this username and
-    # possibly the id (I think they are unique) to store with my internal
-    # user data structure to function like a login
-    if data.get("login") and data.get("id"):
-        if isinstance(data["login"], str) and isinstance(data["id"], int):
-            # I have admin permissions
-            if data.get("login") == "JakeRoggenbuck":
-                logins = get_logins()
-
-                return JSONResponse(content=logins, status_code=200)
+    if is_github_authenticated(authorization):
+        logins = get_logins()
+        return JSONResponse(content=logins, status_code=200)
 
     return JSONResponse(content={"message": "Could not load"}, status_code=400)
 
@@ -419,12 +404,6 @@ def add_user_to_board_route(
     userboard: UserBoard,
     authorization: str = Header(default=None),
 ):
-    if not authorization:
-        raise HTTPException(
-            status_code=401,
-            detail="Missing Authorization header",
-        )
-
     if not userboard.valid_usersname():
         raise HTTPException(
             status_code=422,
@@ -438,29 +417,14 @@ def add_user_to_board_route(
             detail="Invalid board name given",
         )
 
-    headers = {"Authorization": authorization, "Accept": "application/json"}
+    if is_github_authenticated(authorization):
+        add_user_to_board(userboard.username, userboard.board)
+        update_board_participant_counts()
 
-    res = requests.get(
-        "https://api.github.com/user",
-        headers=headers,
-    )
-
-    data = res.json()
-
-    # We can safely assume that the user with the username equal to 'login'
-    # has access to the account. This means we can use this username and
-    # possibly the id (I think they are unique) to store with my internal
-    # user data structure to function like a login
-    if data.get("login") and data.get("id"):
-        if isinstance(data["login"], str) and isinstance(data["id"], int):
-            # I have admin permissions to add people
-            if data.get("login") == "JakeRoggenbuck":
-                add_user_to_board(userboard.username, userboard.board)
-                update_board_participant_counts()
-
-            # Check if GitHub responded
-            if res.status_code == 200:
-                return JSONResponse(content=res.json(), status_code=200)
+        return JSONResponse(
+            content={"user_added": userboard.username},
+            status_code=200,
+        )
 
     return JSONResponse(content={"message": "Could not load"}, status_code=400)
 
