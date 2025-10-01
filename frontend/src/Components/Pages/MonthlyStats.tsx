@@ -113,35 +113,41 @@ export default function ProblemsChart() {
               {
                 label: 'Easy',
                 data: easyData,
-                backgroundColor: 'rgba(76, 175, 80, 0.2)',
-                borderColor: 'rgba(76, 175, 80, 1)',
-                borderWidth: 3,
-                fill: true,
-                tension: 0.4,
-                pointRadius: 5,
-                pointHoverRadius: 7
+                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                borderColor: 'rgb(34, 197, 94)',
+                borderWidth: 2,
+                fill: false,
+                tension: 0.1,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                pointBackgroundColor: 'rgb(34, 197, 94)',
+                pointBorderColor: 'rgb(34, 197, 94)'
               },
               {
                 label: 'Medium',
                 data: mediumData,
-                backgroundColor: 'rgba(255, 152, 0, 0.2)',
-                borderColor: 'rgba(255, 152, 0, 1)',
-                borderWidth: 3,
-                fill: true,
-                tension: 0.4,
-                pointRadius: 5,
-                pointHoverRadius: 7
+                backgroundColor: 'rgba(234, 179, 8, 0.1)',
+                borderColor: 'rgb(234, 179, 8)',
+                borderWidth: 2,
+                fill: false,
+                tension: 0.1,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                pointBackgroundColor: 'rgb(234, 179, 8)',
+                pointBorderColor: 'rgb(234, 179, 8)'
               },
               {
                 label: 'Hard',
                 data: hardData,
-                backgroundColor: 'rgba(244, 67, 54, 0.2)',
-                borderColor: 'rgba(244, 67, 54, 1)',
-                borderWidth: 3,
-                fill: true,
-                tension: 0.4,
-                pointRadius: 5,
-                pointHoverRadius: 7
+                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                borderColor: 'rgb(239, 68, 68)',
+                borderWidth: 2,
+                fill: false,
+                tension: 0.1,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                pointBackgroundColor: 'rgb(239, 68, 68)',
+                pointBorderColor: 'rgb(239, 68, 68)'
               }
             ]
           },
@@ -150,15 +156,22 @@ export default function ProblemsChart() {
             maintainAspectRatio: false,
             scales: {
               x: {
-                stacked: false,
                 grid: {
-                  display: false
+                  color: 'rgba(255, 255, 255, 0.05)',
+                  drawBorder: false
+                },
+                ticks: {
+                  color: '#9ca3af'
                 }
               },
               y: {
-                stacked: false,
                 beginAtZero: true,
+                grid: {
+                  color: 'rgba(255, 255, 255, 0.05)',
+                  drawBorder: false
+                },
                 ticks: {
+                  color: '#9ca3af',
                   callback: function(value) {
                     return value.toLocaleString();
                   }
@@ -170,13 +183,21 @@ export default function ProblemsChart() {
                 display: true,
                 position: 'top',
                 labels: {
+                  color: '#e5e7eb',
                   font: {
-                    size: 14
+                    size: 13
                   },
-                  padding: 20
+                  padding: 15,
+                  usePointStyle: true
                 }
               },
               tooltip: {
+                backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                titleColor: '#e5e7eb',
+                bodyColor: '#e5e7eb',
+                borderColor: 'rgba(255, 255, 255, 0.1)',
+                borderWidth: 1,
+                padding: 12,
                 callbacks: {
                   label: function(context) {
                     return context.dataset.label + ': ' + context.parsed.y.toLocaleString();
@@ -195,64 +216,70 @@ export default function ProblemsChart() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 to-purple-900 p-5">
-      <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-2xl p-8">
-        <h1 className="text-4xl font-bold text-center text-gray-800 mb-2">
-          📊 Problems Solved by Difficulty
-        </h1>
-        <p className="text-center text-gray-600 text-sm mb-8">
-          Monthly breakdown for the past year
-        </p>
+    <div className="min-h-screen bg-gray-900 text-gray-100 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">
+            Problems Solved by Type in the last year
+          </h1>
+        </div>
         
         {loading && (
-          <div className="text-center py-20 text-gray-600 text-lg">
+          <div className="text-center py-20 text-gray-400 text-lg">
             Loading data...
           </div>
         )}
         
         {error && (
-          <div className="text-center py-20 text-red-600 text-base">
+          <div className="text-center py-20 text-red-400 text-base">
             Error loading data: {error}
           </div>
         )}
         
         {!loading && !error && (
           <>
-            <div className="relative h-96 mb-8">
+            {/* Chart Container */}
+            <div className="bg-gray-800 rounded-lg p-6 mb-6" style={{ height: '500px' }}>
               <canvas ref={chartRef}></canvas>
             </div>
             
+            {/* Stats Grid */}
             {stats && (
-              <div className="flex flex-wrap justify-around gap-4">
-                <div className="text-center p-6 bg-gray-50 rounded-xl min-w-36">
-                  <div className="text-gray-600 text-sm mb-2">Total Easy</div>
-                  <div className="text-4xl font-bold text-green-600">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                  <div className="text-gray-400 text-sm mb-2">Total Easy</div>
+                  <div className="text-3xl font-bold text-green-500">
                     {stats.totalEasy.toLocaleString()}
                   </div>
                 </div>
                 
-                <div className="text-center p-6 bg-gray-50 rounded-xl min-w-36">
-                  <div className="text-gray-600 text-sm mb-2">Total Medium</div>
-                  <div className="text-4xl font-bold text-orange-500">
+                <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                  <div className="text-gray-400 text-sm mb-2">Total Medium</div>
+                  <div className="text-3xl font-bold text-yellow-500">
                     {stats.totalMedium.toLocaleString()}
                   </div>
                 </div>
                 
-                <div className="text-center p-6 bg-gray-50 rounded-xl min-w-36">
-                  <div className="text-gray-600 text-sm mb-2">Total Hard</div>
-                  <div className="text-4xl font-bold text-red-600">
+                <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                  <div className="text-gray-400 text-sm mb-2">Total Hard</div>
+                  <div className="text-3xl font-bold text-red-500">
                     {stats.totalHard.toLocaleString()}
                   </div>
                 </div>
                 
-                <div className="text-center p-6 bg-gray-50 rounded-xl min-w-36">
-                  <div className="text-gray-600 text-sm mb-2">Grand Total</div>
-                  <div className="text-4xl font-bold text-gray-800">
+                <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                  <div className="text-gray-400 text-sm mb-2">Grand Total</div>
+                  <div className="text-3xl font-bold text-blue-400">
                     {stats.grandTotal.toLocaleString()}
                   </div>
                 </div>
               </div>
             )}
+            
+            {/* Footer Info */}
+            <div className="text-gray-500 text-sm">
+            </div>
           </>
         )}
       </div>
