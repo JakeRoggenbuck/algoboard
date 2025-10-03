@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { AlertCircle, ArrowLeftRight } from 'lucide-react';
+import { AlertCircle, ArrowLeftRight, Key } from 'lucide-react';
 
 export default function SentenceSimilarity() {
   const [sentence1, setSentence1] = useState('');
   const [sentence2, setSentence2] = useState('');
+  const [apiKey, setApiKey] = useState('');
   const [similarity, setSimilarity] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showApiKey, setShowApiKey] = useState(false);
 
   const cosineSimilarity = (vecA, vecB) => {
     const dotProduct = vecA.reduce((sum, a, i) => sum + a * vecB[i], 0);
@@ -16,13 +18,13 @@ export default function SentenceSimilarity() {
   };
 
   const getEmbedding = async (text) => {
-    // Using Hugging Face's free inference API with a sentence transformer model
     const response = await fetch(
       'https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2',
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({
           inputs: text,
@@ -32,7 +34,10 @@ export default function SentenceSimilarity() {
     );
 
     if (!response.ok) {
-      throw new Error('Failed to get embedding');
+      if (response.status === 401) {
+        throw new Error('Invalid API key. Please check your Hugging Face token.');
+      }
+      throw new Error(`API error: ${response.status}`);
     }
 
     return await response.json();
@@ -41,6 +46,11 @@ export default function SentenceSimilarity() {
   const compareSentences = async () => {
     if (!sentence1.trim() || !sentence2.trim()) {
       setError('Please enter both sentences');
+      return;
+    }
+
+    if (!apiKey.trim()) {
+      setError('Please enter your Hugging Face API key');
       return;
     }
 
@@ -57,7 +67,7 @@ export default function SentenceSimilarity() {
       const sim = cosineSimilarity(emb1, emb2);
       setSimilarity(sim);
     } catch (err) {
-      setError('Error computing similarity. The API might be rate limited. Please try again in a moment.');
+      setError(err.message || 'Error computing similarity. Please check your API key and try again.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -87,6 +97,50 @@ export default function SentenceSimilarity() {
           <p className="text-gray-600">
             Compare two sentences using LLM embeddings and cosine similarity
           </p>
+        </div>
+
+        <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6 rounded">
+          <div className="flex items-start gap-2">
+            <Key className="text-yellow-600 mt-1 flex-shrink-0" size={20} />
+            <div className="text-sm">
+              <p className="font-semibold text-yellow-800 mb-1">API Key Required</p>
+              <p className="text-yellow-700 mb-2">
+                This tool requires a free Hugging Face API key. Get yours at:{' '}
+                <a 
+                  href="https://huggingface.co/settings/tokens" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="underline font-semibold"
+                >
+                  huggingface.co/settings/tokens
+                </a>
+              </p>
+              <p className="text-yellow-700 text-xs">
+                Create a free account, go to Settings → Access Tokens → New Token (read access is sufficient)
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            Hugging Face API Key
+          </label>
+          <div className="flex gap-2">
+            <input
+              type={showApiKey ? "text" : "password"}
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder="hf_..."
+              className="flex-1 p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+            />
+            <button
+              onClick={() => setShowApiKey(!showApiKey)}
+              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm font-medium"
+            >
+              {showApiKey ? 'Hide' : 'Show'}
+            </button>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 mb-8">
@@ -176,6 +230,7 @@ export default function SentenceSimilarity() {
             <li>• Cosine similarity measures the angle between the two embedding vectors</li>
             <li>• Scores range from 0 (completely different) to 1 (identical meaning)</li>
             <li>• Uses Hugging Face's sentence-transformers/all-MiniLM-L6-v2 model</li>
+            <li>• Your API key is stored only in your browser session and never saved</li>
           </ul>
         </div>
       </div>
