@@ -1,20 +1,21 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import {
   createBrowserRouter,
   RouterProvider,
   Route,
   createRoutesFromElements,
-} from "react-router-dom";
-import "./index.css";
-import Board from "./Components/Pages/Board.tsx";
-import Boards from "./Components/Pages/Boards.tsx";
-import Changelog from "./Components/Pages/Changelog.tsx";
-import Home from "./Components/Pages/Home.tsx";
-import UserPage from "./Components/Pages/UserPage.tsx";
-import reportWebVitals from "./reportWebVitals";
-import AuthCallback from "./Components/Pages/AuthCallback.tsx";
-import MonthlyStats from "./Components/Pages/MonthlyStats.tsx";
+} from 'react-router-dom';
+import './index.css';
+import Board from './Components/Pages/Board.tsx';
+import Boards from './Components/Pages/Boards.tsx';
+import Changelog from './Components/Pages/Changelog.tsx';
+import Home from './Components/Pages/Home.tsx';
+import UserPage from './Components/Pages/UserPage.tsx';
+import reportWebVitals from './reportWebVitals';
+import AuthCallback from './Components/Pages/AuthCallback.tsx';
+import MonthlyStats from './Components/Pages/MonthlyStats.tsx';
+import SentenceSimilarity from './Components/Pages/SentenceSimilarity.tsx';
 
 const routes = createRoutesFromElements(
   <Route>
@@ -25,12 +26,16 @@ const routes = createRoutesFromElements(
     <Route path="/boards/:boardId" element={<Board />} />
     <Route path="/auth/callback" element={<AuthCallback />} />
     <Route path="/stats" element={<MonthlyStats />} />
+    <Route
+      path="/unrelated/cosine-similarity"
+      element={<SentenceSimilarity />}
+    />
   </Route>,
 );
 
 const router = createBrowserRouter(routes);
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <RouterProvider router={router} />
