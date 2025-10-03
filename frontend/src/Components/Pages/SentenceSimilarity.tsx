@@ -23,12 +23,14 @@ export default function SentenceSimilarity() {
       {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          inputs: text,
-          options: { wait_for_model: true }
+          inputs: {
+            source_sentence: text,
+            sentences: [text]
+          }
         })
       }
     );
@@ -37,10 +39,29 @@ export default function SentenceSimilarity() {
       if (response.status === 401) {
         throw new Error('Invalid API key. Please check your Hugging Face token.');
       }
-      throw new Error(`API error: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`API error: ${response.status} - ${errorText}`);
     }
 
-    return await response.json();
+    const result = await response.json();
+    // For feature extraction, we just want the embedding vector
+    // Try sending as simple string first
+    const simpleResponse = await fetch(
+      'https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2',
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          inputs: [text]
+        })
+      }
+    );
+    
+    const simpleResult = await simpleResponse.json();
+    return simpleResult[0];
   };
 
   const compareSentences = async () => {
