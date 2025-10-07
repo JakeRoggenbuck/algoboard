@@ -5,3 +5,4 @@ requests
 ruff
 tqdm
 uvicorn
+kronicler

@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 from database import log_email
 from typing import Union
 from fastapi import HTTPException
+import kronicler
 
 
 # GitHub Client stuff
@@ -19,6 +20,7 @@ with open("config.secret") as file:
     CLIENT_SECRET = file.readline().rstrip()
 
 
+@kronicler.capture
 def get_user_info(authorization: str = Header(default=None)) -> JSONResponse:
     headers = {"Authorization": authorization, "Accept": "application/json"}
 
@@ -79,6 +81,7 @@ def get_user_info(authorization: str = Header(default=None)) -> JSONResponse:
     )
 
 
+@kronicler.capture
 def get_access_token(code: Union[str, None] = None) -> JSONResponse:
     if code:
         params = (
@@ -106,6 +109,7 @@ def get_access_token(code: Union[str, None] = None) -> JSONResponse:
     return JSONResponse(content={"message": "Could not load"}, status_code=400)
 
 
+@kronicler.capture
 def is_github_authenticated(authorization: str = Header(default=None)) -> bool:
     if not authorization:
         raise HTTPException(
