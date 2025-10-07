@@ -74,6 +74,7 @@ origins = [
     "http://algoboard.org",
     "https://algoboard.org",
     "https://leaterboard.vercel.app",
+    "https://kronicler.vercel.app"
 ]
 
 app.add_middleware(
