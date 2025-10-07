@@ -10,6 +10,7 @@ import time
 from starlette.middleware.sessions import SessionMiddleware
 from os import getenv
 from dotenv import load_dotenv
+import kronicler
 
 # Internal Imports
 from args import parser
@@ -48,6 +49,13 @@ load_dotenv(override=True)
 app = FastAPI()
 
 app.add_middleware(SessionMiddleware, secret_key=getenv("FASTAPI_SECRET_KEY"))
+
+DB = kronicler.Database(sync_consume=True)
+
+
+@app.get("/logs")
+def read_logs():
+    return DB.fetch_all_as_dict()
 
 
 @app.middleware("http")

@@ -2,6 +2,7 @@ import sqlite3
 from datetime import datetime
 from typing import Dict, List, Tuple
 from alg import linear_weight
+import kronicler
 
 """Naming for database.py file
 
@@ -12,6 +13,7 @@ Anything that start with `_ab` is an internal function only for this file.
 """
 
 
+@kronicler.capture
 def _fetch_problems(board: str) -> List[Tuple]:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
@@ -28,6 +30,7 @@ def _fetch_problems(board: str) -> List[Tuple]:
     return problems
 
 
+@kronicler.capture
 def _calc_count_problems(problems) -> Dict[str, int]:
     counts = {"all": 0, "easy": 0, "medium": 0, "hard": 0}
 
@@ -40,11 +43,13 @@ def _calc_count_problems(problems) -> Dict[str, int]:
     return counts
 
 
+@kronicler.capture
 def total_problems(board: str) -> Dict[str, int]:
     problems = _fetch_problems(board)
     return _calc_count_problems(problems)
 
 
+@kronicler.capture
 def log_email(email: str, username: str) -> None:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
@@ -57,6 +62,7 @@ def log_email(email: str, username: str) -> None:
     con.commit()
 
 
+@kronicler.capture
 def get_logins() -> List[str]:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
@@ -66,6 +72,7 @@ def get_logins() -> List[str]:
     return list(logins)
 
 
+@kronicler.capture
 def add_user(username: str, verbose: bool = False) -> None:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
@@ -82,6 +89,7 @@ def add_user(username: str, verbose: bool = False) -> None:
     con.close()
 
 
+@kronicler.capture
 def add_board(board: str, verbose: bool = False) -> None:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
@@ -101,6 +109,7 @@ def add_board(board: str, verbose: bool = False) -> None:
     con.close()
 
 
+@kronicler.capture
 def add_user_to_board(username: str, board: str, verbose: bool = False) -> None:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
@@ -129,6 +138,7 @@ def add_user_to_board(username: str, board: str, verbose: bool = False) -> None:
     con.close()
 
 
+@kronicler.capture
 def get_last_entry_time() -> str:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
@@ -142,6 +152,7 @@ def get_last_entry_time() -> str:
     return timestamp[0]
 
 
+@kronicler.capture
 def _fetch_total_solved_on_board() -> Tuple[List[Tuple], List[Tuple]]:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
@@ -177,6 +188,7 @@ def _fetch_total_solved_on_board() -> Tuple[List[Tuple], List[Tuple]]:
     return recent, first
 
 
+@kronicler.capture
 def _calc_total_solved_on_board(recent, first) -> Dict[str, int]:
     found = {}
 
@@ -199,11 +211,13 @@ def _calc_total_solved_on_board(recent, first) -> Dict[str, int]:
     return sums
 
 
+@kronicler.capture
 def total_solved_on_board() -> Dict[str, int]:
     recent, first = _fetch_total_solved_on_board()
     return _calc_total_solved_on_board(recent, first)
 
 
+@kronicler.capture
 def update_board_participant_counts(verbose=True) -> None:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
@@ -232,6 +246,7 @@ def update_board_participant_counts(verbose=True) -> None:
 
 
 # TODO: Split up creation and usage here - issue #131
+@kronicler.capture
 def get_board_data(board_id: str, start_date: datetime, end_date: datetime) -> List:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
