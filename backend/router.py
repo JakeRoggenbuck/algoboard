@@ -49,6 +49,7 @@ load_dotenv(override=True)
 app = FastAPI()
 
 app.add_middleware(SessionMiddleware, secret_key=getenv("FASTAPI_SECRET_KEY"))
+app.add_middleware(kronicler.KroniclerMiddleware)
 
 DB = kronicler.Database(sync_consume=True)
 
