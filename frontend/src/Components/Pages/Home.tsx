@@ -4,7 +4,7 @@ import icon_image from "../../images/icon_image.png";
 import bg_image from "../../images/algoboard_bg.png";
 import Feedback from "../../Components/Elements/Feedback.tsx";
 import Admin from "../../Components/Elements/Admin.tsx";
-import { User, LogIn, LogOut } from "lucide-react";
+import { User, LogIn, LogOut, ChevronDown } from "lucide-react";
 import { track } from "@amplitude/analytics-browser";
 
 const CLIENT_ID = "Ov23liAdJ5YRCEzVsbOD";
@@ -21,7 +21,7 @@ function LoginButton() {
   };
 
   return (
-    <button class="text-white" onClick={handleLogin}>
+    <button className="text-white" onClick={handleLogin}>
       Login with Google
     </button>
   );
@@ -266,47 +266,59 @@ export default function Component() {
           )}
         </header>
 
-        <main className="flex z-10 flex-col items-center justify-center flex-grow">
-          <h1 className="text-white text-8xl font-extrabold mb-8">AlgoBoard</h1>
-          {solved !== -9999 ? (
-            <p className="text-2xl text-gray-400">
-              <b>{solved}</b> Problems Solved! {tada}
-            </p>
-          ) : (
-            <p className="m-4"></p>
-          )}
+        <main className="flex z-10 flex-col items-center justify-center flex-grow px-4 py-8">
+          <div className="flex flex-col items-center max-w-3xl w-full space-y-6">
+            <h1 className="text-white text-6xl md:text-7xl lg:text-8xl font-extrabold text-center">
+              AlgoBoard
+            </h1>
 
-          <div className="flex flex-row space-x-2">
-            <Link
-              to="/boards"
-              className="mx-1 text-blue-600 hover:text-blue-800"
-            >
-              <button className="text-xl mt-8 bg-gradient-to-r from-cyan-500 to-blue-600 hover:bg-blue-700 hover:border-blue-700 text-white font-bold py-3 px-4 rounded-lg w-40 whitespace-nowrap hover:from-cyan-600 hover:to-blue-700">
-                View Boards
-              </button>
-            </Link>
+            <h2 className="text-white text-lg md:text-xl text-center max-w-2xl">
+              🏆 Algo Board is a website to promote friendly competition for
+              solving algorithmic coding problems. Algo Board lets you host
+              weekly / monthly competitions for your friends, clubs, and other
+              organizations.
+            </h2>
 
-            <Link
-              to="/changelog"
-              className="mx-1 text-blue-600 hover:text-blue-800"
-            >
-              <button className="text-xl mt-8 bg-[#0D1117] hover:border-blue-700 border-blue-500 border-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-40 whitespace-nowrap">
-                Changelog
-              </button>
-            </Link>
-          </div>
+            {solved !== -9999 ? (
+              <p className="text-xl md:text-2xl text-gray-400 text-center">
+                <b>{solved}</b> Problems Solved! {tada}
+              </p>
+            ) : (
+              <div className="h-8"></div>
+            )}
 
-          {/* Show admin panel to Jake because he is admin */}
-          {"login" in githubInfo && githubInfo.login === "JakeRoggenbuck" ? (
-            <div className="p-12">
-              <Admin />
+            <div className="flex flex-row gap-4 justify-center flex-wrap">
+              <Link to="/boards" className="text-blue-600 hover:text-blue-800">
+                <button className="text-lg md:text-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-lg min-w-[160px] whitespace-nowrap transition">
+                  View Boards
+                </button>
+              </Link>
 
-              <br />
-              <LoginButton />
+              <Link
+                to="/changelog"
+                className="text-blue-600 hover:text-blue-800"
+              >
+                <button className="text-lg md:text-xl bg-[#0D1117] hover:border-blue-700 border-blue-500 border-2 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg min-w-[160px] whitespace-nowrap transition">
+                  Changelog
+                </button>
+              </Link>
             </div>
-          ) : (
-            <></>
-          )}
+
+            <h2 className="text-white text-lg md:text-xl text-center max-w-2xl mt-4">
+              Algo Board was initially made in January of 2024 for my friends
+              and I to run weekly programming competitions.
+            </h2>
+
+            {/* Show admin panel to Jake because he is admin */}
+            {"login" in githubInfo && githubInfo.login === "JakeRoggenbuck" ? (
+              <div className="mt-8">
+                <Admin />
+                <div className="mt-4">
+                  <LoginButton />
+                </div>
+              </div>
+            ) : null}
+          </div>
         </main>
 
         <footer className="text-white p-5 text-sm flex justify-between items-center">
