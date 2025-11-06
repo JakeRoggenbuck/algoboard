@@ -266,18 +266,11 @@ export default function Component() {
           )}
         </header>
 
-        <main className="flex z-10 flex-col items-center justify-center flex-grow px-4 py-8">
+        <main className="flex z-10 flex-col items-center justify-center min-h-[70vh] px-4 py-8">
           <div className="flex flex-col items-center max-w-3xl w-full space-y-6">
             <h1 className="text-white text-6xl md:text-7xl lg:text-8xl font-extrabold text-center">
               AlgoBoard
             </h1>
-
-            <h2 className="text-white text-lg md:text-xl text-center max-w-2xl">
-              🏆 Algo Board is a website to promote friendly competition for
-              solving algorithmic coding problems. Algo Board lets you host
-              weekly / monthly competitions for your friends, clubs, and other
-              organizations.
-            </h2>
 
             {solved !== -9999 ? (
               <p className="text-xl md:text-2xl text-gray-400 text-center">
@@ -304,11 +297,6 @@ export default function Component() {
               </Link>
             </div>
 
-            <h2 className="text-white text-lg md:text-xl text-center max-w-2xl mt-4">
-              Algo Board was initially made in January of 2024 for my friends
-              and I to run weekly programming competitions.
-            </h2>
-
             {/* Show admin panel to Jake because he is admin */}
             {"login" in githubInfo && githubInfo.login === "JakeRoggenbuck" ? (
               <div className="mt-8">
@@ -319,9 +307,46 @@ export default function Component() {
               </div>
             ) : null}
           </div>
+
+          {/* Down arrow indicator */}
+          <div className="mt-16 mb-8 flex justify-center">
+            <ChevronDown className="text-white" size={40} />
+          </div>
         </main>
 
-        <footer className="text-white p-5 text-sm flex justify-between items-center">
+        {/* About Section */}
+        <section className="z-10 px-4 py-16 md:py-32">
+          <div className="flex flex-col items-center max-w-3xl w-full mx-auto">
+            <h2 className="text-white text-3xl md:text-4xl font-bold text-center mb-6">
+              About
+            </h2>
+
+            <p className="text-white text-lg md:text-xl max-w-2xl my-2">
+              🏆 Algo Board is a website to promote friendly competition for
+              solving algorithmic coding problems. Algo Board lets you host
+              weekly / monthly competitions for your friends, clubs, and other
+              organizations.
+            </p>
+
+            <p className="text-white text-lg md:text-xl max-w-2xl my-2">
+              Algo Board was initially made in January of 2024 for my friends
+              and I to run weekly programming competitions.
+            </p>
+
+            <p className="text-white text-lg md:text-xl max-w-2xl my-2">
+              The source code can be found on the{" "}
+              <a
+                className="text-blue-300"
+                href="https://github.com/JakeRoggenbuck/algoboard"
+              >
+                AlgoBoard GitHub
+              </a>{" "}
+              and is under an MIT license.
+            </p>
+          </div>
+        </section>
+
+        <footer className="sticky bottom-0 z-20 bg-[#0D1117] text-white p-5 text-sm flex justify-between items-center border-t border-gray-800">
           <div className="flex items-center space-x-2">
             {isStatusOkay ? (
               <CircleIcon className="text-green-500" />
