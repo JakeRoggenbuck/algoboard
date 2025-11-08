@@ -57,7 +57,7 @@ app.add_middleware(kronicler.KroniclerMiddleware)
 
 @app.get("/logs")
 def read_logs():
-    return DB.fetch_all_as_dict()
+    return DB.logs()
 
 
 @app.middleware("http")
