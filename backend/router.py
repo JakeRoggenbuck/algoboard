@@ -52,6 +52,8 @@ app.add_middleware(SessionMiddleware, secret_key=getenv("FASTAPI_SECRET_KEY"))
 
 DB = kronicler.Database(sync_consume=True)
 
+app.add_middleware(kronicler.KroniclerMiddleware)
+
 
 @app.get("/logs")
 def read_logs():
