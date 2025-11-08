@@ -14,7 +14,7 @@ const UserList = (props) => {
   const [entries, setEntries] = useState([]);
   const [show_line, set_show_line] = useState(true);
   const [update_time, set_update_time] = useState("");
-  const [days_to_graph, set_days_to_graph] = useState(30);
+  const [days_to_graph] = useState(30);
 
   const change_to_line_view = () => {
     set_show_line(true);
@@ -151,7 +151,7 @@ const UserList = (props) => {
     };
 
     fetchUsers();
-  }, []);
+}, [props.boardId, start_date, end_date]);
 
   const colors = ["#a3e78e", "#8ed0e7", "#d28ee7", "#f3ea90", "#f390ca"];
 

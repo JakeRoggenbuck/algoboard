@@ -52,3 +52,5 @@ server.secret.old
 # --------------- #
 google.secret
 # ----------------#
+
+*.secret

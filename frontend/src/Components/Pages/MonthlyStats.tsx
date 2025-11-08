@@ -21,7 +21,7 @@ export default function ProblemsChart() {
     if (!loading && allUsers.length > 0) {
       updateChart();
     }
-  }, [selectedUsers]);
+  }, [selectedUsers, loading, allUsers.length, updateChart]);
 
   const fetchAndProcessData = async () => {
     try {

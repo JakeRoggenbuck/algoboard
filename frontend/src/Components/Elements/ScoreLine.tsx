@@ -192,7 +192,7 @@ const ScoreLine = (props) => {
         chartInstance.current.destroy();
       }
     };
-  }, [data]); // Make sure to include 'data' in the dependency array if it's dynamic
+  }, [data, transformedData, minDate, maxDate]); // Make sure to include 'data' in the dependency array if it's dynamic
 
   return (
     <div>
