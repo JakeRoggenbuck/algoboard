@@ -24,8 +24,8 @@ const UserList = (props) => {
     set_show_line(false);
   };
 
-  const DAY = 24 * 60 * 60 * 1000;
   const { end_date, start_date } = useMemo(() => {
+    const DAY = 24 * 60 * 60 * 1000;
     const end = new Date();
     const start = new Date(end.getTime() - days_to_graph * DAY);
     return { end_date: end, start_date: start };
