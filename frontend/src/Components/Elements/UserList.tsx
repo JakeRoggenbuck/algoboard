@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import StatsTable from "./StatsTable.tsx";
 import ScoreLine from "./ScoreLine.tsx";
 import ScoreHistogram from "./ScoreHistogram.tsx";
@@ -24,9 +24,12 @@ const UserList = (props) => {
     set_show_line(false);
   };
 
-  var end_date = new Date();
   const DAY = 24 * 60 * 60 * 1000;
-  var start_date = new Date(end_date.getTime() - days_to_graph * DAY);
+  const { end_date, start_date } = useMemo(() => {
+    const end = new Date();
+    const start = new Date(end.getTime() - days_to_graph * DAY);
+    return { end_date: end, start_date: start };
+  }, [days_to_graph]);
 
   useEffect(() => {
     const fetchEntries = async () => {
