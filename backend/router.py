@@ -89,6 +89,20 @@ async def search_transcripts(query: SearchQuery):
         raise HTTPException(status_code=500, detail=f"Proxy error: {e}")
 
 
+# Used in another project
+@app.get("/transcript")
+async def home_transcripts():
+    url = "http://localhost:8005"
+
+    try:
+        async with httpx.AsyncClient() as client:
+            r = await client.get(url)
+            r.raise_for_status()
+            return r.json()
+    except httpx.HTTPError as e:
+        raise HTTPException(status_code=500, detail=f"Proxy error: {e}")
+
+
 @app.middleware("http")
 async def log_response_time(request: Request, call_next):
     start_time = time.time()
