@@ -350,6 +350,20 @@ const UserPage = () => {
           </div>
         </div>
       </div>
+
+      <footer className="bg-[#0D1117] text-white p-5 text-sm flex justify-center items-center border-t border-gray-800">
+        <span>
+          View my other projects at{" "}
+          <a
+            href="https://jr0.org"
+            target="_blank"
+            rel="noopener noreferrer author"
+            className="text-blue-300 hover:text-blue-400"
+          >
+            jr0.org
+          </a>
+        </span>
+      </footer>
     </>
   );
 };
