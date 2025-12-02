@@ -376,6 +376,17 @@ export default function Component() {
               (530) 212-0126
             </a>
           </span>
+          <span>
+            View my other projects at{" "}
+            <a
+              href="https://jr0.org"
+              target="_blank"
+              rel="noopener noreferrer author"
+              className="text-blue-300 hover:text-blue-400"
+            >
+              jr0.org
+            </a>
+          </span>
         </footer>
       </div>
     </>
