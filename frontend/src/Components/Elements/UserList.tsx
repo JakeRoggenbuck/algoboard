@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import StatsTable from "./StatsTable.tsx";
 import ScoreLine from "./ScoreLine.tsx";
 import ScoreHistogram from "./ScoreHistogram.tsx";
@@ -14,7 +14,7 @@ const UserList = (props) => {
   const [entries, setEntries] = useState([]);
   const [show_line, set_show_line] = useState(true);
   const [update_time, set_update_time] = useState("");
-  const [days_to_graph, set_days_to_graph] = useState(30);
+  const [days_to_graph] = useState(30);
 
   const change_to_line_view = () => {
     set_show_line(true);
@@ -24,9 +24,12 @@ const UserList = (props) => {
     set_show_line(false);
   };
 
-  var end_date = new Date();
-  const DAY = 24 * 60 * 60 * 1000;
-  var start_date = new Date(end_date.getTime() - days_to_graph * DAY);
+  const { end_date, start_date } = useMemo(() => {
+    const DAY = 24 * 60 * 60 * 1000;
+    const end = new Date();
+    const start = new Date(end.getTime() - days_to_graph * DAY);
+    return { end_date: end, start_date: start };
+  }, [days_to_graph]);
 
   useEffect(() => {
     const fetchEntries = async () => {
@@ -151,7 +154,7 @@ const UserList = (props) => {
     };
 
     fetchUsers();
-  }, []);
+}, [props.boardId, start_date, end_date]);
 
   const colors = ["#a3e78e", "#8ed0e7", "#d28ee7", "#f3ea90", "#f390ca"];
 

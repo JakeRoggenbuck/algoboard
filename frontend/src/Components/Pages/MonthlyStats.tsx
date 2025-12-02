@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import icon_image from "../../images/icon_image.png";
 import { Link } from "react-router-dom";
 import * as Chart from "chart.js/auto";
@@ -16,12 +16,6 @@ export default function ProblemsChart() {
   useEffect(() => {
     fetchAndProcessData();
   }, []);
-
-  useEffect(() => {
-    if (!loading && allUsers.length > 0) {
-      updateChart();
-    }
-  }, [selectedUsers]);
 
   const fetchAndProcessData = async () => {
     try {
@@ -84,7 +78,7 @@ export default function ProblemsChart() {
     user.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const updateChart = async () => {
+  const updateChart = useCallback(async () => {
     try {
       const response = await fetch(
         "https://api.algoboard.org/entries/everyone",
@@ -331,7 +325,13 @@ export default function ProblemsChart() {
       setError(err.message);
       setLoading(false);
     }
-  };
+  }, [selectedUsers]);
+
+  useEffect(() => {
+    if (!loading && allUsers.length > 0) {
+      updateChart();
+    }
+  }, [selectedUsers, loading, allUsers.length, updateChart]);
 
   return (
     <div className="min-h-screen bg-[#0D1117] text-gray-100 p-6">

@@ -1,29 +1,35 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 import Chart from "chart.js/auto";
 
 const ScoreLine = (props) => {
   let data = props.data;
 
-  let transformedData = data.reduce(
-    (acc, [id, name, rank, easy, med, hard, date]) => {
-      // Check if the name already exists in the accumulator
-      if (!acc[name]) {
-        acc[name] = []; // Initialize an empty array for this name if it doesn't exist
-      }
+  const transformedData = useMemo(
+    () =>
+      data.reduce(
+        (acc, [id, name, rank, easy, med, hard, date]) => {
+          // Check if the name already exists in the accumulator
+          if (!acc[name]) {
+            acc[name] = []; // Initialize an empty array for this name if it doesn't exist
+          }
 
-      // Push the relevant attributes into the array associated with the name
-      acc[name].push([rank, easy, med, hard, date]);
+          // Push the relevant attributes into the array associated with the name
+          acc[name].push([rank, easy, med, hard, date]);
 
-      return acc;
-    },
-    {},
+          return acc;
+        },
+        {},
+      ),
+    [data],
   );
 
-  const dates = data.map((item) => new Date(item[6]));
-  const minDate = new Date(Math.min(...dates));
-  const maxDate = new Date(Math.max(...dates));
-
-  minDate.setDate(minDate.getDate() - 1);
+  const { minDate, maxDate } = useMemo(() => {
+    const dates = data.map((item) => new Date(item[6]));
+    const min = new Date(Math.min(...dates));
+    const max = new Date(Math.max(...dates));
+    min.setDate(min.getDate() - 1);
+    return { minDate: min, maxDate: max };
+  }, [data]);
 
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
@@ -192,7 +198,7 @@ const ScoreLine = (props) => {
         chartInstance.current.destroy();
       }
     };
-  }, [data]); // Make sure to include 'data' in the dependency array if it's dynamic
+  }, [data, transformedData, minDate, maxDate]); // Make sure to include 'data' in the dependency array if it's dynamic
 
   return (
     <div>

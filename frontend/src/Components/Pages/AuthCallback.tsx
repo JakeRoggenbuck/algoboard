@@ -107,7 +107,7 @@ export default function AuthCallback() {
 
     console.log("🔐 AuthCallback: Calling fetchToken");
     fetchToken();
-  }, [location.search, navigate]);
+  }, [location, navigate]);
 
   console.log("🔐 AuthCallback: Rendering component");
 
