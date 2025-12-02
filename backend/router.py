@@ -106,7 +106,8 @@ origins = [
     "https://algoboard.org",
     "https://leaterboard.vercel.app",
     "https://kronicler.vercel.app",
-    "https://usekronicler.com"
+    "https://usekronicler.com",
+    "https://ecs-transcript-search.vercel.app"
 ]
 
 app.add_middleware(
