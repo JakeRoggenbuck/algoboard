@@ -4,13 +4,14 @@ import sqlite3
 from datetime import datetime
 from fastapi import FastAPI, Header
 from fastapi.responses import JSONResponse
-from typing import Union
+from typing import Union, List
 from pydantic import BaseModel
 import time
 from starlette.middleware.sessions import SessionMiddleware
 from os import getenv
 from dotenv import load_dotenv
 import kronicler
+import httpx
 
 # Internal Imports
 from args import parser
@@ -56,6 +57,34 @@ DB = kronicler.Database(sync_consume=True)
 @app.get("/logs")
 def read_logs():
     return DB.fetch_all_as_dict()
+
+
+class SearchQuery(BaseModel):
+    query: str
+    top_k: int = 5
+
+
+class SearchResult(BaseModel):
+    chunk: str
+    similarity: float
+    title: str
+    url: str
+    filename: str
+    chunk_index: int
+
+
+# Used in another project
+@app.post("/transcript/search", response_model=List[SearchResult])
+async def search_transcripts(query: SearchQuery):
+    url = "http://localhost:8005/search"
+
+    try:
+        async with httpx.AsyncClient() as client:
+            r = await client.post(url, json=query.dict())
+            r.raise_for_status()
+            return r.json()
+    except httpx.HTTPError as e:
+        raise HTTPException(status_code=500, detail=f"Proxy error: {e}")
 
 
 @app.middleware("http")
