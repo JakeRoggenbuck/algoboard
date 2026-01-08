@@ -6,20 +6,17 @@ const ScoreLine = (props) => {
 
   const transformedData = useMemo(
     () =>
-      data.reduce(
-        (acc, [id, name, rank, easy, med, hard, date]) => {
-          // Check if the name already exists in the accumulator
-          if (!acc[name]) {
-            acc[name] = []; // Initialize an empty array for this name if it doesn't exist
-          }
+      data.reduce((acc, [id, name, rank, easy, med, hard, date]) => {
+        // Check if the name already exists in the accumulator
+        if (!acc[name]) {
+          acc[name] = []; // Initialize an empty array for this name if it doesn't exist
+        }
 
-          // Push the relevant attributes into the array associated with the name
-          acc[name].push([rank, easy, med, hard, date]);
+        // Push the relevant attributes into the array associated with the name
+        acc[name].push([rank, easy, med, hard, date]);
 
-          return acc;
-        },
-        {},
-      ),
+        return acc;
+      }, {}),
     [data],
   );
 

@@ -154,7 +154,7 @@ const UserList = (props) => {
     };
 
     fetchUsers();
-}, [props.boardId, start_date, end_date]);
+  }, [props.boardId, start_date, end_date]);
 
   const colors = ["#a3e78e", "#8ed0e7", "#d28ee7", "#f3ea90", "#f390ca"];
 
