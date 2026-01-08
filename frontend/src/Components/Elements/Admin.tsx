@@ -6,6 +6,11 @@ function Admin() {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isLoginsLoading, setIsLoginsLoading] = useState(false);
+  const [loginCounts, setLoginCounts] = useState<
+    Array<{ username: string; count: number }>
+  >([]);
+  const [loginCountsTotal, setLoginCountsTotal] = useState(0);
 
   const handleClose = () => {
     setIsVisible(false);
@@ -63,6 +68,7 @@ function Admin() {
   };
 
   const GetLatestLogins = async () => {
+    setIsLoginsLoading(true);
     try {
       const response = await fetch(
         "https://api.algoboard.org/admin/get-logins",
@@ -79,10 +85,46 @@ function Admin() {
       const data = await response.json();
 
       if (response.status === 200) {
-        console.log(data);
+        const counts = new Map<string, number>();
+        let total = 0;
+
+        if (Array.isArray(data)) {
+          data.forEach((row) => {
+            if (!Array.isArray(row)) {
+              return;
+            }
+
+            const usernameValue = row[2];
+
+            if (typeof usernameValue !== "string" || !usernameValue.trim()) {
+              return;
+            }
+
+            total += 1;
+            counts.set(usernameValue, (counts.get(usernameValue) || 0) + 1);
+          });
+        }
+
+        const sortedCounts = Array.from(counts.entries())
+          .map(([usernameValue, count]) => ({
+            username: usernameValue,
+            count,
+          }))
+          .sort((a, b) => {
+            if (b.count !== a.count) {
+              return b.count - a.count;
+            }
+
+            return a.username.localeCompare(b.username);
+          });
+
+        setLoginCounts(sortedCounts);
+        setLoginCountsTotal(total);
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoginsLoading(false);
     }
   };
 
@@ -200,11 +242,39 @@ function Admin() {
             <div className="flex gap-2">
               <button
                 onClick={GetLatestLogins}
+                disabled={isLoginsLoading}
                 className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Get Logins
+                {isLoginsLoading ? "Loading..." : "Get Logins"}
               </button>
             </div>
+
+            {loginCounts.length > 0 && (
+              <div className="mt-4 space-y-2">
+                <h2 className="text-lg font-bold text-gray-100">
+                  Logins by Username
+                </h2>
+                <p className="text-sm text-gray-400">
+                  Total logins: {loginCountsTotal} | Unique usernames:{" "}
+                  {loginCounts.length}
+                </p>
+                <div className="border border-gray-700 rounded-md overflow-hidden max-h-64 overflow-y-auto">
+                  <div className="grid grid-cols-2 gap-2 px-3 py-2 text-gray-400 text-sm border-b border-gray-700">
+                    <span>Username</span>
+                    <span className="text-right">Count</span>
+                  </div>
+                  {loginCounts.map((entry) => (
+                    <div
+                      key={entry.username}
+                      className="grid grid-cols-2 gap-2 px-3 py-2 text-gray-100 border-b border-gray-800 last:border-b-0"
+                    >
+                      <span className="truncate">{entry.username}</span>
+                      <span className="text-right">{entry.count}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {message && (
               <p
