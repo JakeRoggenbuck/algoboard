@@ -4,8 +4,12 @@ import ScoreLine from "./ScoreLine.tsx";
 import ScoreHistogram from "./ScoreHistogram.tsx";
 import "chartjs-adapter-luxon";
 
-const FEATURES = {
-  show_days_input: false,
+const DAY_MS = 24 * 60 * 60 * 1000;
+const formatDateInput = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 };
 
 const UserList = (props) => {
@@ -14,7 +18,13 @@ const UserList = (props) => {
   const [entries, setEntries] = useState([]);
   const [show_line, set_show_line] = useState(true);
   const [update_time, set_update_time] = useState("");
-  const [days_to_graph] = useState(30);
+  const [startDateStr, setStartDateStr] = useState(() => {
+    const today = new Date();
+    return formatDateInput(new Date(today.getTime() - 30 * DAY_MS));
+  });
+  const [endDateStr, setEndDateStr] = useState(() =>
+    formatDateInput(new Date()),
+  );
 
   const change_to_line_view = () => {
     set_show_line(true);
@@ -25,11 +35,55 @@ const UserList = (props) => {
   };
 
   const { end_date, start_date } = useMemo(() => {
-    const DAY = 24 * 60 * 60 * 1000;
-    const end = new Date();
-    const start = new Date(end.getTime() - days_to_graph * DAY);
+    const start = startDateStr
+      ? new Date(`${startDateStr}T00:00:00`)
+      : undefined;
+    const end = endDateStr ? new Date(`${endDateStr}T23:59:59.999`) : undefined;
     return { end_date: end, start_date: start };
-  }, [days_to_graph]);
+  }, [startDateStr, endDateStr]);
+
+  const handleStartDateChange = (event) => {
+    const nextStart = event.target.value;
+    setStartDateStr(nextStart);
+    if (endDateStr && nextStart && nextStart > endDateStr) {
+      setEndDateStr(nextStart);
+    }
+  };
+
+  const handleEndDateChange = (event) => {
+    const nextEnd = event.target.value;
+    setEndDateStr(nextEnd);
+    if (startDateStr && nextEnd && nextEnd < startDateStr) {
+      setStartDateStr(nextEnd);
+    }
+  };
+
+  const dateRangeControls = (
+    <div className="mx-1 my-4 mt-8 flex flex-wrap items-center gap-2 text-sm text-white">
+      <label htmlFor="start_date" className="text-gray-200">
+        Start
+      </label>
+      <input
+        className="rounded-md border border-blue-700 bg-[#0B1320] px-2 py-1 text-white"
+        type="date"
+        id="start_date"
+        name="start_date"
+        value={startDateStr}
+        onChange={handleStartDateChange}
+      />
+      <label htmlFor="end_date" className="text-gray-200">
+        End
+      </label>
+      <input
+        className="rounded-md border border-blue-700 bg-[#0B1320] px-2 py-1 text-white"
+        type="date"
+        id="end_date"
+        name="end_date"
+        value={endDateStr}
+        onChange={handleEndDateChange}
+      />
+    </div>
+  );
 
   useEffect(() => {
     const fetchEntries = async () => {
@@ -177,37 +231,28 @@ const UserList = (props) => {
             >
               Show Score Histogram
             </button>
-
-            {FEATURES.show_days_input ? (
-              <input
-                className="w-32 mx-1 my-4 text-md mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg placeholder-white"
-                type="number"
-                id="days_count"
-                name="days_count"
-                defaultValue="8"
-                onChange={(e) => console.log(e.target.value)}
-              />
-            ) : (
-              <></>
-            )}
+            {dateRangeControls}
           </div>
         </>
       ) : (
         <>
           <ScoreHistogram data={users} />
 
-          <button
-            onClick={change_to_line_view}
-            className="mx-1 my-4 text-md mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
-          >
-            Show Problems Solved Graph
-          </button>
-          <button
-            onClick={change_to_histagran_view}
-            className="mx-1 my-4 text-md mt-8 bg-blue-800 text-white font-bold py-2 px-4 rounded-lg"
-          >
-            Show Score Histogram
-          </button>
+          <div className="flex flex-row">
+            <button
+              onClick={change_to_line_view}
+              className="mx-1 my-4 text-md mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
+            >
+              Show Problems Solved Graph
+            </button>
+            <button
+              onClick={change_to_histagran_view}
+              className="mx-1 my-4 text-md mt-8 bg-blue-800 text-white font-bold py-2 px-4 rounded-lg"
+            >
+              Show Score Histogram
+            </button>
+            {dateRangeControls}
+          </div>
         </>
       )}
 
