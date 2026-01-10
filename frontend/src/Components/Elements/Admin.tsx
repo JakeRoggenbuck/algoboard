@@ -237,7 +237,7 @@ function Admin() {
             </div>
 
             <h1 className="font-bold text-gray-100">
-              Show latest logins (Will console log)
+              Show latest logins
             </h1>
             <div className="flex gap-2">
               <button
