@@ -10,6 +10,10 @@ mix phx.new --no-html --no-assets --no-dashboard --no-live --no-mailer --databas
 
 This removes the majority of the extra features and makes the database use sqlite3.
 
+## Roadmap
+
+- [x] Create data models for User, Board, Activity (Prev. `user_rank`), and the relations between them
+
 ## Important Files
 
 Like any Elixir project, you need a `mix.exs` file.
