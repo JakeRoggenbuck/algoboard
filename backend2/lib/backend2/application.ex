@@ -11,8 +11,7 @@ defmodule Backend2.Application do
       Backend2Web.Telemetry,
       Backend2.Repo,
       {Ecto.Migrator,
-        repos: Application.fetch_env!(:backend2, :ecto_repos),
-        skip: skip_migrations?()},
+       repos: Application.fetch_env!(:backend2, :ecto_repos), skip: skip_migrations?()},
       {DNSCluster, query: Application.get_env(:backend2, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Backend2.PubSub},
       # Start a worker by calling: Backend2.Worker.start_link(arg)

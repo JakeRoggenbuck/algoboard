@@ -3,13 +3,14 @@ defmodule Backend2.User do
   import Ecto.Changeset
 
   schema "users" do
+    many_to_many :boards, Backend2.Board, join_through: "boards_users"
+    has_many :activities, Backend2.Activity
+
     field :name, :string
     field :email, :string
     field :gh_username, :string
     field :lc_username, :string
     field :active, :boolean, default: true
-
-    many_to_many :boards, Backend2.Board, join_through: "boards_users"
 
     field :lc_rank, :integer
     field :easy_solved, :integer

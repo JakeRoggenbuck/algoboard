@@ -29,4 +29,3 @@ defmodule Backend2.Board do
     ])
   end
 end
-
