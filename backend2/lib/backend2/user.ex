@@ -9,6 +9,8 @@ defmodule Backend2.User do
     field :lc_username, :string
     field :active, :boolean, default: true
 
+    many_to_many :boards, Backend2.Board, join_through: "boards_users"
+
     field :lc_rank, :integer
     field :easy_solved, :integer
     field :med_solved, :integer
