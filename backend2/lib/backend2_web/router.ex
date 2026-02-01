@@ -9,5 +9,6 @@ defmodule Backend2Web.Router do
     pipe_through :api
 
     get "/sessions", SessionController, :index
+    get "/boards", BoardController, :index
   end
 end
