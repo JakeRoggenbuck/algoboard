@@ -1,6 +1,7 @@
 defmodule Backend2.Session do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query, only: [where: 2]
 
   schema "sessions" do
     belongs_to :user, Backend2.User
@@ -15,5 +16,11 @@ defmodule Backend2.Session do
       [:user_id]
     )
     |> validate_required([:user_id])
+  end
+
+  def list_sessions(user_id) do
+    __MODULE__
+    |> where(user_id: ^user_id)
+    |> Backend2.Repo.all()
   end
 end
