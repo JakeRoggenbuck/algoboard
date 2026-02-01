@@ -5,6 +5,7 @@ defmodule Backend2.User do
   schema "users" do
     many_to_many :boards, Backend2.Board, join_through: "boards_users"
     has_many :activities, Backend2.Activity
+    has_many :sessions, Backend2.Session
 
     field :name, :string
     field :email, :string
@@ -43,5 +44,17 @@ defmodule Backend2.User do
 
   def linear_weight(%__MODULE__{} = user) do
     (user.easy_solved) + 2 * (user.med_solved) + 3 * (user.hard_solved)
+  end
+
+  def create_user(attrs) do
+    %__MODULE__{}
+    |> __MODULE__.changeset(attrs)
+    |> Backend2.Repo.insert()
+  end
+
+  def update_user(%__MODULE__{} = user, attrs) do
+    user
+    |> __MODULE__.changeset(attrs)
+    |> Backend2.Repo.update()
   end
 end
