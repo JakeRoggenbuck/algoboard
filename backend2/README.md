@@ -32,6 +32,106 @@ There is a `test` folder that contains tests and utils to connect to the databas
 
 It seems like some of learning how to use Phoenix will be learning how this structure is meant to work together. I'll likely have to do some reading about what goes where, and why certain design decisions were made. Seems very reasonable though, and similar to Django or Rails.
 
+## Learnings
+
+Using the bang `!` will throw an error if you return the error atom.
+
+```elixir
+Backend2.Repo.get!(board_id)
+```
+
+I made a Controller that can be added to the router. The Controller uses the Session model.
+
+```elixir
+defmodule Backend2Web.SessionController do
+  use Backend2Web, :controller
+
+  def index(conn, _params) do
+    sessions = Backend2.Repo.all(Backend2.Session)
+    json(conn, sessions)
+  end
+end
+```
+
+This is how I added the Controller to the router.
+
+```elixir
+# ...
+  scope "/api", Backend2Web do
+    pipe_through :api
+
+    get "/sessions", SessionController, :index
+  end
+# ...
+```
+
+This is the modal for Session.
+
+```
+defmodule Backend2.Session do
+  use Ecto.Schema
+  import Ecto.Changeset
+  import Ecto.Query, only: [where: 2]
+
+  @derive {Jason.Encoder, only: [:id, :user_id, :inserted_at, :updated_at]}
+  schema "sessions" do
+    belongs_to :user, Backend2.User
+
+    timestamps()
+  end
+
+  # ...
+end
+```
+
+This is what is needed to read the Sessions from the API. This is pretty similar to Django and how they do MVC. The data model is the Model, the router that sets the API path is the view, and the controller is obviously the controller.
+
+When I made the model, I needed to manually create a migration file and run it.
+
+```sh
+mix ecto.gen.migration create_sessions
+```
+
+This makes a file called `priv/repo/migrations/20260201032719_create_sessions.exs` that's basically empty.
+
+At the start, the change function is empty.
+
+```elixir
+defmodule Backend2.Repo.Migrations.CreateSessions do
+  use Ecto.Migration
+
+  def change do
+    create table(:sessions) do
+      add :user_id, references(:users, on_delete: :delete_all), null: false
+
+      timestamps()
+    end
+
+    create index(:sessions, [:user_id])
+  end
+end
+```
+
+We add the line:
+
+```diff
++ add :user_id, references(:users, on_delete: :delete_all), null: false
+```
+
+We also make an index:
+
+```diff
++ create index(:sessions, [:user_id])
+```
+
+We can then run the migration with:
+
+```sh
+mix ecto.migrate
+```
+
+It's interesting to make this migration process manual, but it does make me more conscience of how the data is changing.
+
 ## Running
 
 To start the Phoenix server:
