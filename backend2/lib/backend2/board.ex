@@ -35,4 +35,25 @@ defmodule Backend2.Board do
     |> __MODULE__.changeset(attrs)
     |> Backend2.Repo.insert()
   end
+
+  def fetch_users(board_id) do
+    __MODULE__
+    |> Backend2.Repo.get!(board_id)
+    |> Backend2.Repo.preload(:users)
+    |> Map.fetch!(:users)
+  end
+
+  def add_user(board_id, user_id) do
+    user = Backend2.Repo.get!(Backend2.User, user_id)
+
+    board =
+      __MODULE__
+      |> Backend2.Repo.get!(board_id)
+      |> Backend2.Repo.preload(:users)
+
+    board
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_assoc(:users, [user | board.users])
+    |> Backend2.Repo.update()
+  end
 end
