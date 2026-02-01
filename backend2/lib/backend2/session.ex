@@ -3,6 +3,7 @@ defmodule Backend2.Session do
   import Ecto.Changeset
   import Ecto.Query, only: [where: 2]
 
+  @derive {Jason.Encoder, only: [:id, :user_id, :inserted_at, :updated_at]}
   schema "sessions" do
     belongs_to :user, Backend2.User
 

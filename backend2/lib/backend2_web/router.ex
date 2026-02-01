@@ -7,5 +7,7 @@ defmodule Backend2Web.Router do
 
   scope "/api", Backend2Web do
     pipe_through :api
+
+    get "/sessions", SessionController, :index
   end
 end
