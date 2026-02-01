@@ -40,4 +40,8 @@ defmodule Backend2.User do
       :lc_username
     ])
   end
+
+  def linear_weight(%__MODULE__{} = user) do
+    (user.easy_solved) + 2 * (user.med_solved) + 3 * (user.hard_solved)
+  end
 end
