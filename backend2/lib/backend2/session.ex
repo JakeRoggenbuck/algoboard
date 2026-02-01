@@ -18,6 +18,12 @@ defmodule Backend2.Session do
     |> validate_required([:user_id])
   end
 
+  def create_session(attrs) do
+    %__MODULE__{}
+    |> __MODULE__.changeset(attrs)
+    |> Backend2.Repo.insert()
+  end
+
   def list_sessions(user_id) do
     __MODULE__
     |> where(user_id: ^user_id)
