@@ -35,4 +35,11 @@ defmodule Backend2.Board do
     |> __MODULE__.changeset(attrs)
     |> Backend2.Repo.insert()
   end
+
+  def fetch_users(board_id) do
+    __MODULE__
+    |> Backend2.Repo.get!(board_id)
+    |> Backend2.Repo.preload(:users)
+    |> Map.fetch!(:users)
+  end
 end

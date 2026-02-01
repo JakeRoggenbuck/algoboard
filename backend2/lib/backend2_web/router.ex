@@ -10,5 +10,6 @@ defmodule Backend2Web.Router do
 
     get "/sessions", SessionController, :index
     get "/boards", BoardController, :index
+    get "/boards/:id/users", BoardController, :users
   end
 end
