@@ -67,7 +67,7 @@ This is how I added the Controller to the router.
 
 This is the modal for Session.
 
-```
+```elixir
 defmodule Backend2.Session do
   use Ecto.Schema
   import Ecto.Changeset
