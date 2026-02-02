@@ -63,7 +63,7 @@ def log_email(email: str, username: str) -> None:
     # Check if the email exists in emails
     if found_email is None:
         try:
-            mailing.send_email_on_github_signup
+            mailing.send_email_on_github_signup(username)
         except Exception:
             print("Error sending email!")
 
