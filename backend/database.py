@@ -139,6 +139,19 @@ def add_user(username: str, verbose: bool = False) -> None:
         ),
     )
 
+    # Two need to be added to get a 'delta'
+    cur.execute(
+        "INSERT into user_rank VALUES(NULL, ?, ?, ?, ?, ?, ?)",
+        (
+            username,
+            5_000_000,
+            0,
+            0,
+            0,
+            datetime.now(),
+        ),
+    )
+
     if verbose:
         print(f"Added {username}")
 
