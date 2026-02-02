@@ -210,6 +210,24 @@ export default function Component() {
               </Link>
             </div>
 
+            <div className="w-full max-w-2xl rounded-xl border border-blue-900/60 bg-[#0B1320] p-6 text-left text-white">
+              <h2 className="text-2xl font-bold">How to Join AlgoBoard</h2>
+              <ol className="mt-4 space-y-3 text-gray-300">
+                <li>
+                  <span className="font-semibold text-white">1.</span> Log in
+                  with GitHub. Click “Sign in” in the top right.
+                </li>
+                <li>
+                  <span className="font-semibold text-white">2.</span> Visit
+                  your profile on{" "}
+                  <Link to="/account" className="text-blue-300 hover:text-blue-400">
+                    /account
+                  </Link>{" "}
+                  and add your Leetcode username in the “Join AlgoBoard” section.
+                </li>
+              </ol>
+            </div>
+
             {/* Show admin panel to Jake because he is admin */}
             {"login" in githubInfo && githubInfo.login === "JakeRoggenbuck" ? (
               <div className="mt-8">
