@@ -43,8 +43,8 @@ export default function Board() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
-              Board: {params.boardId}
+            <button className="text-white py-2 px-4">
+              Board: <span className="font-bold">{params.boardId}</span>
             </button>
             <LoginControls />
           </div>

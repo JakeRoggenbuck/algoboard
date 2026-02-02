@@ -71,9 +71,7 @@ export default function Changelog() {
               Changelog for 1-30-2026
             </h1>
 
-            <h3 className="my-4 text-white text-2xl">
-              - Logging scope update
-            </h3>
+            <h3 className="my-4 text-white text-2xl">- Logging scope update</h3>
             <p className="my-4">
               Logging now focuses on function calls to reduce noise.
             </p>
@@ -145,9 +143,7 @@ export default function Changelog() {
             <h3 className="my-4 text-white text-2xl">
               - Kronicler URL updates
             </h3>
-            <p className="my-4">
-              Updated Kronicler URL and routing entries.
-            </p>
+            <p className="my-4">Updated Kronicler URL and routing entries.</p>
           </div>
 
           <div className="m-4 w-3/5">
