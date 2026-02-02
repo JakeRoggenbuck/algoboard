@@ -145,8 +145,6 @@ def add_user_with_github(username: str, github_username: str, verbose: bool = Fa
         (username, 10_000, 0, 0, 0, github_username),
     )
 
-    add_user_to_board(username, "everyone")
-
     if verbose:
         print(f"Added {username} with GitHub {github_username}")
 
