@@ -127,13 +127,48 @@ def add_user(username: str, verbose: bool = False) -> None:
 @kronicler.capture
 def add_user_with_github(username: str, github_username: str, verbose: bool = False):
     con = sqlite3.connect("ranking.db")
+    con.set_trace_callback(print)
     cur = con.cursor()
+
+    def exec_dbg(cur, sql, params=()):
+        try:
+            print("SQL:", sql, "PARAMS:", params)
+            return cur.execute(sql, params)
+        except Exception as exc:
+            print("DB ERROR:", exc)
+            raise
 
     cur.execute(
         """INSERT into users
         (name, rank, easy_solved, med_solved, hard_solved, github_username)
         VALUES(?, ?, ?, ?, ?, ?)""",
         (username, 10_000, 0, 0, 0, github_username),
+    )
+
+    # Insert a default zero rank to new users
+    exec_dbg(
+        "INSERT into user_rank VALUES(NULL, ?, ?, ?, ?, ?, ?)",
+        (
+            username,
+            5_000_000,
+            0,
+            0,
+            0,
+            datetime.now(),
+        ),
+    )
+
+    # Two need to be added to get a 'delta'
+    exec_dbg(
+        "INSERT into user_rank VALUES(NULL, ?, ?, ?, ?, ?, ?)",
+        (
+            username,
+            5_000_000,
+            0,
+            0,
+            0,
+            datetime.now(),
+        ),
     )
 
     if verbose:
