@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Dict, List, Tuple
 from alg import linear_weight
 import kronicler
+import mailing
 
 """Naming for database.py file
 
@@ -53,6 +54,15 @@ def total_problems(board: str) -> Dict[str, int]:
 def log_email(email: str, username: str) -> None:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
+
+    found_email = cur.execute(
+        "SELECT * FROM emails WHERE email = ?",
+        (email,),
+    ).fetchone()
+
+    # Check if the email exists in emails
+    if found_email is None:
+        mailing.send_email_on_github_signup
 
     cur.execute(
         "INSERT into emails (email, username, timestamp) VALUES(?, ?, ?)",
