@@ -2,6 +2,7 @@ import BoardList from "../../Components/Elements/BoardList.tsx";
 import { Link } from "react-router-dom";
 import Feedback from "../../Components/Elements/Feedback.tsx";
 import React from "react";
+import LoginControls from "../../Components/Elements/LoginControls.tsx";
 
 function Boards() {
   document.title = "Boards - AlgoBoard";
@@ -28,26 +29,17 @@ function Boards() {
             </nav>
           </div>
 
-          <div className="space-x-2">
+          <div className="flex items-center space-x-4">
             <a
               target="_blank"
               rel="noreferrer"
               href="https://forms.gle/X7PboDVHygyBvTxcA"
             >
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
-                Invite to My Board
+                Join Board
               </button>
             </a>
-
-            <a
-              target="_blank"
-              rel="noreferrer"
-              href="https://forms.gle/X7PboDVHygyBvTxcA"
-            >
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
-                Join New Board
-              </button>
-            </a>
+            <LoginControls />
           </div>
         </div>
 

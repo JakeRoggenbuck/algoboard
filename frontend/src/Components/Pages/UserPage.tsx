@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { User, LogIn, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import icon_image from "../../images/icon_image.png";
 import Feedback from "../../Components/Elements/Feedback.tsx";
-
-const CLIENT_ID = "Ov23liAdJ5YRCEzVsbOD";
+import LoginControls from "../../Components/Elements/LoginControls.tsx";
+import { useUser } from "../../Components/Context/UserContext.tsx";
 
 const FEATURES = {
   login: true,
@@ -12,73 +11,15 @@ const FEATURES = {
 };
 
 const UserPage = () => {
-  const [githubInfo, setGithubInfo] = useState({ login: "" });
+  const { githubInfo, isLoading: isUserLoading, setGithubInfo } = useUser();
   const [newUsername, setNewUsername] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     document.title = "User Page - AlgoBoard";
-    getUserInfo();
   }, []);
-
-  async function getUserInfo() {
-    setLoading(true);
-    const cacheKey = "githubUserInfo";
-    const cacheTimeKey = "githubUserInfoTime";
-    const cacheTime = localStorage.getItem(cacheTimeKey);
-    const now = new Date().getTime();
-
-    // Cache for 10 minutes
-    if (cacheTime && now - parseInt(cacheTime) < 600_000) {
-      let k = localStorage.getItem(cacheKey);
-      if (k != null) {
-        const cachedData = JSON.parse(k);
-        if (cachedData) {
-          setGithubInfo(cachedData);
-          setLoading(false);
-          return;
-        }
-      }
-    }
-
-    try {
-      const response = await fetch("https://api.algoboard.org/user-info", {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("accessToken"),
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch user data");
-      }
-
-      const data = await response.json();
-      setGithubInfo(data);
-      localStorage.setItem(cacheKey, JSON.stringify(data));
-      localStorage.setItem(cacheTimeKey, now.toString());
-    } catch (err) {
-      setError("Error fetching profile data. Please try again later.");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  function loginWithGitHub() {
-    window.location.assign(
-      "https://github.com/login/oauth/authorize?client_id=" +
-        CLIENT_ID +
-        "&scope=user:email",
-    );
-  }
-
-  function logout() {
-    localStorage.removeItem("accessToken");
-    window.location.reload();
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -87,7 +28,7 @@ const UserPage = () => {
       return;
     }
 
-    setLoading(true);
+    setIsSaving(true);
 
     try {
       const response = await fetch(
@@ -117,7 +58,7 @@ const UserPage = () => {
       setError("Failed to update username. Please try again.");
       console.error(err);
     } finally {
-      setLoading(false);
+      setIsSaving(false);
     }
   };
 
@@ -129,7 +70,7 @@ const UserPage = () => {
       : { easy: 0, med: 0, hard: 0 };
   const totalSolved = problemStats.easy + problemStats.med + problemStats.hard;
 
-  if (loading && !githubInfo.login) {
+  if (isUserLoading && !githubInfo.login) {
     return (
       <div className="bg-[#0D1117] text-white min-h-screen p-8 flex items-center justify-center">
         <div className="animate-pulse">Loading profile data...</div>
@@ -162,49 +103,7 @@ const UserPage = () => {
           <></>
         )}
 
-        {FEATURES.login ? (
-          <div className="flex items-center space-x-4">
-            {localStorage.getItem("accessToken") ? (
-              <button
-                onClick={logout}
-                className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-cyan-600 hover:to-blue-700 transition h-10"
-              >
-                <LogOut className="mr-2" size={20} />
-                Sign Out
-              </button>
-            ) : (
-              <button
-                onClick={loginWithGitHub}
-                className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-cyan-600 hover:to-blue-700 transition h-10"
-              >
-                <LogIn className="mr-2" size={20} />
-                Sign In
-              </button>
-            )}
-
-            <Link to="/account">
-              <div className="flex items-center space-x-2 bg-gray-800 rounded-lg px-3 py-2 h-10">
-                {"avatar_url" in githubInfo ? (
-                  <img
-                    src={githubInfo.avatar_url}
-                    alt="Profile"
-                    height="24"
-                    width="24"
-                    className="rounded-full"
-                  />
-                ) : (
-                  <User className="text-cyan-400" size={20} />
-                )}
-
-                <span className="font-medium text-gray-200">
-                  {githubInfo.login ? githubInfo.login : "Guest"}
-                </span>
-              </div>
-            </Link>
-          </div>
-        ) : (
-          <></>
-        )}
+        {FEATURES.login ? <LoginControls /> : <></>}
       </header>
       <div className="bg-[#0D1117] text-white min-h-screen p-8">
         <div className="max-w-4xl mx-auto">
@@ -324,15 +223,15 @@ const UserPage = () => {
                     onChange={(e) => setNewUsername(e.target.value)}
                     className="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter new username"
-                    disabled={loading}
+                    disabled={isSaving}
                   />
                 </div>
                 <button
                   type="submit"
                   className="bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={loading}
+                  disabled={isSaving}
                 >
-                  {loading ? "Updating..." : "Update Username"}
+                  {isSaving ? "Updating..." : "Update Username"}
                 </button>
               </form>
             </div>

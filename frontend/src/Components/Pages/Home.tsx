@@ -4,10 +4,10 @@ import icon_image from "../../images/icon_image.png";
 import bg_image from "../../images/algoboard_bg.png";
 import Feedback from "../../Components/Elements/Feedback.tsx";
 import Admin from "../../Components/Elements/Admin.tsx";
-import { User, LogIn, LogOut, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { track } from "@amplitude/analytics-browser";
-
-const CLIENT_ID = "Ov23liAdJ5YRCEzVsbOD";
+import LoginControls from "../../Components/Elements/LoginControls.tsx";
+import { useUser } from "../../Components/Context/UserContext.tsx";
 
 const FEATURES = {
   login: true,
@@ -32,54 +32,10 @@ export default function Component() {
   const [solved, setSolved] = useState(-9999);
   const [latency, setLatency] = useState(0);
 
-  const [rerender, setRerender] = useState(false);
-  const [githubInfo, setGithubInfo] = useState({ login: "" });
+  const { githubInfo, refreshUserInfo } = useUser();
 
   document.title = "Home - AlgoBoard";
   const tada = " 🎉";
-
-  async function getUserInfo() {
-    const cacheKey = "githubUserInfo";
-    const cacheTimeKey = "githubUserInfoTime";
-
-    const cacheTime = localStorage.getItem(cacheTimeKey);
-    const now = new Date().getTime();
-
-    // Cache for 10 minutes
-    if (cacheTime && now - parseInt(cacheTime) < 600_000) {
-      let k = localStorage.getItem(cacheKey);
-
-      if (k !== null) {
-        const cachedData = JSON.parse(k);
-
-        if (cachedData) {
-          setGithubInfo(cachedData);
-          return;
-        }
-      }
-    }
-
-    await fetch("https://api.algoboard.org/user-info", {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("accessToken"),
-      },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        // Only cache when the data returned successfully
-        if ("login" in data) {
-          setGithubInfo(data);
-
-          localStorage.setItem(cacheKey, JSON.stringify(data));
-          localStorage.setItem(cacheTimeKey, now.toString());
-
-          track("user-logged-in", { loggin: data["login"] });
-        }
-      });
-  }
 
   useEffect(() => {
     const s = window.location.search;
@@ -97,34 +53,18 @@ export default function Component() {
           .then((data) => {
             if (data.access_token) {
               localStorage.setItem("accessToken", data.access_token);
-              setRerender(!rerender);
+              refreshUserInfo();
             }
           });
       }
       getAccessToken();
     } else {
-      getUserInfo();
+      refreshUserInfo();
     }
 
     // Remove code from url bar
     window.history.pushState({}, "", window.location.pathname);
-  }, [rerender]);
-
-  function loginWithGitHub() {
-    track("user-logged-clicked", { data: "login-clicked" });
-
-    window.location.assign(
-      "https://github.com/login/oauth/authorize?client_id=" +
-        CLIENT_ID +
-        "&scope=user:email",
-    );
-  }
-
-  function logout() {
-    track("user-logged-out-clicked", { data: "logout-clicked" });
-    localStorage.clear();
-    window.location.reload();
-  }
+  }, [refreshUserInfo]);
 
   const fetchSolvedProblems = async () => {
     const cacheKey = "solvedProblems";
@@ -226,45 +166,14 @@ export default function Component() {
           )}
 
           {FEATURES.login ? (
-            <div className="flex items-center space-x-4">
-              {localStorage.getItem("accessToken") ? (
-                <button
-                  onClick={logout}
-                  className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-cyan-600 hover:to-blue-700 transition h-10"
-                >
-                  <LogOut className="mr-2" size={20} />
-                  Sign Out
-                </button>
-              ) : (
-                <button
-                  onClick={loginWithGitHub}
-                  className="flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-cyan-600 hover:to-blue-700 transition h-10"
-                >
-                  <LogIn className="mr-2" size={20} />
-                  Sign In
-                </button>
-              )}
-
-              <Link to={githubInfo.login ? "/account" : ""}>
-                <div className="flex items-center space-x-2 bg-gray-800 rounded-lg px-3 py-2 h-10">
-                  {"avatar_url" in githubInfo ? (
-                    <img
-                      src={githubInfo.avatar_url}
-                      alt="Profile"
-                      height="24"
-                      width="24"
-                      className="rounded-full"
-                    />
-                  ) : (
-                    <User className="text-cyan-400" size={20} />
-                  )}
-
-                  <span className="font-medium text-gray-200">
-                    {githubInfo.login ? githubInfo.login : "Guest"}
-                  </span>
-                </div>
-              </Link>
-            </div>
+            <LoginControls
+              onLoginClick={() =>
+                track("user-logged-clicked", { data: "login-clicked" })
+              }
+              onLogoutClick={() =>
+                track("user-logged-out-clicked", { data: "logout-clicked" })
+              }
+            />
           ) : (
             <></>
           )}
