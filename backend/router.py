@@ -24,6 +24,7 @@ from database import (
     add_user_to_board,
     add_board,
     add_user,
+    rename_board,
     total_problems,
     get_logins,
 )
@@ -353,6 +354,10 @@ if __name__ == "__main__":
 
     elif args.board:
         add_board(args.board)
+
+    elif args.rename_board:
+        old_url, new_name, new_url = args.rename_board.split(":", 2)
+        rename_board(old_url, new_name, new_url, verbose=True)
 
     else:
         parse.print_help()
