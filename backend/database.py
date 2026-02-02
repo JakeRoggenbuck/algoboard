@@ -341,7 +341,7 @@ def get_board_data(board_id: str, start_date: datetime, end_date: datetime) -> L
 
     if use_date_range:
         query = """
-        SELECT ur.*
+        SELECT ur.*, u.github_username
         FROM user_rank ur
         INNER JOIN users u ON ur.name = u.name
         INNER JOIN boards_users bu ON u.id = bu.user_id
@@ -358,8 +358,11 @@ def get_board_data(board_id: str, start_date: datetime, end_date: datetime) -> L
 
         for val in vals.fetchall():
             name = val[1]
+            github_username = val[7]
             if name not in scores:
-                scores[name] = {"id": val[0]}
+                scores[name] = {"id": val[0], "github_username": github_username}
+            elif not scores[name].get("github_username"):
+                scores[name]["github_username"] = github_username
 
             scores[name]["easy_max"] = max(scores[name].get("easy_max", val[3]), val[3])
             scores[name]["easy_min"] = min(scores[name].get("easy_min", val[3]), val[3])
@@ -388,6 +391,7 @@ def get_board_data(board_id: str, start_date: datetime, end_date: datetime) -> L
                     "solved": {"easy": easy, "medium": med, "hard": hard},
                     "name": name,
                     "score": linear_weight(easy, med, hard),
+                    "github_username": data.get("github_username"),
                 }
             )
 
@@ -410,6 +414,7 @@ def get_board_data(board_id: str, start_date: datetime, end_date: datetime) -> L
                     "solved": {"easy": row[3], "medium": row[4], "hard": row[5]},
                     "name": row[1],
                     "score": row[2],
+                    "github_username": row[6],
                 }
             )
 

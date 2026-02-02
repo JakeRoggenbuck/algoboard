@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Github } from "lucide-react";
 import StatsTable from "./StatsTable.tsx";
 import ScoreLine from "./ScoreLine.tsx";
 import ScoreHistogram from "./ScoreHistogram.tsx";
@@ -269,56 +269,75 @@ const UserList = (props) => {
         </span>
       </p>
 
-      {users.map((user, index) => (
-        <div
-          key={index}
-          className={`bg-[#161B22] rounded-md p-4 ${index > 0 ? "mt-4" : ""}`}
-        >
-          <div className="grid grid-cols-3 gap-4">
-            <div className="flex items-center space-x-4">
-              <div
-                style={{
-                  backgroundColor:
-                    colors[user.name.charAt(0).toLowerCase().charCodeAt(0) % 5],
-                }}
-                className={`w-10 h-10 rounded-full flex items-center justify-center`}
-              >
-                {/* You can insert an img tag here or keep it empty */}
-                <p class="text-2xl font-extrabold text-[#ffffff]">
-                  {user.name.charAt(0).toUpperCase()}
-                </p>
-              </div>
-              <div>
-                <div className="font-semibold text-md">{user.name}</div>
-                <div className="text-md flex flex-wrap items-center gap-2">
-                  <span>
-                    solved: {user.rank} easy, {user.solved.medium} medium,{" "}
-                    {user.solved.hard} hard, total:{" "}
-                    {user.solved.easy + user.solved.medium + user.solved.hard}
-                  </span>
-                  <a
-                    className="inline-flex items-center text-blue-400 hover:text-blue-300"
-                    href={`https://leetcode.com/u/${encodeURIComponent(
-                      (user.handle ?? user.name).trim(),
-                    )}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={`Open ${user.name}'s LeetCode profile`}
-                  >
-                    <ExternalLink size={14} />
-                  </a>
+      {users.map((user, index) => {
+        const githubUsername = (user.github_username ?? "").trim();
+
+        return (
+          <div
+            key={index}
+            className={`bg-[#161B22] rounded-md p-4 ${index > 0 ? "mt-4" : ""}`}
+          >
+            <div className="grid grid-cols-3 gap-4">
+              <div className="flex items-center space-x-4">
+                <div
+                  style={{
+                    backgroundColor:
+                      colors[
+                        user.name.charAt(0).toLowerCase().charCodeAt(0) % 5
+                      ],
+                  }}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center`}
+                >
+                  {/* You can insert an img tag here or keep it empty */}
+                  <p class="text-2xl font-extrabold text-[#ffffff]">
+                    {user.name.charAt(0).toUpperCase()}
+                  </p>
+                </div>
+                <div>
+                  <div className="font-semibold text-md">{user.name}</div>
+                  <div className="text-md flex flex-wrap items-center gap-2">
+                    <span>
+                      solved: {user.rank} easy, {user.solved.medium} medium,{" "}
+                      {user.solved.hard} hard, total:{" "}
+                      {user.solved.easy + user.solved.medium + user.solved.hard}
+                    </span>
+                    <a
+                      className="inline-flex items-center text-blue-400 hover:text-blue-300"
+                      href={`https://leetcode.com/u/${encodeURIComponent(
+                        (user.handle ?? user.name).trim(),
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`Open ${user.name}'s LeetCode profile`}
+                    >
+                      <ExternalLink size={14} />
+                    </a>
+                    {githubUsername ? (
+                      <a
+                        className="inline-flex items-center text-blue-400 hover:text-blue-300"
+                        href={`https://github.com/${encodeURIComponent(
+                          githubUsername,
+                        )}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`Open ${user.name}'s GitHub profile`}
+                      >
+                        <Github size={14} />
+                      </a>
+                    ) : null}
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="col-span-2 flex items-center justify-end">
-              <span className="font-semibold">
-                score:{" "}
-                {user.score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-              </span>
+              <div className="col-span-2 flex items-center justify-end">
+                <span className="font-semibold">
+                  score:{" "}
+                  {user.score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
 
       <StatsTable summaryStats={stats} />
     </>
