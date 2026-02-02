@@ -20,6 +20,7 @@ const FEATURES = {
   top_text: false,
   github_stats: false,
   leetcode_stats: true,
+  update_username: false,
 };
 
 const UserPage = () => {
@@ -339,49 +340,52 @@ const UserPage = () => {
               <></>
             )}
 
-            {/* Update Username Form */}
-            <div className="p-6 border-b border-gray-700">
-              <h2 className="text-xl font-bold mb-4">
-                Update Leetcode Username (Coming Soon!)
-              </h2>
-              {error && (
-                <div className="mb-4 p-3 bg-red-900 bg-opacity-50 rounded text-red-200">
-                  {error}
-                </div>
-              )}
-              {successMessage && (
-                <div className="mb-4 p-3 bg-green-900 bg-opacity-50 rounded text-green-200">
-                  {successMessage}
-                </div>
-              )}
+            {FEATURES.update_username ? (
+              <div className="p-6 border-b border-gray-700">
+                <h2 className="text-xl font-bold mb-4">
+                  Update Leetcode Username (Coming Soon!)
+                </h2>
+                {error && (
+                  <div className="mb-4 p-3 bg-red-900 bg-opacity-50 rounded text-red-200">
+                    {error}
+                  </div>
+                )}
+                {successMessage && (
+                  <div className="mb-4 p-3 bg-green-900 bg-opacity-50 rounded text-green-200">
+                    {successMessage}
+                  </div>
+                )}
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label
-                    htmlFor="newUsername"
-                    className="block text-sm font-medium text-gray-400 mb-1"
-                  >
-                    New Username
-                  </label>
-                  <input
-                    type="text"
-                    id="newUsername"
-                    value={newUsername}
-                    onChange={(e) => setNewUsername(e.target.value)}
-                    className="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter new username"
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <label
+                      htmlFor="newUsername"
+                      className="block text-sm font-medium text-gray-400 mb-1"
+                    >
+                      New Username
+                    </label>
+                    <input
+                      type="text"
+                      id="newUsername"
+                      value={newUsername}
+                      onChange={(e) => setNewUsername(e.target.value)}
+                      className="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Enter new username"
+                      disabled={isSaving}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={isSaving}
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={isSaving}
-                >
-                  {isSaving ? "Updating..." : "Update Username"}
-                </button>
-              </form>
-            </div>
+                  >
+                    {isSaving ? "Updating..." : "Update Username"}
+                  </button>
+                </form>
+              </div>
+            ) : (
+              <></>
+            )}
             {!userStats && (
               <div className="p-6">
                 <div className="mb-4 rounded-lg bg-red-900 bg-opacity-60 p-3 text-sm text-red-100">
