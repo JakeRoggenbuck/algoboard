@@ -121,6 +121,25 @@ def add_user(username: str, verbose: bool = False) -> None:
 
 
 @kronicler.capture
+def add_user_with_github(username: str, github_username: str, verbose: bool = False):
+    con = sqlite3.connect("ranking.db")
+    cur = con.cursor()
+
+    cur.execute(
+        """INSERT into users
+        (name, rank, easy_solved, med_solved, hard_solved, github_username)
+        VALUES(?, ?, ?, ?, ?, ?)""",
+        (username, 10_000, 0, 0, 0, github_username),
+    )
+
+    if verbose:
+        print(f"Added {username} with GitHub {github_username}")
+
+    con.commit()
+    con.close()
+
+
+@kronicler.capture
 def add_board(board: str, verbose: bool = False) -> None:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
