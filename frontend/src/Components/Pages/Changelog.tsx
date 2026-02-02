@@ -37,8 +37,42 @@ export default function Changelog() {
         <div className="flex flex-col text-white items-center min-h-screen my-4">
           <div className="m-4 w-3/5">
             <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 2-2-2026
+            </h1>
+
+            <h3 className="my-4 text-white text-2xl">
+              - Account page data and stats refresh
+            </h3>
+            <p className="my-4">
+              Account pages now pull fresh data and display improved stats.
+            </p>
+
+            <h3 className="my-4 text-white text-2xl">
+              - User page improvements behind a feature flag
+            </h3>
+            <p className="my-4">
+              Rolled out user page updates with a feature flag for safe rollout.
+            </p>
+          </div>
+
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
               Changelog for 2-1-2026
             </h1>
+
+            <h3 className="my-4 text-white text-2xl">
+              - Onboarding flow updates
+            </h3>
+            <p className="my-4">
+              The onboarding experience moved and got a smoother flow.
+            </p>
+
+            <h3 className="my-4 text-white text-2xl">
+              - Join AlgoBoard when signed in
+            </h3>
+            <p className="my-4">
+              Signed-in users can now join AlgoBoard directly.
+            </p>
 
             <h3 className="my-4 text-white text-2xl">- Rename boards</h3>
             <p className="my-4">
