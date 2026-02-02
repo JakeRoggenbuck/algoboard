@@ -333,63 +333,6 @@ const UserPage = () => {
                     </div>
                   </div>
 
-                  {!userStats && (
-                    <div className="mt-6 rounded-lg border border-gray-700 bg-gray-800 p-4">
-                      <div className="mb-4 rounded-lg bg-red-900 bg-opacity-60 p-3 text-sm text-red-100">
-                        <div className="font-semibold">
-                          Leetcode Account Not Linked!
-                        </div>
-                        <div className="text-red-200">
-                          Please add your Leetcode username here to join
-                          AlgoBoard.
-                        </div>
-                      </div>
-                      <h3 className="text-lg font-semibold text-white">
-                        Join AlgoBoard
-                      </h3>
-                      <p className="mt-1 text-sm text-gray-300">
-                        Link your GitHub account to a Leetcode username.
-                      </p>
-
-                      {joinError && (
-                        <div className="mt-3 rounded bg-red-900 bg-opacity-50 p-3 text-red-200">
-                          {joinError}
-                        </div>
-                      )}
-                      {joinSuccess && (
-                        <div className="mt-3 rounded bg-green-900 bg-opacity-50 p-3 text-green-200">
-                          {joinSuccess}
-                        </div>
-                      )}
-
-                      <form onSubmit={handleJoin} className="mt-4 space-y-4">
-                        <div>
-                          <label
-                            htmlFor="joinUsername"
-                            className="block text-sm font-medium text-gray-400 mb-1"
-                          >
-                            Leetcode Username
-                          </label>
-                          <input
-                            type="text"
-                            id="joinUsername"
-                            value={joinUsername}
-                            onChange={(e) => setJoinUsername(e.target.value)}
-                            className="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Enter Leetcode username"
-                            disabled={isJoining}
-                          />
-                        </div>
-                        <button
-                          type="submit"
-                          className="rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
-                          disabled={isJoining}
-                        >
-                          {isJoining ? "Joining..." : "Join AlgoBoard"}
-                        </button>
-                      </form>
-                    </div>
-                  )}
                 </div>
               </>
             ) : (
@@ -397,7 +340,7 @@ const UserPage = () => {
             )}
 
             {/* Update Username Form */}
-            <div className="p-6">
+            <div className="p-6 border-b border-gray-700">
               <h2 className="text-xl font-bold mb-4">
                 Update Leetcode Username (Coming Soon!)
               </h2>
@@ -439,6 +382,60 @@ const UserPage = () => {
                 </button>
               </form>
             </div>
+            {!userStats && (
+              <div className="p-6">
+                <div className="mb-4 rounded-lg bg-red-900 bg-opacity-60 p-3 text-sm text-red-100">
+                  <div className="font-semibold">
+                    Leetcode Account Not Linked!
+                  </div>
+                  <div className="text-red-200">
+                    Please add your Leetcode username here to join AlgoBoard.
+                  </div>
+                </div>
+                <h2 className="text-xl font-bold mb-4">Join AlgoBoard</h2>
+                <p className="mt-1 text-sm text-gray-300">
+                  Link your GitHub account to a Leetcode username.
+                </p>
+
+                {joinError && (
+                  <div className="mt-3 rounded bg-red-900 bg-opacity-50 p-3 text-red-200">
+                    {joinError}
+                  </div>
+                )}
+                {joinSuccess && (
+                  <div className="mt-3 rounded bg-green-900 bg-opacity-50 p-3 text-green-200">
+                    {joinSuccess}
+                  </div>
+                )}
+
+                <form onSubmit={handleJoin} className="mt-4 space-y-4">
+                  <div>
+                    <label
+                      htmlFor="joinUsername"
+                      className="block text-sm font-medium text-gray-400 mb-1"
+                    >
+                      Leetcode Username
+                    </label>
+                    <input
+                      type="text"
+                      id="joinUsername"
+                      value={joinUsername}
+                      onChange={(e) => setJoinUsername(e.target.value)}
+                      className="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Enter Leetcode username"
+                      disabled={isJoining}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={isJoining}
+                  >
+                    {isJoining ? "Joining..." : "Join AlgoBoard"}
+                  </button>
+                </form>
+              </div>
+            )}
           </div>
 
           <div className="mt-4 text-gray-400 text-sm text-center">
