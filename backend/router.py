@@ -28,8 +28,14 @@ from database import (
     total_problems,
     get_logins,
     get_user_by_github_username,
+    add_user_with_github,
 )
-from auth import get_access_token, get_user_info, is_github_authenticated
+from auth import (
+    get_access_token,
+    get_user_info,
+    is_github_authenticated,
+    get_github_login,
+)
 
 
 class User(BaseModel):
@@ -158,6 +164,26 @@ def get_user_stats(github_username: str = Query(None)):
         return JSONResponse(content={"user": None}, status_code=404)
 
     return JSONResponse(content={"user": user}, status_code=200)
+
+
+@app.post("/join")
+def join_algoboard(user: User, authorization: str = Header(default=None)):
+    if not user.valid_usersname():
+        raise HTTPException(
+            status_code=422,
+            detail="Invalid username given",
+        )
+
+    github_login = get_github_login(authorization)
+
+    existing = get_user_by_github_username(github_login)
+    if existing is not None:
+        return JSONResponse(content={"user": existing}, status_code=200)
+
+    add_user_with_github(user.username, github_login)
+    created = get_user_by_github_username(github_login)
+
+    return JSONResponse(content={"user": created}, status_code=201)
 
 
 @app.post("/admin/create-user")

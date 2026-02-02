@@ -138,3 +138,36 @@ def is_github_authenticated(authorization: str = Header(default=None)) -> bool:
                 return True
 
     return False
+
+
+@kronicler.capture
+def get_github_login(authorization: str = Header(default=None)) -> str:
+    if not authorization:
+        raise HTTPException(
+            status_code=401,
+            detail="Missing Authorization header",
+        )
+
+    headers = {"Authorization": authorization, "Accept": "application/json"}
+
+    res = requests.get(
+        "https://api.github.com/user",
+        headers=headers,
+    )
+
+    data = res.json()
+
+    if res.status_code != 200 or not isinstance(data, dict):
+        raise HTTPException(
+            status_code=401,
+            detail="Could not authenticate GitHub user",
+        )
+
+    login = data.get("login")
+    if not isinstance(login, str) or not login:
+        raise HTTPException(
+            status_code=401,
+            detail="Missing GitHub login",
+        )
+
+    return login

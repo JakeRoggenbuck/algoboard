@@ -30,6 +30,10 @@ const UserPage = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [userStats, setUserStats] = useState<UserStats | null>(null);
   const [statsError, setStatsError] = useState("");
+  const [joinUsername, setJoinUsername] = useState("");
+  const [isJoining, setIsJoining] = useState(false);
+  const [joinError, setJoinError] = useState("");
+  const [joinSuccess, setJoinSuccess] = useState("");
 
   useEffect(() => {
     document.title = "User Page - AlgoBoard";
@@ -68,6 +72,57 @@ const UserPage = () => {
 
     fetchUserStats();
   }, [githubInfo.login]);
+
+  const isValidUsername = (username) =>
+    Array.from(username).every((c) => /[a-zA-Z0-9-]/.test(c));
+
+  const handleJoin = async (e) => {
+    e.preventDefault();
+    setJoinError("");
+    setJoinSuccess("");
+
+    if (!joinUsername.trim()) {
+      setJoinError("Leetcode username cannot be empty.");
+      return;
+    }
+
+    if (!isValidUsername(joinUsername)) {
+      setJoinError("Leetcode username can only include letters, numbers, or -.");
+      return;
+    }
+
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      setJoinError("Please log in with GitHub first.");
+      return;
+    }
+
+    setIsJoining(true);
+    try {
+      const response = await fetch("https://api.algoboard.org/join", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({ username: joinUsername }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to join AlgoBoard");
+      }
+
+      const data = await response.json();
+      setUserStats(data.user ?? null);
+      setJoinSuccess("Welcome to AlgoBoard!");
+      setJoinUsername("");
+    } catch (err) {
+      console.error(err);
+      setJoinError("Could not join AlgoBoard. Please try again.");
+    } finally {
+      setIsJoining(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -274,6 +329,55 @@ const UserPage = () => {
                       <p className="text-2xl font-bold">{totalSolved}</p>
                     </div>
                   </div>
+
+                  {!userStats && (
+                    <div className="mt-6 rounded-lg border border-gray-700 bg-gray-800 p-4">
+                      <h3 className="text-lg font-semibold text-white">
+                        Join AlgoBoard
+                      </h3>
+                      <p className="mt-1 text-sm text-gray-300">
+                        Link your GitHub account to a Leetcode username.
+                      </p>
+
+                      {joinError && (
+                        <div className="mt-3 rounded bg-red-900 bg-opacity-50 p-3 text-red-200">
+                          {joinError}
+                        </div>
+                      )}
+                      {joinSuccess && (
+                        <div className="mt-3 rounded bg-green-900 bg-opacity-50 p-3 text-green-200">
+                          {joinSuccess}
+                        </div>
+                      )}
+
+                      <form onSubmit={handleJoin} className="mt-4 space-y-4">
+                        <div>
+                          <label
+                            htmlFor="joinUsername"
+                            className="block text-sm font-medium text-gray-400 mb-1"
+                          >
+                            Leetcode Username
+                          </label>
+                          <input
+                            type="text"
+                            id="joinUsername"
+                            value={joinUsername}
+                            onChange={(e) => setJoinUsername(e.target.value)}
+                            className="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter Leetcode username"
+                            disabled={isJoining}
+                          />
+                        </div>
+                        <button
+                          type="submit"
+                          className="rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                          disabled={isJoining}
+                        >
+                          {isJoining ? "Joining..." : "Join AlgoBoard"}
+                        </button>
+                      </form>
+                    </div>
+                  )}
                 </div>
               </>
             ) : (
