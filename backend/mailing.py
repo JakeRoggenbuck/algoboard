@@ -27,7 +27,7 @@ def send_email_on_github_signup(user: str):
         inbox_id=inbox_id,
         to=[admin_email],
         subject="New GitHub Sign Up!",
-        text=f"The user {user} join AlgoBoard!"
+        text=f"The user GitHub '{user}' join AlgoBoard!"
     )
 
     print(f"Email sent successfully! Message ID: {response.message_id}")
@@ -45,7 +45,7 @@ def send_email_on_leetcode_connected(user: str, leetcode: str):
         inbox_id=inbox_id,
         to=[admin_email],
         subject="New GitHub Sign Up!",
-        text=f"The user {user} join AlgoBoard with {leetcode}!"
+        text=f"The user GitHub '{user}' join AlgoBoard with leetcode name '{leetcode}'!"
     )
 
     print(f"Email sent successfully! Message ID: {response.message_id}")
