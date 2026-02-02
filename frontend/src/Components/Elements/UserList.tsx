@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
+import { ExternalLink } from "lucide-react";
 import StatsTable from "./StatsTable.tsx";
 import ScoreLine from "./ScoreLine.tsx";
 import ScoreHistogram from "./ScoreHistogram.tsx";
@@ -153,6 +154,7 @@ const UserList = (props) => {
         const lightning = " ⚡";
 
         for (let i = 0; i < data.participants.length; i++) {
+          data.participants[i].handle = data.participants[i].name;
           if (data.participants[i].score > 2) {
             data.participants[i].name += lightning;
           }
@@ -288,10 +290,23 @@ const UserList = (props) => {
               </div>
               <div>
                 <div className="font-semibold text-md">{user.name}</div>
-                <div className="text-md">
-                  solved: {user.solved.easy} easy, {user.solved.medium} medium,{" "}
-                  {user.solved.hard} hard, total:{" "}
-                  {user.solved.easy + user.solved.medium + user.solved.hard}
+                <div className="text-md flex flex-wrap items-center gap-2">
+                  <span>
+                    solved: {user.rank} easy, {user.solved.medium}{" "}
+                    medium, {user.solved.hard} hard, total:{" "}
+                    {user.solved.easy + user.solved.medium + user.solved.hard}
+                  </span>
+                  <a
+                    className="inline-flex items-center text-blue-400 hover:text-blue-300"
+                    href={`https://leetcode.com/u/${encodeURIComponent(
+                      (user.handle ?? user.name).trim(),
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`Open ${user.name}'s LeetCode profile`}
+                  >
+                    <ExternalLink size={14} />
+                  </a>
                 </div>
               </div>
             </div>
