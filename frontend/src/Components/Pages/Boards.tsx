@@ -2,6 +2,7 @@ import BoardList from "../../Components/Elements/BoardList.tsx";
 import { Link } from "react-router-dom";
 import Feedback from "../../Components/Elements/Feedback.tsx";
 import React from "react";
+import LoginControls from "../../Components/Elements/LoginControls.tsx";
 
 function Boards() {
   document.title = "Boards - AlgoBoard";
@@ -28,7 +29,7 @@ function Boards() {
             </nav>
           </div>
 
-          <div className="space-x-2">
+          <div className="flex items-center space-x-4">
             <a
               target="_blank"
               rel="noreferrer"
@@ -38,6 +39,7 @@ function Boards() {
                 Join Board
               </button>
             </a>
+            <LoginControls />
           </div>
         </div>
 
