@@ -73,6 +73,35 @@ def get_logins() -> List[str]:
 
 
 @kronicler.capture
+def get_user_by_github_username(github_username: str):
+    con = sqlite3.connect("ranking.db")
+    cur = con.cursor()
+
+    row = cur.execute(
+        """SELECT id, name, rank, easy_solved, med_solved, hard_solved, github_username
+        FROM users
+        WHERE github_username = ?
+        LIMIT 1""",
+        (github_username,),
+    ).fetchone()
+
+    con.close()
+
+    if row is None:
+        return None
+
+    return {
+        "id": row[0],
+        "name": row[1],
+        "rank": row[2],
+        "easy_solved": row[3],
+        "med_solved": row[4],
+        "hard_solved": row[5],
+        "github_username": row[6],
+    }
+
+
+@kronicler.capture
 def add_user(username: str, verbose: bool = False) -> None:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()
