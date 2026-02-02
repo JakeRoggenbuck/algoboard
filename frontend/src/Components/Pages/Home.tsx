@@ -224,6 +224,7 @@ export default function Component() {
                     /account
                   </Link>{" "}
                   and add your Leetcode username in the “Join AlgoBoard” section.
+                  You'll show up on the board in the next few hours.
                 </li>
               </ol>
             </div>
