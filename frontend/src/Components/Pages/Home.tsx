@@ -220,11 +220,21 @@ export default function Component() {
                 <li>
                   <span className="font-semibold text-white">2.</span> Visit
                   your profile on{" "}
-                  <Link to="/account" className="text-blue-300 hover:text-blue-400">
+                  <Link
+                    to="/account"
+                    className="text-blue-300 hover:text-blue-400"
+                  >
                     /account
                   </Link>{" "}
-                  and add your Leetcode username in the “Join AlgoBoard” section.
-                  You'll show up on the board in the next few hours.
+                  and add your Leetcode username in the “Join AlgoBoard”
+                  section. You'll show up on the{" "}
+                  <Link
+                    to="/boards/everyone"
+                    className="text-blue-300 hover:text-blue-400"
+                  >
+                    everyone board
+                  </Link>
+                  , at the bottom, immediately.
                 </li>
               </ol>
             </div>

@@ -88,7 +88,9 @@ const UserPage = () => {
     }
 
     if (!isValidUsername(joinUsername)) {
-      setJoinError("Leetcode username can only include letters, numbers, or -.");
+      setJoinError(
+        "Leetcode username can only include letters, numbers, or -.",
+      );
       return;
     }
 
@@ -284,9 +286,7 @@ const UserPage = () => {
               <>
                 {/* AlgoBoard Stats */}
                 <div className="p-6 border-b border-gray-700">
-                  <h2 className="text-xl font-bold mb-4">
-                    AlgoBoard Stats
-                  </h2>
+                  <h2 className="text-xl font-bold mb-4">AlgoBoard Stats</h2>
                   {statsError && (
                     <div className="mb-4 rounded bg-red-900 bg-opacity-50 p-3 text-red-200">
                       {statsError}
@@ -333,7 +333,6 @@ const UserPage = () => {
                       <p className="text-2xl font-bold">{totalSolved}</p>
                     </div>
                   </div>
-
                 </div>
               </>
             ) : (
@@ -399,7 +398,14 @@ const UserPage = () => {
                 <h2 className="text-xl font-bold mb-4">Join AlgoBoard</h2>
                 <p className="mt-1 text-sm text-gray-300">
                   Link your GitHub account to a Leetcode username. If you just
-                  joined, you'll show up on the board in the next few hours.
+                  joined, you'll show up on text-white{" "}
+                  <Link
+                    to="/boards/everyone"
+                    className="text-blue-300 hover:text-blue-400"
+                  >
+                    everyone board
+                  </Link>
+                  , at the bottom, immediately.
                 </p>
 
                 {joinError && (

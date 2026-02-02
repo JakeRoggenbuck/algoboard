@@ -297,8 +297,8 @@ const UserList = (props) => {
                   <div className="font-semibold text-md">{user.name}</div>
                   <div className="text-md flex flex-wrap items-center gap-2">
                     <span>
-                      solved: {user.solved.easy} easy, {user.solved.medium} medium,{" "}
-                      {user.solved.hard} hard, total:{" "}
+                      solved: {user.solved.easy} easy, {user.solved.medium}{" "}
+                      medium, {user.solved.hard} hard, total:{" "}
                       {user.solved.easy + user.solved.medium + user.solved.hard}
                     </span>
                     <a
