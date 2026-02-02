@@ -78,8 +78,10 @@ def add_user(username: str, verbose: bool = False) -> None:
     cur = con.cursor()
 
     cur.execute(
-        "INSERT into users VALUES(NULL, ?, ?, ?, ?, ?)",
-        (username, 10_000, 0, 0, 0),
+        """INSERT into users
+        (name, rank, easy_solved, med_solved, hard_solved, github_username)
+        VALUES(?, ?, ?, ?, ?, ?)""",
+        (username, 10_000, 0, 0, 0, None),
     )
 
     if verbose:
