@@ -236,9 +236,7 @@ function Admin() {
               </button>
             </div>
 
-            <h1 className="font-bold text-gray-100">
-              Show latest logins
-            </h1>
+            <h1 className="font-bold text-gray-100">Show latest logins</h1>
             <div className="flex gap-2">
               <button
                 onClick={GetLatestLogins}
