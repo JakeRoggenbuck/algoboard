@@ -27,6 +27,7 @@ from database import (
     rename_board,
     total_problems,
     get_logins,
+    get_user_by_github_username,
 )
 from auth import get_access_token, get_user_info, is_github_authenticated
 
@@ -142,6 +143,21 @@ def get_access_token_route(code: Union[str, None] = None):
 @app.get("/user-info")
 def get_user_info_route(authorization: str = Header(default=None)):
     return get_user_info(authorization)
+
+
+@app.get("/user-stats")
+def get_user_stats(github_username: str = Query(None)):
+    if not github_username:
+        raise HTTPException(
+            status_code=422,
+            detail="Missing github_username query parameter",
+        )
+
+    user = get_user_by_github_username(github_username)
+    if user is None:
+        return JSONResponse(content={"user": None}, status_code=404)
+
+    return JSONResponse(content={"user": user}, status_code=200)
 
 
 @app.post("/admin/create-user")

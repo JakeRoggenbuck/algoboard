@@ -29,7 +29,8 @@ def setup_database():
             rank INTEGER NOT NULL,
             easy_solved INTEGER NOT NULL,
             med_solved INTEGER NOT NULL,
-            hard_solved INTEGER NOT NULL)"""
+            hard_solved INTEGER NOT NULL,
+            github_username TEXT)"""
         )
 
         cur.execute(
@@ -80,13 +81,16 @@ def setup_database():
                 assert hard["difficulty"] == "Hard"
 
                 cur.execute(
-                    "INSERT into users VALUES(NULL, ?, ?, ?, ?, ?)",
+                    """INSERT into users
+                    (name, rank, easy_solved, med_solved, hard_solved, github_username)
+                    VALUES(?, ?, ?, ?, ?, ?)""",
                     (
                         username,
                         rank,
                         easy["count"],
                         med["count"],
                         hard["count"],
+                        None,
                     ),
                 )
 

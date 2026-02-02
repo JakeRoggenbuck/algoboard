@@ -5,9 +5,21 @@ import Feedback from "../../Components/Elements/Feedback.tsx";
 import LoginControls from "../../Components/Elements/LoginControls.tsx";
 import { useUser } from "../../Components/Context/UserContext.tsx";
 
+type UserStats = {
+  id: number;
+  name: string;
+  rank: number;
+  easy_solved: number;
+  med_solved: number;
+  hard_solved: number;
+  github_username: string;
+};
+
 const FEATURES = {
   login: true,
   top_text: false,
+  github_stats: false,
+  leetcode_stats: false,
 };
 
 const UserPage = () => {
@@ -16,10 +28,46 @@ const UserPage = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [userStats, setUserStats] = useState<UserStats | null>(null);
+  const [statsError, setStatsError] = useState("");
 
   useEffect(() => {
     document.title = "User Page - AlgoBoard";
   }, []);
+
+  useEffect(() => {
+    const fetchUserStats = async () => {
+      if (!githubInfo.login) {
+        setUserStats(null);
+        setStatsError("");
+        return;
+      }
+
+      try {
+        const url = new URL("https://api.algoboard.org/user-stats");
+        url.searchParams.set("github_username", githubInfo.login);
+
+        const response = await fetch(url.toString());
+        if (!response.ok) {
+          if (response.status === 404) {
+            setUserStats(null);
+            setStatsError("");
+            return;
+          }
+          throw new Error("Failed to load user stats");
+        }
+
+        const data = await response.json();
+        setUserStats(data.user ?? null);
+        setStatsError("");
+      } catch (err) {
+        console.error(err);
+        setStatsError("Failed to load user stats.");
+      }
+    };
+
+    fetchUserStats();
+  }, [githubInfo.login]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,12 +110,13 @@ const UserPage = () => {
     }
   };
 
-  const solvedProblemsData = localStorage.getItem("solvedProblems");
-
-  const problemStats =
-    solvedProblemsData !== null && solvedProblemsData["total"] === 1571
-      ? JSON.parse(solvedProblemsData)
-      : { easy: 0, med: 0, hard: 0 };
+  const problemStats = userStats
+    ? {
+        easy: userStats.easy_solved,
+        med: userStats.med_solved,
+        hard: userStats.hard_solved,
+      }
+    : { easy: 0, med: 0, hard: 0 };
   const totalSolved = problemStats.easy + problemStats.med + problemStats.hard;
 
   if (isUserLoading && !githubInfo.login) {
@@ -151,46 +200,65 @@ const UserPage = () => {
               </div>
             </div>
 
-            {/* Stats section */}
-            <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-700">
-              <div className="bg-gray-700 p-4 rounded-lg">
-                <h3 className="text-gray-400 text-sm mb-2">GitHub Repos</h3>
-                <p className="text-2xl font-bold">{githubInfo.public_repos}</p>
-              </div>
-              <div className="bg-gray-700 p-4 rounded-lg">
-                <h3 className="text-gray-400 text-sm mb-2">Followers</h3>
-                <p className="text-2xl font-bold">{githubInfo.followers}</p>
-              </div>
-              <div className="bg-gray-700 p-4 rounded-lg">
-                <h3 className="text-gray-400 text-sm mb-2">Following</h3>
-                <p className="text-2xl font-bold">{githubInfo.following}</p>
-              </div>
-            </div>
+            {FEATURES.github_stats ? (
+              <>
+                {/* Stats section */}
+                <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-700">
+                  <div className="bg-gray-700 p-4 rounded-lg">
+                    <h3 className="text-gray-400 text-sm mb-2">GitHub Repos</h3>
+                    <p className="text-2xl font-bold">
+                      {githubInfo.public_repos}
+                    </p>
+                  </div>
+                  <div className="bg-gray-700 p-4 rounded-lg">
+                    <h3 className="text-gray-400 text-sm mb-2">Followers</h3>
+                    <p className="text-2xl font-bold">{githubInfo.followers}</p>
+                  </div>
+                  <div className="bg-gray-700 p-4 rounded-lg">
+                    <h3 className="text-gray-400 text-sm mb-2">Following</h3>
+                    <p className="text-2xl font-bold">{githubInfo.following}</p>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
 
-            {/* AlgoBoard Stats */}
-            <div className="p-6 border-b border-gray-700">
-              <h2 className="text-xl font-bold mb-4">
-                Problem Solving Stats (Coming Soon!)
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-green-900 bg-opacity-50 p-4 rounded-lg">
-                  <h3 className="text-green-400 text-sm mb-2">Easy</h3>
-                  <p className="text-2xl font-bold">{problemStats.easy}</p>
+            {FEATURES.leetcode_stats ? (
+              <>
+                {/* AlgoBoard Stats */}
+                <div className="p-6 border-b border-gray-700">
+                  <h2 className="text-xl font-bold mb-4">
+                    Problem Solving Stats (Coming Soon!)
+                  </h2>
+                  {statsError && (
+                    <div className="mb-4 rounded bg-red-900 bg-opacity-50 p-3 text-red-200">
+                      {statsError}
+                    </div>
+                  )}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="bg-green-900 bg-opacity-50 p-4 rounded-lg">
+                      <h3 className="text-green-400 text-sm mb-2">Easy</h3>
+                      <p className="text-2xl font-bold">{problemStats.easy}</p>
+                    </div>
+                    <div className="bg-yellow-900 bg-opacity-50 p-4 rounded-lg">
+                      <h3 className="text-yellow-400 text-sm mb-2">Medium</h3>
+                      <p className="text-2xl font-bold">{problemStats.med}</p>
+                    </div>
+                    <div className="bg-red-900 bg-opacity-50 p-4 rounded-lg">
+                      <h3 className="text-red-400 text-sm mb-2">Hard</h3>
+                      <p className="text-2xl font-bold">{problemStats.hard}</p>
+                    </div>
+                    <div className="bg-blue-900 bg-opacity-50 p-4 rounded-lg">
+                      <h3 className="text-blue-400 text-sm mb-2">Total</h3>
+                      <p className="text-2xl font-bold">{totalSolved}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="bg-yellow-900 bg-opacity-50 p-4 rounded-lg">
-                  <h3 className="text-yellow-400 text-sm mb-2">Medium</h3>
-                  <p className="text-2xl font-bold">{problemStats.med}</p>
-                </div>
-                <div className="bg-red-900 bg-opacity-50 p-4 rounded-lg">
-                  <h3 className="text-red-400 text-sm mb-2">Hard</h3>
-                  <p className="text-2xl font-bold">{problemStats.hard}</p>
-                </div>
-                <div className="bg-blue-900 bg-opacity-50 p-4 rounded-lg">
-                  <h3 className="text-blue-400 text-sm mb-2">Total</h3>
-                  <p className="text-2xl font-bold">{totalSolved}</p>
-                </div>
-              </div>
-            </div>
+              </>
+            ) : (
+              <></>
+            )}
 
             {/* Update Username Form */}
             <div className="p-6">
