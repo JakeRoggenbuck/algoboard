@@ -110,6 +110,34 @@ def add_board(board: str, verbose: bool = False) -> None:
 
 
 @kronicler.capture
+def rename_board(
+    board_urlname: str,
+    new_name: str,
+    new_urlname: str,
+    verbose: bool = False,
+) -> None:
+    con = sqlite3.connect("ranking.db")
+    cur = con.cursor()
+
+    normalized_urlname = new_urlname.lower().replace(" ", "-")
+    cur.execute(
+        "UPDATE boards SET name = ?, urlname = ? WHERE urlname = ?",
+        (new_name, normalized_urlname, board_urlname),
+    )
+
+    if verbose:
+        if cur.rowcount == 0:
+            print(f"No board found for urlname: {board_urlname}")
+        else:
+            print(
+                f"Renamed {board_urlname} to {new_name} ({normalized_urlname})"
+            )
+
+    con.commit()
+    con.close()
+
+
+@kronicler.capture
 def add_user_to_board(username: str, board: str, verbose: bool = False) -> None:
     con = sqlite3.connect("ranking.db")
     cur = con.cursor()

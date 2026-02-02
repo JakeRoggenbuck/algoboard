@@ -25,6 +25,11 @@ def parser():
         help="Create a new board",
     )
     parse.add_argument(
+        "-r",
+        "--rename_board",
+        help="Rename a board [old_url:new_name:new_url]",
+    )
+    parse.add_argument(
         "-u",
         "--update_participant_counts",
         help="Update participant counts",
