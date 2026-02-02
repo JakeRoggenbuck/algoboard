@@ -126,32 +126,6 @@ def add_user(username: str, verbose: bool = False) -> None:
         (username, 10_000, 0, 0, 0, None),
     )
 
-    # Insert a default zero rank to new users
-    cur.execute(
-        "INSERT into user_rank VALUES(NULL, ?, ?, ?, ?, ?, ?)",
-        (
-            username,
-            5_000_000,
-            0,
-            0,
-            0,
-            datetime.now(),
-        ),
-    )
-
-    # Two need to be added to get a 'delta'
-    cur.execute(
-        "INSERT into user_rank VALUES(NULL, ?, ?, ?, ?, ?, ?)",
-        (
-            username,
-            5_000_000,
-            0,
-            0,
-            0,
-            datetime.now(),
-        ),
-    )
-
     if verbose:
         print(f"Added {username}")
 
@@ -170,6 +144,8 @@ def add_user_with_github(username: str, github_username: str, verbose: bool = Fa
         VALUES(?, ?, ?, ?, ?, ?)""",
         (username, 10_000, 0, 0, 0, github_username),
     )
+
+    add_user_to_board(username, "everyone")
 
     if verbose:
         print(f"Added {username} with GitHub {github_username}")
