@@ -156,6 +156,7 @@ def add_user_with_github(username: str, github_username: str, verbose: bool = Fa
 
     # Insert a default zero rank to new users
     exec_dbg(
+        cur,
         "INSERT into user_rank VALUES(NULL, ?, ?, ?, ?, ?, ?)",
         (
             username,
@@ -169,6 +170,7 @@ def add_user_with_github(username: str, github_username: str, verbose: bool = Fa
 
     # Two need to be added to get a 'delta'
     exec_dbg(
+        cur,
         "INSERT into user_rank VALUES(NULL, ?, ?, ?, ?, ?, ?)",
         (
             username,
