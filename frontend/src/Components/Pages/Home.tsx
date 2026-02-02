@@ -184,6 +184,10 @@ export default function Component() {
     fetchStatus();
   }, []); // The empty array means this effect runs once on mount
 
+  function scrollToBottom() {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+  }
+
   return (
     <>
       <div className="bg-[#0D1117] min-h-screen flex flex-col justify-between">
@@ -310,7 +314,13 @@ export default function Component() {
 
           {/* Down arrow indicator */}
           <div className="mt-16 mb-8 flex justify-center">
-            <ChevronDown className="text-white" size={40} />
+            <button
+              type="button"
+              onClick={scrollToBottom}
+              aria-label="Scroll to bottom"
+            >
+              <ChevronDown className="text-white" size={40} />
+            </button>
           </div>
         </main>
 
