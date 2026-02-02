@@ -8,6 +8,8 @@ import { useUser } from "../../Components/Context/UserContext.tsx";
 const FEATURES = {
   login: true,
   top_text: false,
+  github_stats: false,
+  leetcode_stats: false,
 };
 
 const UserPage = () => {
@@ -151,46 +153,60 @@ const UserPage = () => {
               </div>
             </div>
 
-            {/* Stats section */}
-            <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-700">
-              <div className="bg-gray-700 p-4 rounded-lg">
-                <h3 className="text-gray-400 text-sm mb-2">GitHub Repos</h3>
-                <p className="text-2xl font-bold">{githubInfo.public_repos}</p>
-              </div>
-              <div className="bg-gray-700 p-4 rounded-lg">
-                <h3 className="text-gray-400 text-sm mb-2">Followers</h3>
-                <p className="text-2xl font-bold">{githubInfo.followers}</p>
-              </div>
-              <div className="bg-gray-700 p-4 rounded-lg">
-                <h3 className="text-gray-400 text-sm mb-2">Following</h3>
-                <p className="text-2xl font-bold">{githubInfo.following}</p>
-              </div>
-            </div>
+            {FEATURES.github_stats ? (
+              <>
+                {/* Stats section */}
+                <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-700">
+                  <div className="bg-gray-700 p-4 rounded-lg">
+                    <h3 className="text-gray-400 text-sm mb-2">GitHub Repos</h3>
+                    <p className="text-2xl font-bold">
+                      {githubInfo.public_repos}
+                    </p>
+                  </div>
+                  <div className="bg-gray-700 p-4 rounded-lg">
+                    <h3 className="text-gray-400 text-sm mb-2">Followers</h3>
+                    <p className="text-2xl font-bold">{githubInfo.followers}</p>
+                  </div>
+                  <div className="bg-gray-700 p-4 rounded-lg">
+                    <h3 className="text-gray-400 text-sm mb-2">Following</h3>
+                    <p className="text-2xl font-bold">{githubInfo.following}</p>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
 
-            {/* AlgoBoard Stats */}
-            <div className="p-6 border-b border-gray-700">
-              <h2 className="text-xl font-bold mb-4">
-                Problem Solving Stats (Coming Soon!)
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-green-900 bg-opacity-50 p-4 rounded-lg">
-                  <h3 className="text-green-400 text-sm mb-2">Easy</h3>
-                  <p className="text-2xl font-bold">{problemStats.easy}</p>
+            {FEATURES.leetcode_stats ? (
+              <>
+                {/* AlgoBoard Stats */}
+                <div className="p-6 border-b border-gray-700">
+                  <h2 className="text-xl font-bold mb-4">
+                    Problem Solving Stats (Coming Soon!)
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="bg-green-900 bg-opacity-50 p-4 rounded-lg">
+                      <h3 className="text-green-400 text-sm mb-2">Easy</h3>
+                      <p className="text-2xl font-bold">{problemStats.easy}</p>
+                    </div>
+                    <div className="bg-yellow-900 bg-opacity-50 p-4 rounded-lg">
+                      <h3 className="text-yellow-400 text-sm mb-2">Medium</h3>
+                      <p className="text-2xl font-bold">{problemStats.med}</p>
+                    </div>
+                    <div className="bg-red-900 bg-opacity-50 p-4 rounded-lg">
+                      <h3 className="text-red-400 text-sm mb-2">Hard</h3>
+                      <p className="text-2xl font-bold">{problemStats.hard}</p>
+                    </div>
+                    <div className="bg-blue-900 bg-opacity-50 p-4 rounded-lg">
+                      <h3 className="text-blue-400 text-sm mb-2">Total</h3>
+                      <p className="text-2xl font-bold">{totalSolved}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="bg-yellow-900 bg-opacity-50 p-4 rounded-lg">
-                  <h3 className="text-yellow-400 text-sm mb-2">Medium</h3>
-                  <p className="text-2xl font-bold">{problemStats.med}</p>
-                </div>
-                <div className="bg-red-900 bg-opacity-50 p-4 rounded-lg">
-                  <h3 className="text-red-400 text-sm mb-2">Hard</h3>
-                  <p className="text-2xl font-bold">{problemStats.hard}</p>
-                </div>
-                <div className="bg-blue-900 bg-opacity-50 p-4 rounded-lg">
-                  <h3 className="text-blue-400 text-sm mb-2">Total</h3>
-                  <p className="text-2xl font-bold">{totalSolved}</p>
-                </div>
-              </div>
-            </div>
+              </>
+            ) : (
+              <></>
+            )}
 
             {/* Update Username Form */}
             <div className="p-6">
