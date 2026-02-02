@@ -187,6 +187,7 @@ def join_algoboard(user: User, authorization: str = Header(default=None)):
         print("Error sending email!")
 
     add_user_with_github(user.username, github_login)
+
     created = get_user_by_github_username(github_login)
 
     return JSONResponse(content={"user": created}, status_code=201)
