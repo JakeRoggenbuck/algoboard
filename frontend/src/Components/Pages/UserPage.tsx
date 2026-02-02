@@ -398,7 +398,7 @@ const UserPage = () => {
                 <h2 className="text-xl font-bold mb-4">Join AlgoBoard</h2>
                 <p className="mt-1 text-sm text-gray-300">
                   Link your GitHub account to a Leetcode username. If you just
-                  joined, you'll show up on text-white{" "}
+                  joined, you'll show up on the {" "}
                   <Link
                     to="/boards/everyone"
                     className="text-blue-300 hover:text-blue-400"
