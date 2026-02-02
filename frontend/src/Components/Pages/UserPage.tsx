@@ -398,7 +398,8 @@ const UserPage = () => {
                 </div>
                 <h2 className="text-xl font-bold mb-4">Join AlgoBoard</h2>
                 <p className="mt-1 text-sm text-gray-300">
-                  Link your GitHub account to a Leetcode username.
+                  Link your GitHub account to a Leetcode username. If you just
+                  joined, you'll show up on the board in the next few hours.
                 </p>
 
                 {joinError && (
