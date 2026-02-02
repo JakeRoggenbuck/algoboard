@@ -181,7 +181,10 @@ def join_algoboard(user: User, authorization: str = Header(default=None)):
     if existing is not None:
         return JSONResponse(content={"user": existing}, status_code=200)
 
-    mailing.send_email_on_leetcode_connected(github_login, user.username)
+    try:
+        mailing.send_email_on_leetcode_connected(github_login, user.username)
+    except Exception:
+        print("Error sending email!")
 
     add_user_with_github(user.username, github_login)
     created = get_user_by_github_username(github_login)

@@ -62,7 +62,10 @@ def log_email(email: str, username: str) -> None:
 
     # Check if the email exists in emails
     if found_email is None:
-        mailing.send_email_on_github_signup
+        try:
+            mailing.send_email_on_github_signup
+        except Exception:
+            print("Error sending email!")
 
     cur.execute(
         "INSERT into emails (email, username, timestamp) VALUES(?, ?, ?)",
