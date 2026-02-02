@@ -37,6 +37,208 @@ export default function Changelog() {
         <div className="flex flex-col text-white items-center min-h-screen my-4">
           <div className="m-4 w-3/5">
             <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 2-1-2026
+            </h1>
+
+            <h3 className="my-4 text-white text-2xl">- Rename boards</h3>
+            <p className="my-4">
+              Boards can now be renamed after they are created.
+            </p>
+          </div>
+
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 1-31-2026
+            </h1>
+
+            <h3 className="my-4 text-white text-2xl">
+              - Elixir backend rewrite start
+            </h3>
+            <p className="my-4">
+              Started the Elixir backend rewrite for core services.
+            </p>
+
+            <h3 className="my-4 text-white text-2xl">
+              - Sessions and boards migrations
+            </h3>
+            <p className="my-4">
+              Added migrations for sessions and boards data.
+            </p>
+          </div>
+
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 1-30-2026
+            </h1>
+
+            <h3 className="my-4 text-white text-2xl">
+              - Logging scope update
+            </h3>
+            <p className="my-4">
+              Logging now focuses on function calls to reduce noise.
+            </p>
+          </div>
+
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 1-10-2026
+            </h1>
+
+            <h3 className="my-4 text-white text-2xl">
+              - Add start and end date support
+            </h3>
+            <p className="my-4">
+              Data can now be requested with a start and end date.
+            </p>
+          </div>
+
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 1-7-2026
+            </h1>
+
+            <h3 className="my-4 text-white text-2xl">
+              - Improved admin login view
+            </h3>
+            <p className="my-4">
+              The admin view now shows logins in a clearer format.
+            </p>
+          </div>
+
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 12-2-2025
+            </h1>
+
+            <h3 className="my-4 text-white text-2xl">- New home route</h3>
+            <p className="my-4">
+              The main site now has a dedicated home route.
+            </p>
+
+            <h3 className="my-4 text-white text-2xl">
+              - Footer link to jr0.org
+            </h3>
+            <p className="my-4">Added a footer link to other projects.</p>
+          </div>
+
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 11-7-2025
+            </h1>
+
+            <h3 className="my-4 text-white text-2xl">- Logs route update</h3>
+            <p className="my-4">
+              Updated routing to use "logs" instead of the older path.
+            </p>
+
+            <h3 className="my-4 text-white text-2xl">- TypeScript fixes</h3>
+            <p className="my-4">
+              Cleaned up a set of TypeScript errors and small issues.
+            </p>
+          </div>
+
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 10-8-2025
+            </h1>
+
+            <h3 className="my-4 text-white text-2xl">
+              - Kronicler URL updates
+            </h3>
+            <p className="my-4">
+              Updated Kronicler URL and routing entries.
+            </p>
+          </div>
+
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 10-6-2025
+            </h1>
+
+            <h3 className="my-4 text-white text-2xl">
+              - Kronicler logging and CORS
+            </h3>
+            <p className="my-4">
+              Added Kronicler logging with updated CORS settings.
+            </p>
+          </div>
+
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 9-30-2025
+            </h1>
+
+            <h3 className="my-4 text-white text-2xl">- New stats view</h3>
+            <p className="my-4">
+              Added a stats page with more data and line charts.
+            </p>
+
+            <h3 className="my-4 text-white text-2xl">
+              - Name select and deselect
+            </h3>
+            <p className="my-4">
+              You can now select and deselect names in the UI.
+            </p>
+
+            <h3 className="my-4 text-white text-2xl">
+              - Style updates to match AlgoBoard
+            </h3>
+            <p className="my-4">
+              Updated layout and styles to better match the main site.
+            </p>
+          </div>
+
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 9-28-2025
+            </h1>
+
+            <h3 className="my-4 text-white text-2xl">
+              - Fix add-user names with dashes
+            </h3>
+            <p className="my-4">
+              Users with dashes in their name can now be added to boards.
+            </p>
+
+            <h3 className="my-4 text-white text-2xl">
+              - Scoring algorithm text update
+            </h3>
+            <p className="my-4">
+              Clarified the scoring algorithm description in the UI.
+            </p>
+          </div>
+
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 9-20-2025
+            </h1>
+
+            <h3 className="my-4 text-white text-2xl">
+              - Graph and badges fixes
+            </h3>
+            <p className="my-4">
+              Fixed rendering issues in graphs and score badges.
+            </p>
+          </div>
+
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
+              Changelog for 8-27-2025
+            </h1>
+
+            <h3 className="my-4 text-white text-2xl">
+              - Google OAuth login flow
+            </h3>
+            <p className="my-4">
+              Added Google OAuth login with callback and redirect handling.
+            </p>
+
+            <h3 className="my-4 text-white text-2xl">- JWT helpers</h3>
+            <p className="my-4">Added JWT helpers to support auth tokens.</p>
+          </div>
+
+          <div className="m-4 w-3/5">
+            <h1 className="my-4 font-bold text-white text-5xl">
               Changelog for 4-1-2025
             </h1>
 
