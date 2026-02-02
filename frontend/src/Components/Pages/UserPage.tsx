@@ -292,7 +292,10 @@ const UserPage = () => {
                     </div>
                   )}
                   {userStats && (
-                    <div className="mb-4 space-y-1 text-sm text-gray-300">
+                    <div className="mb-4 space-y-2 text-sm text-gray-300">
+                      <div className="inline-flex items-center rounded-full bg-green-900 bg-opacity-60 px-3 py-1 text-xs font-semibold text-green-200">
+                        Leetcode Linked
+                      </div>
                       <div>
                         <span className="font-semibold text-white">
                           GitHub Username:
@@ -332,6 +335,15 @@ const UserPage = () => {
 
                   {!userStats && (
                     <div className="mt-6 rounded-lg border border-gray-700 bg-gray-800 p-4">
+                      <div className="mb-4 rounded-lg bg-red-900 bg-opacity-60 p-3 text-sm text-red-100">
+                        <div className="font-semibold">
+                          Leetcode Account Not Linked!
+                        </div>
+                        <div className="text-red-200">
+                          Please add your Leetcode username here to join
+                          AlgoBoard.
+                        </div>
+                      </div>
                       <h3 className="text-lg font-semibold text-white">
                         Join AlgoBoard
                       </h3>
