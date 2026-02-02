@@ -19,7 +19,7 @@ const FEATURES = {
   login: true,
   top_text: false,
   github_stats: false,
-  leetcode_stats: false,
+  leetcode_stats: true,
 };
 
 const UserPage = () => {
@@ -229,11 +229,31 @@ const UserPage = () => {
                 {/* AlgoBoard Stats */}
                 <div className="p-6 border-b border-gray-700">
                   <h2 className="text-xl font-bold mb-4">
-                    Problem Solving Stats (Coming Soon!)
+                    AlgoBoard Stats
                   </h2>
                   {statsError && (
                     <div className="mb-4 rounded bg-red-900 bg-opacity-50 p-3 text-red-200">
                       {statsError}
+                    </div>
+                  )}
+                  {userStats && (
+                    <div className="mb-4 space-y-1 text-sm text-gray-300">
+                      <div>
+                        <span className="font-semibold text-white">
+                          GitHub Username:
+                        </span>{" "}
+                        {userStats.github_username}
+                      </div>
+                      <div>
+                        <span className="font-semibold text-white">
+                          Leetcode Username:
+                        </span>{" "}
+                        {userStats.name}
+                        <span className="text-gray-400">
+                          {" "}
+                          · rank #{userStats.rank.toLocaleString()}
+                        </span>
+                      </div>
                     </div>
                   )}
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
