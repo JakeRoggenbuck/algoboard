@@ -154,7 +154,7 @@ def add_user_with_github(username: str, github_username: str, verbose: bool = Fa
             0,
             0,
             0,
-            datetime.now(),
+            datetime(2024, 1, 1),
         ),
     )
 
@@ -167,7 +167,7 @@ def add_user_with_github(username: str, github_username: str, verbose: bool = Fa
             0,
             0,
             0,
-            datetime.now(),
+            datetime(2024, 1, 1),
         ),
     )
 
