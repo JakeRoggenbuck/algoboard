@@ -3,7 +3,9 @@ from datetime import datetime
 from typing import Dict, List, Tuple
 from alg import linear_weight
 import kronicler
+
 import mailing
+import pull
 
 """Naming for database.py file
 
@@ -158,18 +160,37 @@ def add_user_with_github(username: str, github_username: str, verbose: bool = Fa
         ),
     )
 
-    # Two need to be added to get a 'delta'
-    cur.execute(
-        "INSERT into user_rank VALUES(NULL, ?, ?, ?, ?, ?, ?)",
-        (
-            username,
-            5_000_000,
-            0,
-            0,
-            0,
-            datetime(2024, 1, 1),
-        ),
-    )
+    try:
+        data = pull.pull_data_gql(username)
+
+        # Insert a default zero rank to new users
+        cur.execute(
+            "INSERT into user_rank VALUES(NULL, ?, ?, ?, ?, ?, ?)",
+            (
+                username,
+                data["Rank"],
+                data["Easy"],
+                data["Medium"],
+                data["Hard"],
+                datetime.now(),
+            ),
+        )
+
+    except Exception:
+        print("Could not pull user data on join, using default.")
+
+        # Two need to be added to get a 'delta'
+        cur.execute(
+            "INSERT into user_rank VALUES(NULL, ?, ?, ?, ?, ?, ?)",
+            (
+                username,
+                5_000_000,
+                0,
+                0,
+                0,
+                datetime(2024, 1, 1),
+            ),
+        )
 
     if verbose:
         print(f"Added {username} with GitHub {github_username}")
