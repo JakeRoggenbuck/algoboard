@@ -1,21 +1,43 @@
 import requests
 
-URL = "https://alfa-leetcode-api.onrender.com/"
 
+def pull_data_gql(username: str):
+    url = "https://leetcode.com/graphql"
 
-def get_url(username: str):
-    return URL + username
+    payload = {
+        "query": """
+        query ($username: String!) {
 
+        matchedUser(username: $username) {
+            profile {
+                ranking
+            }
+            submitStatsGlobal {
+            acSubmissionNum {
+                difficulty
+                count
+            }
+            }
+        }
+        }
+        """,
+        "variables": {"username": username}
+    }
 
-def pull_data(username: str):
-    res = requests.get(get_url(username) + "/solved")
-    return res.json()
+    r = requests.post(url, json=payload)
 
+    data = r.json()["data"]["matchedUser"]
+    ranking = data["profile"]["ranking"]
+    solved_raw = data["submitStatsGlobal"]["acSubmissionNum"]
+    solved = {}
 
-def pull_rank(username: str):
-    res = requests.get(get_url(username))
-    return res.json()
+    for x in solved_raw:
+        solved[x["difficulty"]] = x["count"]
+
+    solved["Rank"] = ranking
+
+    return solved
 
 
 if __name__ == "__main__":
-    print(pull_data("jakeroggenbuck"))
+    print(pull_data_gql("jakeroggenbuck"))
