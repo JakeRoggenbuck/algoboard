@@ -31,6 +31,9 @@ export default function Component() {
   const [isStatusOkay, setIsStatusOkay] = useState(false);
   const [solved, setSolved] = useState(-9999);
   const [latency, setLatency] = useState(0);
+  const [leetcodeLinkStatus, setLeetcodeLinkStatus] = useState<
+    "unknown" | "linked" | "missing"
+  >("unknown");
 
   const { githubInfo, refreshUserInfo } = useUser();
 
@@ -65,6 +68,37 @@ export default function Component() {
     // Remove code from url bar
     window.history.pushState({}, "", window.location.pathname);
   }, [refreshUserInfo]);
+
+  useEffect(() => {
+    const fetchLeetcodeLinkStatus = async () => {
+      if (!githubInfo.login) {
+        setLeetcodeLinkStatus("unknown");
+        return;
+      }
+
+      try {
+        const url = new URL("https://api.algoboard.org/user-stats");
+        url.searchParams.set("github_username", githubInfo.login);
+
+        const response = await fetch(url.toString());
+        if (!response.ok) {
+          if (response.status === 404) {
+            setLeetcodeLinkStatus("missing");
+            return;
+          }
+          throw new Error("Failed to load user stats");
+        }
+
+        const data = await response.json();
+        setLeetcodeLinkStatus(data.user ? "linked" : "missing");
+      } catch (error) {
+        console.error("Failed to load user stats:", error);
+        setLeetcodeLinkStatus("unknown");
+      }
+    };
+
+    fetchLeetcodeLinkStatus();
+  }, [githubInfo.login]);
 
   const fetchSolvedProblems = async () => {
     const cacheKey = "solvedProblems";
@@ -178,6 +212,24 @@ export default function Component() {
             <></>
           )}
         </header>
+
+        {leetcodeLinkStatus === "missing" && (
+          <div className="relative z-10 mx-auto mt-2 w-full max-w-3xl px-4">
+            <div className="rounded-lg bg-red-900 bg-opacity-60 p-4 text-sm text-red-100">
+              <div className="font-semibold">Leetcode Account Not Linked!</div>
+              <div className="text-red-200">
+                Add your Leetcode username on{" "}
+                <Link
+                  to="/account"
+                  className="text-blue-200 underline hover:text-blue-100"
+                >
+                  /account
+                </Link>{" "}
+                to join AlgoBoard.
+              </div>
+            </div>
+          </div>
+        )}
 
         <main className="flex z-10 flex-col items-center justify-center min-h-[70vh] px-4 py-8">
           <div className="flex flex-col items-center max-w-3xl w-full space-y-6">
