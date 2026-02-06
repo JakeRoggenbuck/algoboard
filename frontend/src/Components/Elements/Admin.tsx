@@ -96,7 +96,7 @@ function Admin() {
             }
 
             const usernameValue = row[2];
-            const emailValue = row[3];
+            const emailValue = row[1];
 
             if (typeof usernameValue !== "string" || !usernameValue.trim()) {
               return;
