@@ -8,7 +8,7 @@ function Admin() {
   const [isVisible, setIsVisible] = useState(false);
   const [isLoginsLoading, setIsLoginsLoading] = useState(false);
   const [loginCounts, setLoginCounts] = useState<
-    Array<{ username: string; count: number }>
+    Array<{ username: string; email: string; count: number }>
   >([]);
   const [loginCountsTotal, setLoginCountsTotal] = useState(0);
 
@@ -86,6 +86,7 @@ function Admin() {
 
       if (response.status === 200) {
         const counts = new Map<string, number>();
+        const emailByKey = new Map<string, string>();
         let total = 0;
 
         if (Array.isArray(data)) {
@@ -95,27 +96,47 @@ function Admin() {
             }
 
             const usernameValue = row[2];
+            const emailValue = row[3];
 
             if (typeof usernameValue !== "string" || !usernameValue.trim()) {
               return;
             }
 
+            const normalizedEmail =
+              typeof emailValue === "string" && emailValue.trim()
+                ? emailValue
+                : "Unknown";
+            const key = `${usernameValue}::${normalizedEmail}`;
+
             total += 1;
-            counts.set(usernameValue, (counts.get(usernameValue) || 0) + 1);
+            counts.set(key, (counts.get(key) || 0) + 1);
+            emailByKey.set(key, normalizedEmail);
           });
         }
 
         const sortedCounts = Array.from(counts.entries())
-          .map(([usernameValue, count]) => ({
-            username: usernameValue,
-            count,
-          }))
+          .map(([key, count]) => {
+            const separatorIndex = key.indexOf("::");
+            const usernameValue =
+              separatorIndex >= 0 ? key.slice(0, separatorIndex) : key;
+
+            return {
+              username: usernameValue,
+              email: emailByKey.get(key) || "Unknown",
+              count,
+            };
+          })
           .sort((a, b) => {
             if (b.count !== a.count) {
               return b.count - a.count;
             }
 
-            return a.username.localeCompare(b.username);
+            const usernameCompare = a.username.localeCompare(b.username);
+            if (usernameCompare !== 0) {
+              return usernameCompare;
+            }
+
+            return a.email.localeCompare(b.email);
           });
 
         setLoginCounts(sortedCounts);
@@ -250,23 +271,25 @@ function Admin() {
             {loginCounts.length > 0 && (
               <div className="mt-4 space-y-2">
                 <h2 className="text-lg font-bold text-gray-100">
-                  Logins by Username
+                  Logins by Username and Email
                 </h2>
                 <p className="text-sm text-gray-400">
-                  Total logins: {loginCountsTotal} | Unique usernames:{" "}
+                  Total logins: {loginCountsTotal} | Unique username/email pairs:{" "}
                   {loginCounts.length}
                 </p>
                 <div className="border border-gray-700 rounded-md overflow-hidden max-h-64 overflow-y-auto">
-                  <div className="grid grid-cols-2 gap-2 px-3 py-2 text-gray-400 text-sm border-b border-gray-700">
+                  <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-2 px-3 py-2 text-gray-400 text-sm border-b border-gray-700">
                     <span>Username</span>
+                    <span>Email</span>
                     <span className="text-right">Count</span>
                   </div>
                   {loginCounts.map((entry) => (
                     <div
-                      key={entry.username}
-                      className="grid grid-cols-2 gap-2 px-3 py-2 text-gray-100 border-b border-gray-800 last:border-b-0"
+                      key={`${entry.username}-${entry.email}`}
+                      className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-2 px-3 py-2 text-gray-100 border-b border-gray-800 last:border-b-0"
                     >
                       <span className="truncate">{entry.username}</span>
+                      <span className="truncate">{entry.email}</span>
                       <span className="text-right">{entry.count}</span>
                     </div>
                   ))}
