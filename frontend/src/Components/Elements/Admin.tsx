@@ -280,7 +280,7 @@ function Admin() {
                 <div className="border border-gray-700 rounded-md overflow-hidden max-h-64 overflow-y-auto">
                   <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-2 px-3 py-2 text-gray-400 text-sm border-b border-gray-700">
                     <span>Username</span>
-                    <span>Email</span>
+                    <span className="text-left">Email</span>
                     <span className="text-right">Count</span>
                   </div>
                   {loginCounts.map((entry) => (
@@ -289,7 +289,7 @@ function Admin() {
                       className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-2 px-3 py-2 text-gray-100 border-b border-gray-800 last:border-b-0"
                     >
                       <span className="truncate">{entry.username}</span>
-                      <span className="truncate">{entry.email}</span>
+                      <span className="truncate text-left">{entry.email}</span>
                       <span className="text-right">{entry.count}</span>
                     </div>
                   ))}
