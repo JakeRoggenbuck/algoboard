@@ -150,6 +150,11 @@ def repull_replace_data():
 
         data = pull.pull_data_gql(user[1])
 
+        if data is None:
+            print("User skipped!")
+
+            continue
+
         data = {
             "ranking": data["Rank"],
             "easySolved": data["Easy"],
