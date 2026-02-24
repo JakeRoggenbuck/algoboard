@@ -60,7 +60,10 @@ const getMonthKeyFromRow = (row: LoginRowValue[]): string | null => {
 };
 
 type LoginsMonthlyHistogramProps = {
-  data: Array<{ month: string; count: number }>;
+  data: {
+    months: string[];
+    datasets: Array<{ username: string; percentages: number[]; color: string }>;
+  };
 };
 
 function LoginsMonthlyHistogram({ data }: LoginsMonthlyHistogramProps) {
@@ -84,37 +87,35 @@ function LoginsMonthlyHistogram({ data }: LoginsMonthlyHistogramProps) {
     chartInstance.current = new Chart(context, {
       type: "bar",
       data: {
-        labels: data.map((item) => item.month),
-        datasets: [
-          {
-            label: "Logins",
-            data: data.map((item) => item.count),
-            backgroundColor: "#60A5FACC",
-            borderColor: "#60A5FA",
-            borderWidth: 1,
-          },
-        ],
+        labels: data.months,
+        datasets: data.datasets.map((dataset) => ({
+          label: dataset.username,
+          data: dataset.percentages,
+          backgroundColor: `${dataset.color}CC`,
+          borderColor: dataset.color,
+          borderWidth: 1,
+        })),
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          },
-        },
+        plugins: {},
         scales: {
           y: {
             beginAtZero: true,
+            max: 100,
+            stacked: true,
             ticks: {
               precision: 0,
+              callback: (value) => `${value}%`,
             },
             title: {
               display: true,
-              text: "Login Count",
+              text: "Percent of Monthly Logins",
             },
           },
           x: {
+            stacked: true,
             title: {
               display: true,
               text: "Month",
@@ -149,9 +150,13 @@ function Admin() {
     Array<{ username: string; email: string; count: number }>
   >([]);
   const [loginCountsTotal, setLoginCountsTotal] = useState(0);
-  const [monthlyLoginCounts, setMonthlyLoginCounts] = useState<
-    Array<{ month: string; count: number }>
-  >([]);
+  const [monthlyLoginCounts, setMonthlyLoginCounts] = useState<{
+    months: string[];
+    datasets: Array<{ username: string; percentages: number[]; color: string }>;
+  }>({
+    months: [],
+    datasets: [],
+  });
 
   const handleClose = () => {
     setIsVisible(false);
@@ -228,7 +233,8 @@ function Admin() {
       if (response.status === 200) {
         const counts = new Map<string, number>();
         const emailByKey = new Map<string, string>();
-        const monthlyCounts = new Map<string, number>();
+        const monthlyUserCounts = new Map<string, Map<string, number>>();
+        const totalByUsername = new Map<string, number>();
         let total = 0;
 
         if (Array.isArray(data)) {
@@ -237,25 +243,36 @@ function Admin() {
               return;
             }
 
-            const monthKey = getMonthKeyFromRow(row as LoginRowValue[]);
-            if (monthKey) {
-              monthlyCounts.set(monthKey, (monthlyCounts.get(monthKey) || 0) + 1);
-            }
-
             const usernameValue = row[2];
             const emailValue = row[1];
 
             if (typeof usernameValue !== "string" || !usernameValue.trim()) {
               return;
             }
+            const normalizedUsername = usernameValue.trim();
+
+            const monthKey = getMonthKeyFromRow(row as LoginRowValue[]);
+            if (monthKey) {
+              const countsForMonth =
+                monthlyUserCounts.get(monthKey) || new Map<string, number>();
+              countsForMonth.set(
+                normalizedUsername,
+                (countsForMonth.get(normalizedUsername) || 0) + 1,
+              );
+              monthlyUserCounts.set(monthKey, countsForMonth);
+            }
 
             const normalizedEmail =
               typeof emailValue === "string" && emailValue.trim()
                 ? emailValue
                 : "Unknown";
-            const key = `${usernameValue}::${normalizedEmail}`;
+            const key = `${normalizedUsername}::${normalizedEmail}`;
 
             total += 1;
+            totalByUsername.set(
+              normalizedUsername,
+              (totalByUsername.get(normalizedUsername) || 0) + 1,
+            );
             counts.set(key, (counts.get(key) || 0) + 1);
             emailByKey.set(key, normalizedEmail);
           });
@@ -286,16 +303,53 @@ function Admin() {
             return a.email.localeCompare(b.email);
           });
 
-        const sortedMonthlyCounts = Array.from(monthlyCounts.entries())
-          .sort(([monthA], [monthB]) => monthA.localeCompare(monthB))
-          .map(([monthKey, count]) => ({
-            month: monthFormatter.format(new Date(`${monthKey}-01T00:00:00Z`)),
-            count,
-          }));
+        const sortedMonthKeys = Array.from(monthlyUserCounts.keys()).sort((a, b) =>
+          a.localeCompare(b),
+        );
+        const orderedUsernames = Array.from(totalByUsername.entries())
+          .sort((a, b) => {
+            if (b[1] !== a[1]) {
+              return b[1] - a[1];
+            }
+            return a[0].localeCompare(b[0]);
+          })
+          .map(([usernameKey]) => usernameKey);
+        const colorForUsername = (name: string) => {
+          let hash = 0;
+          for (let i = 0; i < name.length; i += 1) {
+            hash = name.charCodeAt(i) + ((hash << 5) - hash);
+          }
+          const hue = Math.abs(hash) % 360;
+          return `hsl(${hue}, 65%, 55%)`;
+        };
+        const monthlyPercentDatasets = orderedUsernames.map((name) => ({
+          username: name,
+          percentages: sortedMonthKeys.map((monthKey) => {
+            const monthCounts = monthlyUserCounts.get(monthKey);
+            if (!monthCounts) {
+              return 0;
+            }
+            const totalForMonth = Array.from(monthCounts.values()).reduce(
+              (sum, value) => sum + value,
+              0,
+            );
+            if (!totalForMonth) {
+              return 0;
+            }
+            const userCount = monthCounts.get(name) || 0;
+            return Number(((userCount / totalForMonth) * 100).toFixed(2));
+          }),
+          color: colorForUsername(name),
+        }));
 
         setLoginCounts(sortedCounts);
         setLoginCountsTotal(total);
-        setMonthlyLoginCounts(sortedMonthlyCounts);
+        setMonthlyLoginCounts({
+          months: sortedMonthKeys.map((monthKey) =>
+            monthFormatter.format(new Date(`${monthKey}-01T00:00:00Z`)),
+          ),
+          datasets: monthlyPercentDatasets,
+        });
       }
     } catch (error) {
       console.log(error);
@@ -449,10 +503,11 @@ function Admin() {
                     </div>
                   ))}
                 </div>
-                {monthlyLoginCounts.length > 0 && (
+                {monthlyLoginCounts.months.length > 0 &&
+                  monthlyLoginCounts.datasets.length > 0 && (
                   <div className="pt-2">
                     <h3 className="text-md font-bold text-gray-100">
-                      Logins Per Month
+                      Logins Per Month by Username (Stacked %)
                     </h3>
                     <LoginsMonthlyHistogram data={monthlyLoginCounts} />
                   </div>
