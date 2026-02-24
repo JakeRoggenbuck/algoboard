@@ -1,4 +1,142 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import Chart from "chart.js/auto";
+
+type LoginRowValue = string | number | null | undefined;
+
+const monthFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
+const parseTimestampValue = (value: LoginRowValue): Date | null => {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    const timestamp =
+      value > 1_000_000_000_000
+        ? value
+        : value > 1_000_000_000
+          ? value * 1000
+          : NaN;
+    const date = new Date(timestamp);
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const trimmedValue = value.trim();
+  if (
+    !trimmedValue ||
+    (!trimmedValue.includes("-") &&
+      !trimmedValue.includes("T") &&
+      !trimmedValue.includes("/") &&
+      !trimmedValue.includes(":"))
+  ) {
+    return null;
+  }
+
+  const date = new Date(trimmedValue);
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+const getMonthKeyFromRow = (row: LoginRowValue[]): string | null => {
+  const preferredTimestampColumns = [0, 3, 4];
+  for (const index of preferredTimestampColumns) {
+    const parsed = parseTimestampValue(row[index]);
+    if (parsed) {
+      return `${parsed.getUTCFullYear()}-${String(parsed.getUTCMonth() + 1).padStart(2, "0")}`;
+    }
+  }
+
+  for (const value of row) {
+    const parsed = parseTimestampValue(value);
+    if (parsed) {
+      return `${parsed.getUTCFullYear()}-${String(parsed.getUTCMonth() + 1).padStart(2, "0")}`;
+    }
+  }
+
+  return null;
+};
+
+type LoginsMonthlyHistogramProps = {
+  data: Array<{ month: string; count: number }>;
+};
+
+function LoginsMonthlyHistogram({ data }: LoginsMonthlyHistogramProps) {
+  const chartRef = useRef<HTMLCanvasElement | null>(null);
+  const chartInstance = useRef<Chart | null>(null);
+
+  useEffect(() => {
+    if (!chartRef.current) {
+      return;
+    }
+
+    const context = chartRef.current.getContext("2d");
+    if (!context) {
+      return;
+    }
+
+    if (chartInstance.current) {
+      chartInstance.current.destroy();
+    }
+
+    chartInstance.current = new Chart(context, {
+      type: "bar",
+      data: {
+        labels: data.map((item) => item.month),
+        datasets: [
+          {
+            label: "Logins",
+            data: data.map((item) => item.count),
+            backgroundColor: "#60A5FACC",
+            borderColor: "#60A5FA",
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              precision: 0,
+            },
+            title: {
+              display: true,
+              text: "Login Count",
+            },
+          },
+          x: {
+            title: {
+              display: true,
+              text: "Month",
+            },
+          },
+        },
+      },
+    });
+
+    return () => {
+      if (chartInstance.current) {
+        chartInstance.current.destroy();
+      }
+    };
+  }, [data]);
+
+  return (
+    <div className="mt-2 h-72">
+      <canvas ref={chartRef} />
+    </div>
+  );
+}
 
 function Admin() {
   const [username, setUsername] = useState("");
@@ -11,6 +149,9 @@ function Admin() {
     Array<{ username: string; email: string; count: number }>
   >([]);
   const [loginCountsTotal, setLoginCountsTotal] = useState(0);
+  const [monthlyLoginCounts, setMonthlyLoginCounts] = useState<
+    Array<{ month: string; count: number }>
+  >([]);
 
   const handleClose = () => {
     setIsVisible(false);
@@ -87,12 +228,18 @@ function Admin() {
       if (response.status === 200) {
         const counts = new Map<string, number>();
         const emailByKey = new Map<string, string>();
+        const monthlyCounts = new Map<string, number>();
         let total = 0;
 
         if (Array.isArray(data)) {
           data.forEach((row) => {
             if (!Array.isArray(row)) {
               return;
+            }
+
+            const monthKey = getMonthKeyFromRow(row as LoginRowValue[]);
+            if (monthKey) {
+              monthlyCounts.set(monthKey, (monthlyCounts.get(monthKey) || 0) + 1);
             }
 
             const usernameValue = row[2];
@@ -139,8 +286,16 @@ function Admin() {
             return a.email.localeCompare(b.email);
           });
 
+        const sortedMonthlyCounts = Array.from(monthlyCounts.entries())
+          .sort(([monthA], [monthB]) => monthA.localeCompare(monthB))
+          .map(([monthKey, count]) => ({
+            month: monthFormatter.format(new Date(`${monthKey}-01T00:00:00Z`)),
+            count,
+          }));
+
         setLoginCounts(sortedCounts);
         setLoginCountsTotal(total);
+        setMonthlyLoginCounts(sortedMonthlyCounts);
       }
     } catch (error) {
       console.log(error);
@@ -294,6 +449,14 @@ function Admin() {
                     </div>
                   ))}
                 </div>
+                {monthlyLoginCounts.length > 0 && (
+                  <div className="pt-2">
+                    <h3 className="text-md font-bold text-gray-100">
+                      Logins Per Month
+                    </h3>
+                    <LoginsMonthlyHistogram data={monthlyLoginCounts} />
+                  </div>
+                )}
               </div>
             )}
 
